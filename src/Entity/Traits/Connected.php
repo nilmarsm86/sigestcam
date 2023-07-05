@@ -2,6 +2,7 @@
 
 namespace App\Entity\Traits;
 
+use App\Entity\StructuredCable;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
@@ -19,11 +20,14 @@ trait Connected
     #[ORM\Column(length: 255)]
     private string $ip;
 
-    #[ORM\Column(type: Types::TEXT)]
-    private ?string $structuredCable = null;
+    #[ORM\OneToOne(targetEntity: StructuredCable::class, cascade: ['persist', 'remove'])]
+    private ?StructuredCable $structuredCable = null;
 
     #[ORM\Column(length: 255)]
     private string $inventory;
+
+    #[ORM\Column(length: 255)]
+    private string $contic;
 
     public function getModel(): string
     {
@@ -61,12 +65,12 @@ trait Connected
         return $this;
     }
 
-    public function getStructuredCable(): ?string
+    public function getStructuredCable(): ?StructuredCable
     {
         return $this->structuredCable;
     }
 
-    public function setStructuredCable(string $structuredCable): static
+    public function setStructuredCable(StructuredCable $structuredCable): static
     {
         $this->structuredCable = $structuredCable;
 
@@ -81,6 +85,18 @@ trait Connected
     public function setInventory(string $inventory): static
     {
         $this->inventory = $inventory;
+
+        return $this;
+    }
+
+    public function getContic(): string
+    {
+        return $this->contic;
+    }
+
+    public function setContic(string $contic): static
+    {
+        $this->contic = $contic;
 
         return $this;
     }

@@ -22,8 +22,8 @@ class Port
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column]
-    private int $number;
+    #[ORM\Column(length: 255)]
+    private string $number;
 
     #[ORM\Column]
     private float $speed = 1;
@@ -37,7 +37,7 @@ class Port
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
     private ?ConnectedElement $connectedElement = null;
 
-    public function __construct(int $number)
+    public function __construct(string $number)
     {
         $this->number = $number;
         $this->speed = 1;
@@ -49,12 +49,12 @@ class Port
         return $this->id;
     }
 
-    public function getNumber(): int
+    public function getNumber(): string
     {
         return $this->number;
     }
 
-    /*public function setNumber(int $number): static
+    /*public function setNumber(string $number): static
     {
         $this->number = $number;
 
@@ -117,8 +117,8 @@ class Port
      */
     public function setConnectedElement(?ConnectedElement $connectedElement): static
     {
-        if ($this->isFromCommutator() && !$this->hasConnectedCamera()) {
-            throw new Exception('Only cameras can be connected directly to the switch ports.');
+        if ($this->isFromCard() && !$this->hasConnectedModem()) {
+            throw new Exception('Only modems can be connected directly to the card ports.');
         }
 
         $this->connectedElement = $connectedElement;
@@ -150,6 +150,14 @@ class Port
         return $this->setConnectedElement($modem);
     }
 
+    /**
+     * @throws Exception
+     */
+    public function connectServer(Server $server): static
+    {
+        return $this->setConnectedElement($server);
+    }
+
     public function hasConnectedCamera(): bool
     {
         return $this->getConnectedElement() instanceof Camera;
@@ -163,6 +171,11 @@ class Port
     public function hasConnectedModem(): bool
     {
         return $this->getConnectedElement() instanceof Modem;
+    }
+
+    public function hasConnectedServer(): bool
+    {
+        return $this->getConnectedElement() instanceof Server;
     }
 
     public function configure(float $speed): static

@@ -19,6 +19,10 @@ class Municipality
     #[ORM\Column(length: 255)]
     private string $name;
 
+    #[ORM\ManyToOne(inversedBy: 'municipalities')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Province $province = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -32,6 +36,18 @@ class Municipality
     public function setName(string $name): static
     {
         $this->name = $name;
+
+        return $this;
+    }
+
+    public function getProvince(): ?Province
+    {
+        return $this->province;
+    }
+
+    public function setProvince(?Province $province): static
+    {
+        $this->province = $province;
 
         return $this;
     }

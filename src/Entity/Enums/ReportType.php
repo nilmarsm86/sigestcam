@@ -12,4 +12,5 @@ enum ReportType: string
     case Modem = 'Modem';
     case Msam = 'Msam';
     case Switch = 'Switch';
+    case Server = 'Server';
 }

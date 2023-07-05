@@ -20,11 +20,6 @@ class Camera extends ConnectedElement
     #[ORM\ManyToOne(inversedBy: 'cameras')]
     private ?Modem $modem = null;
 
-    public function __construct()
-    {
-        parent::__construct();
-    }
-
     public function getUser(): ?string
     {
         return $this->user;

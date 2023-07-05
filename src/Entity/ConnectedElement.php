@@ -8,7 +8,7 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: ConnectedElementRepository::class)]
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
-#[ORM\DiscriminatorMap(['msam' => 'Msam', 'moden' => 'Modem', 'camera' => 'Camera'])]
+#[ORM\DiscriminatorMap(['msam' => 'Msam', 'moden' => 'Modem', 'camera' => 'Camera', 'server' => 'Server'])]
 class ConnectedElement extends Equipment
 {
     #[ORM\Column(length: 255)]

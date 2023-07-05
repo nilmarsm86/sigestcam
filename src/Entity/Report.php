@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Enums\Organ;
+use App\Entity\Enums\Aim;
 use App\Entity\Enums\Priority;
 use App\Entity\Enums\ReportState;
 use App\Entity\Enums\ReportType;
@@ -44,8 +44,8 @@ class Report
     private Priority $enumPriority;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
-    private Equipment $equipment;
+    #[ORM\JoinColumn(nullable: true)]
+    private ?Equipment $equipment = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $flaw = null;
@@ -55,10 +55,6 @@ class Report
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $solution = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $organ = null;
-    private ?Organ $enumOrgan = null;
 
     #[ORM\Column(length: 255)]
     private string $unit = 'Unidad 1';
@@ -75,10 +71,18 @@ class Report
     private string $state;
     private ReportState $enumState;
 
+    #[ORM\Column(length: 255)]
+    private string $aim;
+    private Aim $enumAim;
+
+    #[ORM\ManyToOne]
+    private ?Organ $organ = null;
+
     public function __construct()
     {
         $this->entryDate = new DateTimeImmutable('now');
         $this->enumPriority = Priority::Hight;
+        $this->enumState = ReportState::Open;
     }
 
     public function getId(): ?int
@@ -170,7 +174,7 @@ class Report
         return $this;
     }
 
-    public function getEquipment(): Equipment
+    public function getEquipment(): ?Equipment
     {
         return $this->equipment;
     }
@@ -214,18 +218,6 @@ class Report
     public function setSolution(?string $solution): static
     {
         $this->solution = $solution;
-
-        return $this;
-    }
-
-    public function getOrgan(): ?Organ
-    {
-        return $this->enumOrgan;
-    }
-
-    private function setOrgan(?Organ $organ): static
-    {
-        $this->enumOrgan = $organ;
 
         return $this;
     }
@@ -278,14 +270,48 @@ class Report
         return $this;
     }
 
+    public function getAim(): Aim
+    {
+        return $this->enumAim;
+    }
+
+    public function setAim(Aim $aim): static
+    {
+        $this->enumAim = $aim;
+
+        return $this;
+    }
+
+    public function getOrgan(): ?Organ
+    {
+        return $this->organ;
+    }
+
+    public function setOrgan(?Organ $organ): static
+    {
+        $this->organ = $organ;
+
+        return $this;
+    }
+
+    public function getPhysicalAddress(): string
+    {
+        return $this->getEquipment()->getPhysicalAddress();
+    }
+
+    public function getMunicipality(): Municipality
+    {
+        return $this->getEquipment()->getMunicipality();
+    }
+
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
     public function onSave(): void
     {
         $this->type = $this->getType()->value;
         $this->priority = $this->getPriority()->value;
-        $this->organ = $this->getOrgan()->value;
         $this->state = $this->getState()->value;
+        $this->aim = $this->getAim()->value;
     }
 
     #[ORM\PostLoad]
@@ -293,8 +319,8 @@ class Report
     {
         $this->setType(ReportType::from($this->type));
         $this->setPriority(Priority::from($this->priority));
-        $this->setOrgan(Organ::from($this->organ));
         $this->setState(ReportState::from($this->organ));
+        $this->setAim(Aim::from($this->aim));
     }
 
 }

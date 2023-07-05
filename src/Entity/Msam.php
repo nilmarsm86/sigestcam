@@ -14,6 +14,9 @@ class Msam extends ConnectedElement
     #[ORM\OrderBy(['slot' => 'ASC'])]
     private Collection $cards;
 
+    #[ORM\Column]
+    private ?int $slotAmount = null;
+
     public function __construct()
     {
         parent::__construct();
@@ -46,6 +49,18 @@ class Msam extends ConnectedElement
                 $card->setMsam(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getSlotAmount(): ?int
+    {
+        return $this->slotAmount;
+    }
+
+    public function setSlotAmount(int $slotAmount): static
+    {
+        $this->slotAmount = $slotAmount;
 
         return $this;
     }
