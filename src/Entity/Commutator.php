@@ -24,6 +24,9 @@ class Commutator extends Equipment implements Harbor
     #[ORM\Column]
     private int $portsAmount;
 
+    #[ORM\Column(length: 255)]
+    private ?string $gateway = null;
+
     /**
      * @throws Exception
      */
@@ -68,5 +71,17 @@ class Commutator extends Equipment implements Harbor
 
         return $this;
     }*/
+
+    public function getGateway(): ?string
+    {
+        return $this->gateway;
+    }
+
+    public function setGateway(string $gateway): static
+    {
+        $this->gateway = $gateway;
+
+        return $this;
+    }
 
 }

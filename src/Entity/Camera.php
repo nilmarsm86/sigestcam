@@ -20,6 +20,9 @@ class Camera extends ConnectedElement
     #[ORM\ManyToOne(inversedBy: 'cameras')]
     private ?Modem $modem = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $electronicSerial = null;
+
     public function getUser(): ?string
     {
         return $this->user;
@@ -52,6 +55,18 @@ class Camera extends ConnectedElement
     public function setModem(?Modem $modem): static
     {
         $this->modem = $modem;
+
+        return $this;
+    }
+
+    public function getElectronicSerial(): ?string
+    {
+        return $this->electronicSerial;
+    }
+
+    public function setElectronicSerial(?string $electronicSerial): static
+    {
+        $this->electronicSerial = $electronicSerial;
 
         return $this;
     }

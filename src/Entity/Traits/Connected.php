@@ -15,7 +15,7 @@ trait Connected
     private string $model;
 
     #[ORM\Column(length: 255)]
-    private string $serial;
+    private string $fisicalSerial;
 
     #[ORM\Column(length: 255)]
     private string $ip;
@@ -41,14 +41,14 @@ trait Connected
         return $this;
     }
 
-    public function getSerial(): string
+    public function getFisicalSerial(): string
     {
-        return $this->serial;
+        return $this->fisicalSerial;
     }
 
-    public function setSerial(string $serial): static
+    public function setFisicalSerial(string $fisicalSerial): static
     {
-        $this->serial = $serial;
+        $this->fisicalSerial = $fisicalSerial;
 
         return $this;
     }
