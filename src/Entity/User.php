@@ -2,11 +2,13 @@
 
 namespace App\Entity;
 
+use App\DTO\RegistrationForm;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
@@ -18,6 +20,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\Column]
+    private ?string $name = null;
+
+    #[ORM\Column]
+    private ?string $lastname = null;
 
     #[ORM\Column(length: 180, unique: true)]
     private ?string $username = null;
@@ -31,14 +39,45 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\ManyToMany(targetEntity: Rol::class)]
     private Collection $roles;
 
-    public function __construct()
+    #[ORM\Column]
+    private ?bool $active = null;
+
+    public function __construct(string $name, string $lastname, string $username, string $password)
     {
+        $this->name = $name;
+        $this->lastname = $lastname;
+        $this->username = $username;
+        $this->password = $password;
         $this->roles = new ArrayCollection();
     }
 
     public function getId(): ?int
     {
         return $this->id;
+    }
+
+    public function geName(): ?string
+    {
+        return $this->name;
+    }
+
+    public function setName(string $name): static
+    {
+        $this->name = $name;
+
+        return $this;
+    }
+
+    public function geLastame(): ?string
+    {
+        return $this->lastname;
+    }
+
+    public function setLastname(string $lastname): static
+    {
+        $this->lastname = $lastname;
+
+        return $this;
     }
 
     public function getUsername(): ?string
@@ -125,6 +164,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function removeRole(Rol $role): static
     {
         $this->roles->removeElement($role);
+
+        return $this;
+    }
+
+    public function register(UserPasswordHasherInterface $userPasswordHasher): static
+    {
+        $encodePassword = $userPasswordHasher->hashPassword($this,$this->password);
+        $this->setPassword($encodePassword);
+        $this->setActive(false);
+
+        return $this;
+    }
+
+    public function isActive(): ?bool
+    {
+        return $this->active;
+    }
+
+    public function setActive(bool $active): static
+    {
+        $this->active = $active;
 
         return $this;
     }

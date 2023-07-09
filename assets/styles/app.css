@@ -19,3 +19,11 @@ body {
     border-radius: 10rem;
     padding: 0.75rem 1rem;
 }
+
+form.register ul{
+    list-style: none;
+}
+
+form.register ul li{
+    color: red;
+}

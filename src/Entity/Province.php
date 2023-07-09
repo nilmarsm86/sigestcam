@@ -6,8 +6,10 @@ use App\Repository\ProvinceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProvinceRepository::class)]
+#[Assert\UniqueEntity('name', message: 'La provincia debe ser única.')]
 class Province
 {
     #[ORM\Id]

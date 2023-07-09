@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\User;
+use App\DTO\RegistrationForm;
 use App\Form\RegistrationFormType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -16,28 +16,25 @@ class RegistrationController extends AbstractController
     #[Route('/register', name: 'app_register')]
     public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
     {
-        $user = new User();
-        $form = $this->createForm(RegistrationFormType::class, $user);
+        $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            // encode the plain password, esto iria en el DTO
-            $user->setPassword(
-                $userPasswordHasher->hashPassword(
-                    $user,
-                    $form->get('plainPassword')->getData()
-                )
-            );
+            /** @var RegistrationForm $dto */
+            $dto = $form->getData();
+            $user = $dto->toEntity();
+            $user->register($userPasswordHasher);
 
             $entityManager->persist($user);
             $entityManager->flush();
             // do anything else you need here, like send an email
+            $this->addFlash('success', 'Se a registrado correctamente en el sistema. Espere que le activen el usuario.');
 
             return $this->redirectToRoute('app_login');
         }
 
-        return $this->renderForm('registration/register.html.twig', [
-            'registrationForm' => $form,
+        return $this->render('registration/register.html.twig', [
+            'form' => $form->createView(),
         ]);
     }
 }

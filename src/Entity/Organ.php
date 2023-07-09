@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Repository\OrganRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: OrganRepository::class)]
+#[Assert\UniqueEntity('name', message: 'El organo debe ser único.')]
 class Organ
 {
     #[ORM\Id]

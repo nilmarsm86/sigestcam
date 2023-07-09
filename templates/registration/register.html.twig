@@ -3,20 +3,6 @@
 {% block title %}Register{% endblock %}
 
 {% block content %}
-    {#    <h1>Register</h1> #}
-
-    {#    {{ form_errors(registrationForm) }} #}
-
-    {#    {{ form_start(registrationForm) }} #}
-    {#        {{ form_row(registrationForm.username) }} #}
-    {#        {{ form_row(registrationForm.plainPassword, { #}
-    {#            label: 'Password' #}
-    {#        }) }} #}
-    {#        {{ form_row(registrationForm.agreeTerms) }} #}
-
-    {#        <button type="submit" class="btn">Register</button> #}
-    {#    {{ form_end(registrationForm) }} #}
-
     <div class="col-lg-5 d-none d-lg-flex">
         <div class="flex-grow-1 bg-register-image"
              style="background-image: url({{ asset('img/camera/arno-senoner-42t-DKecmPk-unsplash.jpg') }});"></div>
@@ -31,7 +17,7 @@
                     Registrarse en el sistema!
                 </h4>
             </div>
-            <form class="user">
+            {{ form_start(form) }}
                 <hr>
                 <br><br>
                 <div class="row mb-3">
@@ -39,15 +25,21 @@
                         <span class="input-group-text login-text-icon" id="basic-addon1">
                             <i class="fas fa-edit"></i>
                         </span>
-                        <input class="form-control form-control-user no-border-left" type="text" id="exampleFirstName"
-                               placeholder="Nombre" name="first_name">
+                        {{ form_widget(form.name) }}
                     </div>
                     <div class="col-sm-6 input-group" style="width:50%">
                         <span class="input-group-text login-text-icon" id="basic-addon1">
                             <i class="fas fa-edit"></i>
                         </span>
-                        <input class="form-control form-control-user no-border-left" type="text" id="exampleFirstName"
-                               placeholder="Apellidos" name="last_name">
+                        {{ form_widget(form.lastname) }}
+                    </div>
+                </div>
+                <div class="row mb-3">
+                    <div class="col-sm-6 mb-3 mb-sm-0 input-group" style="width:50%">
+                        {{ form_errors(form.name) }}
+                    </div>
+                    <div class="col-sm-6 input-group" style="width:50%">
+                        {{ form_errors(form.lastname) }}
                     </div>
                 </div>
 
@@ -55,8 +47,10 @@
                     <span class="input-group-text login-text-icon" id="basic-addon1">
                         <i class="fas fa-user"></i>
                     </span>
-                    <input class="form-control form-control-user no-border-left" type="email" id="exampleInputEmail"
-                           aria-describedby="emailHelp" placeholder="Usuario" name="email">
+                    {{ form_widget(form.username) }}
+                </div>
+                <div class="mb-3 input-group">
+                    {{ form_errors(form.username) }}
                 </div>
 
                 <div class="row mb-3">
@@ -64,17 +58,26 @@
                         <span class="input-group-text login-text-icon" id="basic-addon1">
                             <i class="fas fa-lock"></i>
                         </span>
-                        <input class="form-control form-control-user no-border-left" type="password"
-                               id="examplePasswordInput" placeholder="Contraseña" name="password">
+                        {{ form_widget(form.plainPassword.first) }}
                     </div>
 
                     <div class="col-sm-6 input-group login-text-icon" style="width:50%">
                         <span class="input-group-text login-text-icon" id="basic-addon1">
                             <i class="fas fa-lock"></i>
                         </span>
-                        <input class="form-control form-control-user no-border-left" type="password"
-                               id="exampleRepeatPasswordInput" placeholder="Repetir contraseña"
-                               name="password_repeat">
+                        {{ form_widget(form.plainPassword.second) }}
+                    </div>
+                </div>
+                <div class="mb-3">
+                    {{ form_errors(form.plainPassword.first) }}
+                </div>
+                <div class="mb-3 input-group">
+                    <div class="form-check">
+                        {{ form_widget(form.agreeTerms) }}
+                        <label class="form-check-label" for="formCheck-1">
+                            <strong>Aceptar términos</strong>
+                        </label>
+                        {{ form_errors(form.agreeTerms) }}
                     </div>
                 </div>
                 <button class="btn btn-primary d-block btn-user w-100" type="submit">
@@ -82,7 +85,7 @@
                 </button>
                 <br><br>
                 <hr>
-            </form>
+            {{ form_end(form) }}
             <div class="text-center">
                 <a class="btn btn-primary d-block btn-user w-100 btn-google link-button" href="#">
                     <i class="fas fa-user-lock"></i> Ya tiene una cuenta? Entre al sistema!
