@@ -2,26 +2,26 @@
 
 namespace App\Repository;
 
-use App\Entity\Rol;
+use App\Entity\Role;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Rol>
+ * @extends ServiceEntityRepository<Role>
  *
- * @method Rol|null find($id, $lockMode = null, $lockVersion = null)
- * @method Rol|null findOneBy(array $criteria, array $orderBy = null)
- * @method Rol[]    findAll()
- * @method Rol[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Role|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Role|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Role[]    findAll()
+ * @method Role[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class RolRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Rol::class);
+        parent::__construct($registry, Role::class);
     }
 
-    public function save(Rol $entity, bool $flush = false): void
+    public function save(Role $entity, bool $flush = false): void
     {
         $this->getEntityManager()->persist($entity);
 
@@ -30,7 +30,7 @@ class RolRepository extends ServiceEntityRepository
         }
     }
 
-    public function remove(Rol $entity, bool $flush = false): void
+    public function remove(Role $entity, bool $flush = false): void
     {
         $this->getEntityManager()->remove($entity);
 
@@ -40,7 +40,7 @@ class RolRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Rol[] Returns an array of Rol objects
+//     * @return Role[] Returns an array of Role objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class RolRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Rol
+//    public function findOneBySomeField($value): ?Role
 //    {
 //        return $this->createQueryBuilder('r')
 //            ->andWhere('r.exampleField = :val')

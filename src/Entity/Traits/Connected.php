@@ -5,7 +5,7 @@ namespace App\Entity\Traits;
 use App\Entity\Camera;
 use App\Entity\StructuredCable;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\DBAL\Types\Types;
+use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 
 #[ORM\UniqueConstraint(name: 'ip', columns: ['ip'])]
@@ -103,13 +103,16 @@ trait Connected
         return $this;
     }
 
+    /**
+     * @throws Exception
+     */
     #[ORM\PrePersist]
     #[ORM\PreUpdate]
-    public function validateIp(): void
+    public function hasIp(): void
     {
         if($this instanceof Camera){
             if($this->getIp()){
-                throw new \Exception('The camera needs to have an IP.');
+                throw new Exception('The camera needs to have an IP.');
             }
         }
     }

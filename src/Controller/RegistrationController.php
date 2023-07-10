@@ -4,6 +4,8 @@ namespace App\Controller;
 
 use App\DTO\RegistrationForm;
 use App\Form\RegistrationFormType;
+use App\Repository\RolRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,19 +16,21 @@ use Symfony\Component\Routing\Annotation\Route;
 class RegistrationController extends AbstractController
 {
     #[Route('/register', name: 'app_register')]
-    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, EntityManagerInterface $entityManager): Response
+    public function register(Request $request, UserPasswordHasherInterface $userPasswordHasher, UserRepository $userRepository, RolRepository $rolRepository): Response
     {
         $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $roleUser = $rolRepository->findOneBy(['name' => 'ROLE_USER']);
+
             /** @var RegistrationForm $dto */
             $dto = $form->getData();
             $user = $dto->toEntity();
-            $user->register($userPasswordHasher);
+            $user->register($userPasswordHasher, $roleUser);
 
-            $entityManager->persist($user);
-            $entityManager->flush();
+            $userRepository->save($user, true);
+
             // do anything else you need here, like send an email
             $this->addFlash('success', 'Se a registrado correctamente en el sistema. Espere que le activen el usuario para autenticarse.');
 

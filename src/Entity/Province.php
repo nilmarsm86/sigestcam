@@ -9,6 +9,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProvinceRepository::class)]
+#[ORM\UniqueConstraint(name: 'name', columns: ['name'])]
 #[Assert\UniqueEntity('name', message: 'La provincia debe ser única.')]
 class Province
 {

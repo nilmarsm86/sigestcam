@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\DTO\RegistrationForm;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,6 +12,7 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
+#[ORM\UniqueConstraint(name: 'username', columns: ['username'])]
 #[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -36,7 +36,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\ManyToMany(targetEntity: Rol::class)]
+    #[ORM\ManyToMany(targetEntity: Role::class)]
     private Collection $roles;
 
     #[ORM\Column]
@@ -103,32 +103,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     }
 
     /**
-     * @see UserInterface
-     */
-    public function getRoles(): array
-    {
-        /*$roles = $this->roles;
-        // guarantee every user at least has ROLE_USER
-        $roles[] = 'ROLE_USER';
-
-        return array_unique($roles);*/
-
-        $roles = [];
-        foreach ($this->roles as $rol) {
-            /** @var Rol $rol */
-            $roles[] = $rol->getName();
-        }
-        return $roles;
-    }
-
-    /*public function setRoles(array $roles): static
-    {
-        $this->roles = $roles;
-
-        return $this;
-    }*/
-
-    /**
      * @see PasswordAuthenticatedUserInterface
      */
     public function getPassword(): string
@@ -152,7 +126,33 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         // $this->plainPassword = null;
     }
 
-    public function addRole(Rol $role): static
+    /**
+     * @see UserInterface
+     */
+    public function getRoles(): array
+    {
+        /*$roles = $this->roles;
+        // guarantee every user at least has ROLE_USER
+        $roles[] = 'ROLE_USER';
+
+        return array_unique($roles);*/
+
+        $roles = [];
+        foreach ($this->roles as $rol) {
+            /** @var Role $rol */
+            $roles[] = $rol->getName();
+        }
+        return $roles;
+    }
+
+    /*public function setRoles(array $roles): static
+    {
+        $this->roles = $roles;
+
+        return $this;
+    }*/
+
+    public function addRole(Role $role): static
     {
         if (!$this->roles->contains($role)) {
             $this->roles->add($role);
@@ -161,18 +161,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeRole(Rol $role): static
+    public function removeRole(Role $role): static
     {
         $this->roles->removeElement($role);
 
         return $this;
     }
 
-    public function register(UserPasswordHasherInterface $userPasswordHasher): static
+    public function register(UserPasswordHasherInterface $userPasswordHasher, Role $baseRol): static
     {
         $encodePassword = $userPasswordHasher->hashPassword($this,$this->password);
         $this->setPassword($encodePassword);
         $this->setActive(false);
+        $this->addRole($baseRol);
 
         return $this;
     }
