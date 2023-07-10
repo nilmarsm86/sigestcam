@@ -1,0 +1,14 @@
+{% macro flashes() %}
+    {% for label, messages in app.flashes %}
+        {% for message in messages %}
+            {{ _self.flash(label, message) }}
+        {% endfor %}
+    {% endfor %}
+{% endmacro %}
+
+{% macro flash(type, message) %}
+    <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="float: right"></button>
+        <div>{{ message }}</div>
+    </div>
+{% endmacro %}
