@@ -56,7 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->id;
     }
 
-    public function geName(): ?string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -68,7 +68,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function geLastame(): ?string
+    public function getLastame(): ?string
     {
         return $this->lastname;
     }
@@ -188,5 +188,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->active = $active;
 
         return $this;
+    }
+
+    public function getFullName(): string
+    {
+        return $this->getName().' '.$this->getLastame();
+    }
+
+    public function __toString(): string
+    {
+        return $this->getUsername();
     }
 }

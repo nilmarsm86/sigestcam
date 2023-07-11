@@ -18,4 +18,11 @@ return [
         'path' => 'app.js',
         'preload' => true,
     ],
+    '@hotwired/stimulus' => [
+        'downloaded_to' => 'vendor/@hotwired/stimulus.js',
+        'url' => 'https://cdn.jsdelivr.net/npm/@hotwired/stimulus@3.2.1/+esm',
+    ],
+    '@symfony/stimulus-bundle' => [
+        'path' => '@symfony/stimulus-bundle/loader.js',
+    ],
 ];
