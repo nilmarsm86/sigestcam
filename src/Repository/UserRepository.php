@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
+use App\Repository\Traits\Paginate;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -22,6 +23,8 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
+    use Paginate;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
@@ -67,27 +70,20 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         $builder = $this->createQueryBuilder('u');
         if($filter){
             $builder->andWhere('u.username LIKE :username')
-                    ->setParameter(':username', '%'.$filter.'%');
+                    ->orWhere('u.name LIKE :name')
+                    ->orWhere('u.lastname LIKE :lastname')
+                    ->setParameters([
+                        ':username' => '%'.$filter.'%',
+                        ':name' => '%'.$filter.'%',
+                        ':lastname' => '%'.$filter.'%',
+                    ]);
         }
 
         $query = $builder->orderBy('u.id', 'ASC')
-                ->setMaxResults($amountPerPage)
-
-                ->getQuery()
-                //->getResult()
-        ;
+                         ->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
     }
 
-    private function paginate(Query $dql, int $page, int $limit): Paginator
-    {
-        $paginator = new Paginator($dql);
-        $paginator->getQuery()
-            ->setFirstResult($limit * ($page - 1)) // Offset
-            ->setMaxResults($limit); // Limit
-
-        return $paginator;
-    }
 
 //    public function findOneBySomeField($value): ?User
 //    {

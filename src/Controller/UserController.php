@@ -15,13 +15,13 @@ class UserController extends AbstractController
     public function index(Request $request, UserRepository $userRepository): Response
     {
         //manejar el filtro enviado por query string
-        $filter = $request->query->get('filter', 'admin');
+        $filter = $request->query->get('filter', '');
         //manejar la cantidad a mostrar enviado por query string
         $amountPerPage = $request->query->get('amount', 10);
         //manejar el paginado
         $pageNumber = $request->query->get('page', 1);
 
-        $paginator = $userRepository->findUsers();
+        $paginator = $userRepository->findUsers($filter, $amountPerPage, $pageNumber);
         $maxPages = ceil($paginator->count() / $amountPerPage);
         $from = ($pageNumber * $amountPerPage) - $amountPerPage + 1;
         $to = (($pageNumber * $amountPerPage) < $paginator->count()) ? $pageNumber * $amountPerPage : $paginator->count();
