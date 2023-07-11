@@ -71,4 +71,9 @@ class Camera extends ConnectedElement
         return $this;
     }
 
+    public function __toString(): string
+    {
+        return 'Camara: ('.$this->getPhysicalSerial().') ['.$this->getIp().']';
+    }
+
 }

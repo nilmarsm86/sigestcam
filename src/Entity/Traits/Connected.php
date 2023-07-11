@@ -16,9 +16,6 @@ trait Connected
     #[ORM\Column(length: 255)]
     private string $model;
 
-    #[ORM\Column(length: 255)]
-    private string $fisicalSerial;
-
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $ip = null;
 
@@ -39,18 +36,6 @@ trait Connected
     public function setModel(string $model): static
     {
         $this->model = $model;
-
-        return $this;
-    }
-
-    public function getFisicalSerial(): string
-    {
-        return $this->fisicalSerial;
-    }
-
-    public function setFisicalSerial(string $fisicalSerial): static
-    {
-        $this->fisicalSerial = $fisicalSerial;
 
         return $this;
     }

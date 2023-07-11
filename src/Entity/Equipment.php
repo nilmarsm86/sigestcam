@@ -27,6 +27,9 @@ class Equipment
     #[ORM\Column(length: 255)]
     protected string $physicalAddress;
 
+    #[ORM\Column(length: 255)]
+    protected string $physicalSerial;
+
     public function __construct()
     {
         $this->enumState = StateEnum::Active;
@@ -57,6 +60,18 @@ class Equipment
     public function setPhysicalAddress(string $physicalAddress): static
     {
         $this->physicalAddress = $physicalAddress;
+
+        return $this;
+    }
+
+    public function getPhysicalSerial(): string
+    {
+        return $this->physicalSerial;
+    }
+
+    public function setPhysicalSerial(string $physicalSerial): static
+    {
+        $this->physicalSerial = $physicalSerial;
 
         return $this;
     }

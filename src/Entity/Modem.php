@@ -82,4 +82,14 @@ class Modem extends ConnectedElement
         return $this;
     }
 
+    public function __toString(): string
+    {
+        $data = 'Modem: ('.$this->getPhysicalSerial().')';
+        if(!is_null($this->getIp())){
+            $data .= '['.$this->getIp().']';
+        }
+
+        return $data;
+    }
+
 }
