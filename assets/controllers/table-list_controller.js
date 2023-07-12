@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import Backdrop from "../components/backdrop.js";
 
 /*
 * The following line makes this controller "lazy": it won't be downloaded until needed
@@ -6,29 +7,47 @@ import { Controller } from '@hotwired/stimulus';
 */
 /* stimulusFetch: 'lazy' */
 export default class extends Controller {
-    static targets = ['showSelect']
-    static values = {
-        url: String,
-    }
+    static targets = ['backdropComponent']
 
-    currentPath = '';
-
+    /**
+     *
+     */
     connect(){
-        this.currentPath = new URL(document.location);
+        customElements.define("backdrop-component", Backdrop);//register un webcomponent
+
+        /*this.element.addEventListener(`table-list:${BACKDROP_SHOW_EVENT}`, (event) => {
+            this.backdropComponentTarget.dispatchEvent(new CustomEvent(BACKDROP_SHOW_EVENT, {
+                detail: {}
+            }));
+            //this.backdropComponentTarget.onShow();
+        });*/
+
+        /*this.element.addEventListener(`table-list:${BACKDROP_HIDE_EVENT}`, (event) => {
+            this.backdropComponentTarget.dispatchEvent(new CustomEvent(BACKDROP_HIDE_EVENT, {
+                detail: {}
+            }));
+            //this.backdropComponentTarget.onHide();
+        });*/
+
+        /*this.selectAmountTarget.addEventListener('select-navigate-querystring:onPreChange', (event) => {
+            this.backdropComponentTarget.onShow();
+        });*/
     }
 
     /**
-     * Cambiar la cantidad de elementos a mostrar por pagina
-     * @param event change select event
+     * Show back drop
+     * @param event
      */
-    amountToDisplayPerPage(event){
-        /*if(this.currentPath.searchParams.has('amount')){
-            if(this.currentPath.searchParams.get('amount') === event.target.value){
-                return ;
-            }
-        }*/
-        this.currentPath.searchParams.set('amount', event.target.value);
-        document.location = this.currentPath.toString();
+    showBackdrop(event){
+        this.backdropComponentTarget.onShow();
     }
-    // ...
+
+    /**
+     * Show back drop
+     * @param event
+     */
+    hideBackdrop(event){
+        this.backdropComponentTarget.onHide();
+    }
+
 }

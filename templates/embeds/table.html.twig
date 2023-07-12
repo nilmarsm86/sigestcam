@@ -1,4 +1,11 @@
-<div class="card shadow" {{ stimulus_controller('table-list') }}>
+<div
+        class="card shadow"
+        {{ stimulus_controller('table-list') }}
+        data-action="
+            select-navigate-querystring:onChange->table-list#showBackdrop
+            role:startChange->table-list#showBackdrop
+            role:endChange->table-list#hideBackdrop"
+>
     <div class="card-header py-3">
         <p class="text-primary m-0 fw-bold">{% block card_title %}{% endblock %}</p>
     </div>
@@ -8,8 +15,11 @@
                 {# Show amount #}
                 <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
                     <label class="form-label">Mostrar:&nbsp;
-                        <select class="d-inline-block form-select form-select-sm" {{ stimulus_action('table-list', 'amountToDisplayPerPage', 'change') }}>
-                            {% for item in [10, 25, 50, 100] %}
+                        <select {# form interna de manejar el evento #}
+                                class="d-inline-block form-select form-select-sm"
+                                {{ stimulus_controller('select-navigate-querystring', {'queryName':'amount'}) }}
+                        >
+                            {% for item in [2, 10, 25, 50, 100] %}
                                 <option value="{{ item }}" {% if amountPerPage == item %}selected{% endif %}>
                                     {{ item }}
                                 </option>
@@ -47,30 +57,29 @@
         <div class="row">
             <div class="col-md-6 align-self-center">
                 <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">
-                    Mostrar {{ from }} al {{ to }} de {{ total }}
+                    Mostrar <strong>{{ from }}</strong> al <strong>{{ to }}</strong> de <strong>{{ total }}</strong>
                 </p>
             </div>
             <div class="col-md-6">
-
                 <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
                     {% if maxPages > 1 %}
                         <ul class="pagination">
                             <li class="page-item {% if page == 1 %}disabled{% endif %}">
-                                <a class="page-link" aria-label="Previous" href="{{ path('user_list') }}">
+                                <a class="page-link" aria-label="Previous" href="{{ path('user_list',{'page':1, 'filter':filter, 'amount':amountPerPage}) }}">
                                     <span aria-hidden="true">«</span>
                                 </a>
                             </li>
                             {% for item in 1..maxPages %}
-                                <li class="page-item {% if page == item %}disabled{% endif %}">
+                                <li class="page-item {% if page == item %}active{% endif %}">
                                     <a class="page-link"
-                                       href="{{ path('user_list', {'page':item, 'filter':filter, 'amountPerPage':amountPerPage}) }}">
+                                       href="{{ path('user_list', {'page':item, 'filter':filter, 'amount':amountPerPage}) }}">
                                         {{ item }}
                                     </a>
                                 </li>
                             {% endfor %}
                             <li class="page-item {% if page == maxPages %}disabled{% endif %}">
                                 <a class="page-link" aria-label="Next"
-                                   href="{{ path('user_list', {'page':maxPages, 'filter':filter, 'amountPerPage':amountPerPage}) }}">
+                                   href="{{ path('user_list', {'page':maxPages, 'filter':filter, 'amount':amountPerPage}) }}">
                                     <span aria-hidden="true">»</span>
                                 </a>
                             </li>
@@ -80,4 +89,13 @@
             </div>
         </div>
     </div>
+
+    {# Convertirlo en un include #}
+{#    <div class="backdrop d-none justify-content-center align-items-center" {{ stimulus_target('table-list', 'backdrop') }}>#}
+{#        <div class="spinner-border" role="status">#}
+{#            <span class="visually-hidden">Cargando...</span>#}
+{#        </div>#}
+{#    </div>#}
+    <backdrop-component {{ stimulus_target('table-list', 'backdropComponent') }}></backdrop-component>
+
 </div>

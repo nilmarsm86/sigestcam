@@ -4,7 +4,7 @@
 
 {% block content %}
     <h3 class="text-dark mb-4">Gestión de usuarios y roles</h3>
-    {% embed "layout/table.html.twig" with {'total': users.count} %}
+    {% embed "embeds/table.html.twig" with {'total': users.count} %}
         {% block card_title %}
             Usuarios y roles
         {% endblock %}
@@ -13,11 +13,9 @@
             <tr>
                 <th>Nombre y Apellidos</th>
                 <th>Usuario</th>
-                <th>Rol usuario</th>
-                <th>Rol técnico</th>
-                <th>Rol oficial</th>
-                <th>Rol jefe</th>
-                <th>Rol admin</th>
+                {% for role in roles %}
+                    <th>{{ role.capitalizeName() }}</th>
+                {% endfor %}
             </tr>
         {% endblock %}
 
@@ -26,31 +24,18 @@
                 <tr>
                     <td>{{ user.getFullName() }}</td>
                     <td>{{ user.username }}</td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input type="checkbox" disabled checked>
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input type="checkbox" user="" rol="">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input type="checkbox" user="" rol="">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input type="checkbox" user="" rol="">
-                        </div>
-                    </td>
-                    <td>
-                        <div class="form-check form-switch">
-                            <input type="checkbox" user="" rol="">
-                        </div>
-                    </td>
+                    {% for role in roles %}
+                        <td>
+                            <div class="form-check" {{ stimulus_controller('role', {'user':user.id, 'role':role.id, 'url':path('add_role')}) }}>
+                                <input
+                                        type="checkbox"
+                                        {{ stimulus_action('role', 'onChange', 'change')}} {# forma externa de manejar el evento #}
+                                        {% if role.name is same as 'ROLE_USER' %}disabled{% endif %}
+                                        {% if user.hasRole(role) %}checked{% endif%}
+                                >
+                            </div>
+                        </td>
+                    {% endfor %}
                 </tr>
             {% endfor %}
         {% endblock %}
