@@ -1,0 +1,50 @@
+<ul class="navbar-nav text-light" id="accordionSidebar">
+    <li class="nav-item">
+        <a class="nav-link {% if app.request.attributes.get('_route') == 'app_home' %}active{% endif %}"
+           href="{{ path('app_home') }}"
+        >
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Dashboard</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-table"></i>
+            <span>Perfil</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-table"></i>
+            <span>Reportes</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="far fa-user-circle"></i>
+            <span>Equipamiento</span></a>
+    </li>
+    {% if is_granted('ROLE_ADMIN')%}
+        <li class="nav-item">
+            <a class="nav-link {% if app.request.attributes.get('_route') in ['user_list', 'user_profile'] %}active{% endif %}"
+               href="{{ path('user_list') }}"
+            >
+                <i class="fas fa-user-circle"></i>
+                <span>Usuarios</span>
+            </a>
+        </li>
+    {% endif %}
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-key"></i>
+            <span>Partes</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#"
+           onclick="confirm('Está seguro que desea salir del sistema?') ? location.replace('{{ path('app_logout') }}') : ''">
+            <i class="fas fa-shoe-prints"></i>
+            <span>Salir</span>
+        </a>
+    </li>
+</ul>

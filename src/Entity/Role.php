@@ -36,15 +36,30 @@ class Role
      * Return translate rol name
      * @return string
      */
-    public function capitalizeName(): string
+    public function capitalizeName(string $role = null): string
     {
-        return match ($this->getName()) {
+        return match ($role ?: $this->getName()) {
             'ROLE_USER' => 'Rol usuario',
             'ROLE_TECHNICAL' => 'Rol técnico',
             'ROLE_OFFICER' => 'Rol oficial',
             'ROLE_BOSS' => 'Rol jefe',
             'ROLE_ADMIN' => 'Rol admin',
+            'ROLE_SUPER_ADMIN' => 'Rol super admin',
         };
+    }
+
+    /**
+     * Can change this role for all users
+     * @return bool
+     */
+    public function blockChange(): bool
+    {
+        return $this->getName() === 'ROLE_USER';
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->getName() === 'ROLE_SUPER_ADMIN';
     }
 
 }

@@ -6,6 +6,7 @@ use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
@@ -142,7 +143,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             /** @var Role $rol */
             $roles[] = $rol->getName();
         }
-        return $roles;
+        return array_unique($roles);
     }
 
     /*public function setRoles(array $roles): static
@@ -161,8 +162,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function removeRole(Role $role): static
+    /**
+     * @throws Exception
+     */
+    public function removeRole(Role $role, bool $secure = true): static
     {
+        if($role->getName() === 'ROLE_USER'){
+            throw new Exception('No puede ser eliminado el rol de usuario.');
+        }
+
+        if($secure){
+            if(in_array('ROLE_ADMIN', $this->getRoles())){
+                throw new Exception('No pueden ser eliminados los roles del administrador.');
+            }
+        }
+
         $this->roles->removeElement($role);
 
         return $this;
@@ -203,5 +217,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function __toString(): string
     {
         return $this->getUsername();
+    }
+
+    /**
+     * Can change this user roles
+     * @return bool
+     */
+    public function blockRoles(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles());
+    }
+
+    /**
+     * Can change this user roles
+     * @return bool
+     */
+    public function isSuperAdmin(): bool
+    {
+        return in_array('ROLE_SUPER_ADMIN', $this->getRoles());
     }
 }

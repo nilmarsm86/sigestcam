@@ -11,24 +11,7 @@
                     <div class="sidebar-brand-text mx-3"><span>SIGESTCAM</span></div>
                 </a>
                 <hr class="sidebar-divider my-0">
-                <ul class="navbar-nav text-light" id="accordionSidebar">
-                    <li class="nav-item"><a class="nav-link" href="#"><i
-                                    class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i
-                                    class="fas fa-table"></i><span>Perfil</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-table"></i><span>Reportes</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i
-                                    class="far fa-user-circle"></i><span>Equipamiento</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i
-                                    class="fas fa-user-circle"></i><span>Usuarios</span></a></li>
-                    <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-key"></i><span>Partes</span></a>
-                    </li>
-                    <li class="nav-item"><a class="nav-link active" href="#"><i
-                                    class="fas fa-shoe-prints"></i><span>Salir</span></a></li>
-
-                </ul>
+                {{ include('layout/sidebar.html.twig') }}
                 <div class="text-center d-none d-md-inline">
                     <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
                 </div>
@@ -44,19 +27,20 @@
                         {# Formulario de buscar por ip #}
                         <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search">
                             <div class="input-group">
-                                <input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+                                <input class="bg-light form-control border-0 small" type="text" placeholder="Buscar por ip...">
                                 <button class="btn btn-primary py-0" type="button">
                                     <i class="fas fa-search"></i>
                                 </button>
                             </div>
                         </form>
+                        {# Formulario de buscar por ip #}
                         <ul class="navbar-nav flex-nowrap ms-auto">
                             <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>
                                 <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in" aria-labelledby="searchDropdown">
                                     {# Formulario de buscar por ip #}
                                     <form class="me-auto navbar-search w-100">
                                         <div class="input-group">
-                                            <input class="bg-light form-control border-0 small" type="text" placeholder="Search for ...">
+                                            <input class="bg-light form-control border-0 small" type="text" placeholder="Buscar por ip...">
                                             <div class="input-group-append">
                                                 <button class="btn btn-primary py-0" type="button">
                                                     <i class="fas fa-search"></i>
@@ -64,6 +48,7 @@
                                             </div>
                                         </div>
                                     </form>
+                                    {# Formulario de buscar por ip #}
                                 </div>
                             </li>
                             <li class="nav-item dropdown no-arrow mx-1">
@@ -196,25 +181,25 @@
                                 <div class="nav-item dropdown no-arrow">
                                     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"
                                        href="#">
-                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">Nombre y Apellidos</span>
-                                        <img class="border rounded-circle img-profile"
-                                             src="{{ asset('img/avatars/avatar1.jpeg') }}">
+                                        <span class="d-none d-lg-inline me-2 text-gray-600 small">{{ app.user.fullName }}</span>
+                                        <i class="fas fa-user-circle display-6"></i>
                                     </a>
                                     <div class="dropdown-menu shadow dropdown-menu-end animated--grow-in">
-                                        <a class="dropdown-item" href="#">
+                                        <a class="dropdown-item" href="{{ path('user_profile') }}">
                                             <i class="fas fa-user fa-sm fa-fw me-2 text-gray-400"></i>
-                                            &nbsp;Profile
+                                            &nbsp;Perfil
                                         </a>
-                                        <a class="dropdown-item" href="#">
-                                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>
-                                            &nbsp;Settings
-                                        </a>
+{#                                        <a class="dropdown-item" href="#">#}
+{#                                            <i class="fas fa-cogs fa-sm fa-fw me-2 text-gray-400"></i>#}
+{#                                            &nbsp;Settings#}
+{#                                        </a>#}
 
                                         <div class="dropdown-divider"></div>
                                         <a class="dropdown-item" href="#"
-                                           onclick="confirm('Esta seguro que desea salir del sistema?')">
+                                           onclick="confirm('Esta seguro que desea salir del sistema?') ? location.replace('{{ path('app_logout') }}') : ''"
+                                        >
                                             <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
-                                            &nbsp;Logout
+                                            &nbsp;Salir
                                         </a>
                                     </div>
                                 </div>
@@ -223,12 +208,22 @@
                     </div>
                 </nav>
                 <div class="container-fluid">
+                    <div aria-live="polite" aria-atomic="true" class="position-relative">
+                        <!-- Position it: -->
+                        <!-- - `.toast-container` for spacing between toasts -->
+                        <!-- - `top-0` & `end-0` to position the toasts in the upper right corner -->
+                        <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
+                        <div class="toast-container top-0 end-0 p-3">
+                            <!-- Then put toasts within -->
+                        </div>
+                    </div>
                     {% block content %}{% endblock %}
                 </div>
             </div>
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
-                    <div class="text-center my-auto copyright"><span>Copyright © Sisgestcam {{ 'now'|date('Y') }}</span>
+                    <div class="text-center my-auto copyright">
+                        <span>Copyright © Sisgestcam {{ 'now'|date('Y') }}</span>
                     </div>
                 </div>
             </footer>

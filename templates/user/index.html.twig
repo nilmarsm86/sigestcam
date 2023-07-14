@@ -4,7 +4,7 @@
 
 {% block content %}
     <h3 class="text-dark mb-4">Gestión de usuarios y roles</h3>
-    {% embed "embeds/table.html.twig" with {'total': users.count} %}
+    {% embed "embeds/table.html.twig" with {'paginator': paginator} %}
         {% block card_title %}
             Usuarios y roles
         {% endblock %}
@@ -14,29 +14,40 @@
                 <th>Nombre y Apellidos</th>
                 <th>Usuario</th>
                 {% for role in roles %}
-                    <th>{{ role.capitalizeName() }}</th>
+                    {% if role.isSuperAdmin() == false %}
+                        <th>{{ role.capitalizeName() }}</th>
+                    {% endif %}
                 {% endfor %}
             </tr>
         {% endblock %}
 
         {% block table_body %}
-            {% for user in users %}
-                <tr>
-                    <td>{{ user.getFullName() }}</td>
-                    <td>{{ user.username }}</td>
-                    {% for role in roles %}
-                        <td>
-                            <div class="form-check" {{ stimulus_controller('role', {'user':user.id, 'role':role.id, 'url':path('add_role')}) }}>
-                                <input
-                                        type="checkbox"
-                                        {{ stimulus_action('role', 'onChange', 'change')}} {# forma externa de manejar el evento #}
-                                        {% if role.name is same as 'ROLE_USER' %}disabled{% endif %}
-                                        {% if user.hasRole(role) %}checked{% endif%}
-                                >
-                            </div>
-                        </td>
-                    {% endfor %}
-                </tr>
+            {% for user in paginator.getData() %}
+                {% if user.isSuperAdmin() == false %}
+                    <tr>
+                        <td>{{ user.getFullName() }}</td>
+                        <td>{{ user.username }}</td>
+                        {% for role in roles %}
+                            {% if role.isSuperAdmin() == false %}
+                                <td>
+                                    <div class="form-check" {{ stimulus_controller('role', {
+                                        'user':user.id,
+                                        'role':role.id,
+                                        'urlAddRole':path('add_role'),
+                                        'urlRemoveRole':path('remove_role'),
+                                    }) }}>
+                                        <input
+                                            type="checkbox"
+                                            {{ stimulus_action('role', 'onChange', 'change')}} {# forma externa de manejar el evento #}
+                                            {% if app.user.isSuperAdmin() == false and (role.blockChange() or user.blockRoles()) %}disabled{% endif %}
+                                            {% if user.hasRole(role) %}checked{% endif%}
+                                        >
+                                    </div>
+                                </td>
+                            {% endif %}
+                        {% endfor %}
+                    </tr>
+                {% endif %}
             {% endfor %}
         {% endblock %}
 
@@ -51,4 +62,6 @@
             {#                    </tr> #}
         {% endblock %}
     {% endembed %}
+
+
 {% endblock %}

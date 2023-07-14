@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\DTO\Paginator;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -12,52 +13,93 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/user')]
-#[IsGranted('ROLE_ADMIN')]
 class UserController extends AbstractController
 {
     #[Route('/', name: 'user_list')]
+    #[IsGranted('ROLE_ADMIN')]
     public function index(Request $request, UserRepository $userRepository, RoleRepository $roleRepository): Response
     {
-        //manejar el filtro enviado por query string
         $filter = $request->query->get('filter', '');
-        //manejar la cantidad a mostrar enviado por query string
         $amountPerPage = $request->query->get('amount', 10);
-        //manejar el paginado
         $pageNumber = $request->query->get('page', 1);
 
-        $paginator = $userRepository->findUsers($filter, $amountPerPage, $pageNumber);
-        $maxPages = ceil($paginator->count() / $amountPerPage);
-        $from = ($pageNumber * $amountPerPage) - $amountPerPage + 1;
-        $to = (($pageNumber * $amountPerPage) < $paginator->count()) ? $pageNumber * $amountPerPage : $paginator->count();
-
+        $data = $userRepository->findUsers($filter, $amountPerPage, $pageNumber);
+        $paginator = new Paginator($data, $amountPerPage, $pageNumber);
         $roles = $roleRepository->findAll();
 
         return $this->render('user/index.html.twig', [
-            'users' => $paginator,
-            'amountPerPage' => $amountPerPage,
             'filter' => $filter,
-            'page' => $pageNumber,
-            'from' => $from,
-            'to' => $to,
-            'maxPages' => $maxPages,
-            'roles' => $roles
+            'roles' => $roles,
+            'paginator' => $paginator
         ]);
     }
 
     #[Route('/add_role', name: 'add_role', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function addRole(Request $request, UserRepository $userRepository, RoleRepository $roleRepository): Response
     {
-        if($request->isXmlHttpRequest()){
+        if($request->isXmlHttpRequest() && ($request->query->get('fetch') === '1')){
             $user = $userRepository->find($request->request->get('user'));
             $role = $roleRepository->find($request->request->get('role'));
 
             $user->addRole($role);
 
             $userRepository->save($user, true);
-            return $this->json(['status' => 'OK']);
+            return $this->render('user/_add_remove_role.html.twig', [
+                'id' => 'add_'.$user->getId().'-'.$role->getId(),
+                'role' => $role,
+                'user' => $user,
+                'action' => 'Establecido',
+                'type' => 'text-bg-success',
+                'message' => null
+            ]);
         }
 
         throw new BadRequestHttpException('Ajax request');
+    }
+
+    #[Route('/remove_role', name: 'remove_role', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function removeRole(Request $request, UserRepository $userRepository, RoleRepository $roleRepository): Response
+    {
+        if($request->isXmlHttpRequest() && ($request->query->get('fetch') === '1')){
+            $user = $userRepository->find($request->request->get('user'));
+            $role = $roleRepository->find($request->request->get('role'));
+
+            try {
+                $user->removeRole($role, !$this->isGranted('ROLE_SUPER_ADMIN'));
+                $userRepository->save($user, true);
+                $data = [
+                    'type' => 'text-bg-success',
+                    'message' => null
+                ];
+                $response = new Response();
+            }catch (\Exception $exception){
+                $data = [
+                    'type' => 'text-bg-danger',
+                    'message' => $exception->getMessage()
+                ];
+                $response = new Response('', 422);
+            } finally {
+                return $this->render('user/_add_remove_role.html.twig', $data + [
+                    'id' => 'remove_'.$user->getId().'-'.$role->getId(),
+                    'role' => $role,
+                    'user' => $user,
+                    'action' => 'Eliminado',
+                ], $response);
+            }
+        }
+
+        throw new BadRequestHttpException('Ajax request');
+    }
+
+    #[Route('/profile', name: 'user_profile')]
+    #[IsGranted('ROLE_USER')]
+    public function profile(RoleRepository $roleRepository): Response
+    {
+        $roles = $roleRepository->findAll();
+
+        return $this->render('user/profile.html.twig', ['roles' => $roles]);
     }
 
 

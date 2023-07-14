@@ -5,6 +5,7 @@ security:
         ROLE_OFFICER: ROLE_USER
         ROLE_BOSS: ROLE_OFFICER
         ROLE_ADMIN: [ROLE_BOSS, ROLE_TECHNICAL]
+        ROLE_SUPER_ADMIN: ROLE_ADMIN
     # https://symfony.com/doc/current/security.html#registering-the-user-hashing-passwords
     password_hashers:
         Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface: 'auto'

@@ -21,6 +21,7 @@ class UserFixtures extends Fixture
         $this->createOfficer($manager);
         $this->createBoss($manager);
         $this->createAdmin($manager);
+        $this->createSuperAdmin($manager);
         $manager->flush();
     }
 
@@ -37,11 +38,25 @@ class UserFixtures extends Fixture
         $manager->persist($user);
     }
 
+    private function createSuperAdmin(ObjectManager $manager)
+    {
+        $adminUser = $manager->getRepository(User::class)->findOneBy(['username' => 'admin']);
+        if(is_null($adminUser)){
+            $roles = $manager->getRepository(Role::class)->findAll();
+
+            $admin = new User('Super', 'Admin', 'superadmin', 'superadmin');
+            $this->save($manager, $admin, $roles);
+        }
+    }
+
     private function createAdmin(ObjectManager $manager)
     {
         $adminUser = $manager->getRepository(User::class)->findOneBy(['username' => 'admin']);
         if(is_null($adminUser)){
             $roles = $manager->getRepository(Role::class)->findAll();
+            $roles = array_filter($roles, function ($role){
+                return $role->getName() !== 'ROLE_SUPER_ADMIN';
+            });
 
             $admin = new User('Admin', 'Admin', 'admin', 'admin');
             $this->save($manager, $admin, $roles);
@@ -54,7 +69,7 @@ class UserFixtures extends Fixture
         if(is_null($bossUser)){
             $roles = $manager->getRepository(Role::class)->findAll();
             $roles = array_filter($roles, function ($role){
-                return $role->getName() !== 'ROLE_ADMIN';
+                return $role->getName() !== 'ROLE_SUPER_ADMIN' && $role->getName() !== 'ROLE_ADMIN';
             });
 
             $boss = new User('Boss', 'Boss', 'boss', 'boss');
@@ -68,7 +83,7 @@ class UserFixtures extends Fixture
         if(is_null($officerUser)){
             $roles = $manager->getRepository(Role::class)->findAll();
             $roles = array_filter($roles, function ($role){
-                return $role->getName() !== 'ROLE_ADMIN' && $role->getName() !== 'ROLE_BOSS';
+                return $role->getName() !== 'ROLE_SUPER_ADMIN' && $role->getName() !== 'ROLE_ADMIN' && $role->getName() !== 'ROLE_BOSS';
             });
 
             $officer = new User('Officer', 'Officer', 'officer', 'officer');
@@ -82,7 +97,7 @@ class UserFixtures extends Fixture
         if(is_null($technicalUser)){
             $roles = $manager->getRepository(Role::class)->findAll();
             $roles = array_filter($roles, function ($role){
-                return $role->getName() !== 'ROLE_ADMIN' && $role->getName() !== 'ROLE_BOSS' && $role->getName() !== 'ROLE_OFFICER';
+                return $role->getName() !== 'ROLE_SUPER_ADMIN' && $role->getName() !== 'ROLE_ADMIN' && $role->getName() !== 'ROLE_BOSS' && $role->getName() !== 'ROLE_OFFICER';
             });
 
             $technical = new User('Technical', 'Technical', 'technical', 'technical');

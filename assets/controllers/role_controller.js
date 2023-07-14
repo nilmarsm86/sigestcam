@@ -9,41 +9,54 @@ export default class extends Controller {
     static values = {
         user: Number,
         role: Number,
-        url: String
+        urlAddRole: String,
+        urlRemoveRole: String,
     }
 
     async onChange(event){
-        //event.preventDefault();
         this.dispatch('startChange');
-
+        let response = null;
         if(event.target.checked){
-            const url = new URL(this.urlValue, document.location.origin);
-            url.searchParams.set('fetch', 1);
-            const request = new Request(url.toString(), {
-                headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
-            });
-
-            let data = new FormData();
-            data.set('user', this.userValue);
-            data.set('role', this.roleValue);
-
-            const response = await fetch(request, {
-                method: 'POST',
-                body: new URLSearchParams(data),
-            });
-
-            if(response.ok){
-                console.log('Rol agregado');
-                //poner un toast
-                this.dispatch('endChange');
-                //event.target.checked = false;
-            }
+            response = await this.doRequest(this.urlAddRoleValue);
         }else{
-            //eliminar el rol
-            console.log('eliminar el rol');
-        }
+            response = await this.doRequest(this.urlRemoveRoleValue);
+            if(!response.ok){
+                event.target.checked = true;
+            }
 
-        //event.resume();
+            if(response.status === 422){
+                event.target.disabled = true;
+            }
+        }
+        await this.processResponse(response);
+        this.dispatch('endChange');
+    }
+
+    async processResponse(response){
+        const responseText = await response.text();
+        const nodes = new DOMParser().parseFromString(responseText, 'text/html').body.childNodes;
+        let id = nodes[0].id;
+        document.querySelector('.toast-container').appendChild(nodes[0]);
+
+        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(document.querySelector(`#${id}`));
+        toastBootstrap.show();
+    }
+
+    async doRequest(path){
+        const url = new URL(path, document.location.origin);
+        url.searchParams.set('fetch', '1');
+        const request = new Request(url.toString(), {
+            headers: new Headers({'X-Requested-With': 'XMLHttpRequest'}),
+        });
+
+        let data = new FormData();
+        data.set('user', this.userValue);
+        data.set('role', this.roleValue);
+
+        return await fetch(request, {
+            method: 'POST',
+            body: new URLSearchParams(data),
+        });
     }
 
     /**

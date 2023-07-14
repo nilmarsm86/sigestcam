@@ -20,7 +20,7 @@
                                 {{ stimulus_controller('select-navigate-querystring', {'queryName':'amount'}) }}
                         >
                             {% for item in [2, 10, 25, 50, 100] %}
-                                <option value="{{ item }}" {% if amountPerPage == item %}selected{% endif %}>
+                                <option value="{{ item }}" {% if paginator.amount == item %}selected{% endif %}>
                                     {{ item }}
                                 </option>
                             {% endfor %}
@@ -33,10 +33,12 @@
             <div class="col-md-6">
                 {# filter #}
                 <div class="text-md-end dataTables_filter" id="dataTable_filter">
-                    <label class="form-label">
-                        <input type="search" class="form-control form-control-sm" aria-controls="dataTable"
-                               placeholder="Buscar...">
-                    </label>
+                    <form method="get">
+                        <label class="form-label">
+                            <input type="search" class="form-control form-control-sm" aria-controls="dataTable"
+                                   placeholder="Buscar..." name="filter" value="{{ filter }}">
+                        </label>
+                    </form>
                 </div>
                 {# filter #}
             </div>
@@ -57,29 +59,30 @@
         <div class="row">
             <div class="col-md-6 align-self-center">
                 <p id="dataTable_info" class="dataTables_info" role="status" aria-live="polite">
-                    Mostrar <strong>{{ from }}</strong> al <strong>{{ to }}</strong> de <strong>{{ total }}</strong>
+                    Mostrar <strong>{{ paginator.from }}</strong> al <strong>{{ paginator.to }}</strong> de <strong>{{ paginator.total }}</strong>
                 </p>
             </div>
             <div class="col-md-6">
                 <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                    {% if maxPages > 1 %}
+                    {% if paginator.maxPage > 1 %}
                         <ul class="pagination">
-                            <li class="page-item {% if page == 1 %}disabled{% endif %}">
-                                <a class="page-link" aria-label="Previous" href="{{ path('user_list',{'page':1, 'filter':filter, 'amount':amountPerPage}) }}">
+                            <li class="page-item {% if paginator.currentPage == 1 %}disabled{% endif %}">
+                                <a class="page-link" aria-label="Previous"
+                                   href="{{ path('user_list',{'page':1, 'filter':filter, 'amount':paginator.amount}) }}">
                                     <span aria-hidden="true">«</span>
                                 </a>
                             </li>
-                            {% for item in 1..maxPages %}
-                                <li class="page-item {% if page == item %}active{% endif %}">
+                            {% for item in 1..paginator.maxPage %}
+                                <li class="page-item {% if paginator.currentPage == item %}active{% endif %}">
                                     <a class="page-link"
-                                       href="{{ path('user_list', {'page':item, 'filter':filter, 'amount':amountPerPage}) }}">
+                                       href="{{ path('user_list', {'page':item, 'filter':filter, 'amount':paginator.amount}) }}">
                                         {{ item }}
                                     </a>
                                 </li>
                             {% endfor %}
-                            <li class="page-item {% if page == maxPages %}disabled{% endif %}">
+                            <li class="page-item {% if paginator.currentPage == paginator.maxPage %}disabled{% endif %}">
                                 <a class="page-link" aria-label="Next"
-                                   href="{{ path('user_list', {'page':maxPages, 'filter':filter, 'amount':amountPerPage}) }}">
+                                   href="{{ path('user_list', {'page':paginator.maxPage, 'filter':filter, 'amount':paginator.amount}) }}">
                                     <span aria-hidden="true">»</span>
                                 </a>
                             </li>
@@ -89,13 +92,5 @@
             </div>
         </div>
     </div>
-
-    {# Convertirlo en un include #}
-{#    <div class="backdrop d-none justify-content-center align-items-center" {{ stimulus_target('table-list', 'backdrop') }}>#}
-{#        <div class="spinner-border" role="status">#}
-{#            <span class="visually-hidden">Cargando...</span>#}
-{#        </div>#}
-{#    </div>#}
     <backdrop-component {{ stimulus_target('table-list', 'backdropComponent') }}></backdrop-component>
-
 </div>
