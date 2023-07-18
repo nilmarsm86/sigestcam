@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\Paginator;
+use App\Form\ProfileFullNameType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -24,13 +25,11 @@ class UserController extends AbstractController
         $pageNumber = $request->query->get('page', 1);
 
         $data = $userRepository->findUsers($filter, $amountPerPage, $pageNumber);
-        $paginator = new Paginator($data, $amountPerPage, $pageNumber);
-        $roles = $roleRepository->findAll();
 
         return $this->render('user/index.html.twig', [
             'filter' => $filter,
-            'roles' => $roles,
-            'paginator' => $paginator
+            'roles' => $roleRepository->findAll(),
+            'paginator' => new Paginator($data, $amountPerPage, $pageNumber)
         ]);
     }
 
@@ -95,11 +94,21 @@ class UserController extends AbstractController
 
     #[Route('/profile', name: 'user_profile')]
     #[IsGranted('ROLE_USER')]
-    public function profile(RoleRepository $roleRepository): Response
+    public function profile(Request $request, RoleRepository $roleRepository, UserRepository $userRepository): Response
     {
-        $roles = $roleRepository->findAll();
+        $form = $this->createForm(ProfileFullNameType::class, $this->getUser());
+        $form->handleRequest($request);
 
-        return $this->render('user/profile.html.twig', ['roles' => $roles]);
+        if($form->isSubmitted() && $form->isValid()){
+            $userRepository->save($this->getUser(), true);
+
+            $this->addFlash('success', 'Datos salvados.');
+        }
+
+        return $this->render('user/profile.html.twig', [
+            'roles' => $roleRepository->findAll(),
+            'form' => $form->createView()
+        ]);
     }
 
 

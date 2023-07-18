@@ -1,5 +1,7 @@
 {% extends 'base.html.twig' %}
 
+{% from 'macros/toast.html.twig' import toasts %}
+
 {% block body %}
     <body id="page-top">
     <div id="wrapper">
@@ -215,6 +217,7 @@
                         <!-- - `.p-3` to prevent the toasts from sticking to the edge of the container  -->
                         <div class="toast-container top-0 end-0 p-3">
                             <!-- Then put toasts within -->
+                            {{ toasts() }}
                         </div>
                     </div>
                     {% block content %}{% endblock %}

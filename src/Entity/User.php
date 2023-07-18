@@ -69,7 +69,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getLastame(): ?string
+    public function getLastname(): ?string
     {
         return $this->lastname;
     }
@@ -211,7 +211,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFullName(): string
     {
-        return $this->getName().' '.$this->getLastame();
+        return $this->getName().' '.$this->getLastname();
     }
 
     public function __toString(): string
