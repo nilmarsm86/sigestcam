@@ -10,14 +10,4 @@ use Doctrine\ORM\Mapping as ORM;
 class Server extends ConnectedElement
 {
     use Connected;
-
-    public function __toString(): string
-    {
-        $data = 'Server: ('.$this->getPhysicalSerial().')';
-        if(!is_null($this->getIp())){
-            $data .= '['.$this->getIp().']';
-        }
-
-        return $data;
-    }
 }

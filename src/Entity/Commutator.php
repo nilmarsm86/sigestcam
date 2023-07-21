@@ -8,23 +8,33 @@ use App\Repository\CommutatorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use App\Entity\Traits\Port as PortTrait;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommutatorRepository::class)]
 #[ORM\UniqueConstraint(name: 'ip', columns: ['ip'])]
-#[Assert\UniqueEntity('ip', message: 'El ip debe ser único.')]
+#[DoctrineAssert\UniqueEntity('ip', message: 'El ip debe ser único.')]
 class Commutator extends Equipment implements Harbor
 {
     use PortTrait;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'El IP no debe estar vacío.')]
+    #[Assert\NotNull(message: 'El IP no debe ser nulo.')]
+    #[Assert\Ip(message:'Establezca un IP válido.')]
     private string $ip;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Establezca la cantidad de puertos.')]
+    #[Assert\NotNull(message: 'La cantidad de puertos no debe ser nula.')]
+    #[Assert\Positive]
     private int $portsAmount;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'El IP gateway no debe estar vacío.')]
+    #[Assert\NotNull(message: 'El IP gateway no debe ser nulo.')]
+    #[Assert\Ip(message:'Establezca un IP gateway válido.')]
     private ?string $gateway = null;
 
     /**
@@ -82,6 +92,20 @@ class Commutator extends Equipment implements Harbor
         $this->gateway = $gateway;
 
         return $this;
+    }
+
+    /**
+     * No se pone en trait debido a la validación
+     * @return int
+     */
+    #[Assert\Count(
+        max: 32,
+        maxMessage: 'Una switch tiene un máximo de {{ limit }} puertos.',
+    )]
+    public function maxPorts(): int
+    {
+        //deberia ser una validacion dinamica en dependencia de la cantidad de puertos pasaados
+        return $this->maximumPortsAmount;
     }
 
 }

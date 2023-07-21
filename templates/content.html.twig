@@ -197,8 +197,8 @@
 {#                                        </a>#}
 
                                         <div class="dropdown-divider"></div>
-                                        <a class="dropdown-item" href="#"
-                                           onclick="confirm('Esta seguro que desea salir del sistema?') ? location.replace('{{ path('app_logout') }}') : ''"
+                                        <a class="dropdown-item" href="{{ path('app_logout') }}"
+                                             onclick="return confirm('Está seguro que desea salir del sistema?')"
                                         >
                                             <i class="fas fa-sign-out-alt fa-sm fa-fw me-2 text-gray-400"></i>
                                             &nbsp;Salir

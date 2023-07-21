@@ -7,11 +7,19 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Port as PortEntity;
 use Exception;
+use Symfony\Component\Validator\Constraints as Assert;
 
 trait Port
 {
     #[ORM\OneToMany(mappedBy: 'card', targetEntity:PortEntity::class)]
     #[ORM\OrderBy(['number' => 'ASC'])]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
+    )]
+    #[Assert\All([
+        new Assert\Valid
+    ])]
     private Collection $ports;
     private int $maximumPortsAmount;
 
@@ -31,7 +39,7 @@ trait Port
     private function addPort(PortEntity $port): static
     {
         if($this->ports->count() === $this->maximumPortsAmount){
-            throw new Exception('You have reached the maximum number of ports allowed for this harbor.');
+            throw new Exception('Ha alcanzado el número máximo de puertos permitidos para este equipo.');
         }
 
         if (!$this->ports->contains($port)) {
@@ -62,7 +70,7 @@ trait Port
     public function createPorts(int $amount): static
     {
         if($this->ports->count() === $this->maximumPortsAmount){
-            throw new Exception('You have reached the maximum number of ports allowed for this harbor.');
+            throw new Exception('Ha alcanzado el número máximo de puertos permitidos para este puerto.');
         }
 
         for ($i = 0; $i < $amount; $i++) {

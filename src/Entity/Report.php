@@ -10,6 +10,7 @@ use App\Repository\ReportRepository;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ReportRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -34,6 +35,11 @@ class Report
 
     #[ORM\Column(length: 255)]
     private string $type;
+
+    #[Assert\Choice(
+        choices: [ReportType::Camera, ReportType::Server, ReportType::Msam, ReportType::Modem, ReportType::Switch],
+        message: 'Seleccione una prioridad válida.'
+    )]
     private ReportType $enumType;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -41,6 +47,11 @@ class Report
 
     #[ORM\Column(length: 255)]
     private string $priority;
+
+    #[Assert\Choice(
+        choices: [Priority::Hight, Priority::Medium, Priority::Low],
+        message: 'Seleccione una prioridad válida.'
+    )]
     private Priority $enumPriority;
 
     #[ORM\ManyToOne]
@@ -69,10 +80,14 @@ class Report
 
     #[ORM\Column(length: 255)]
     private string $state;
+
+    #[Assert\Choice(choices: [ReportState::Open, ReportState::Close], message: 'Seleccione un estado válido.')]
     private ReportState $enumState;
 
     #[ORM\Column(length: 255)]
     private string $aim;
+
+    #[Assert\Choice(choices: [Aim::NoObjective, Aim::Objective], message: 'Seleccione un aim válido.')]
     private Aim $enumAim;
 
     #[ORM\ManyToOne]

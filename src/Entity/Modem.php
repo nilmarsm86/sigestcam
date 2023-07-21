@@ -8,6 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ModemRepository::class)]
 class Modem extends ConnectedElement
@@ -17,9 +18,19 @@ class Modem extends ConnectedElement
     const MAXIMUM_CAMERA_NUMBER = 4;
 
     #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    #[Assert\Valid]
     private ?self $slaveModem = null;
 
     #[ORM\OneToMany(mappedBy: 'modem', targetEntity: Camera::class)]
+    #[Assert\Count(
+        min: 1,
+        max: 4,
+        minMessage: 'Debe establecer al menos 1 camara para este modem.',
+        maxMessage: 'El modem no puede tener más de 4 cámaras conectadas.'
+    )]
+    #[Assert\All([
+        new Assert\Valid
+    ])]
     private Collection $cameras;
 
     public function __construct()
@@ -80,16 +91,6 @@ class Modem extends ConnectedElement
         }
 
         return $this;
-    }
-
-    public function __toString(): string
-    {
-        $data = 'Modem: ('.$this->getPhysicalSerial().')';
-        if(!is_null($this->getIp())){
-            $data .= '['.$this->getIp().']';
-        }
-
-        return $data;
     }
 
 }
