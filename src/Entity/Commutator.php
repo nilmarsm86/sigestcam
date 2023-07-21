@@ -100,7 +100,7 @@ class Commutator extends Equipment implements Harbor
      */
     #[Assert\Count(
         max: 32,
-        maxMessage: 'Una switch tiene un máximo de {{ limit }} puertos.',
+        maxMessage: 'Un switch tiene un máximo de {{ limit }} puertos.',
     )]
     public function maxPorts(): int
     {

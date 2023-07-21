@@ -5,11 +5,11 @@ namespace App\Entity;
 use App\Entity\Traits\NameToString;
 use App\Repository\OrganRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 #[ORM\Entity(repositoryClass: OrganRepository::class)]
 #[ORM\UniqueConstraint(name: 'name', columns: ['name'])]
-#[Assert\UniqueEntity('name', message: 'El organo debe ser único.')]
+#[DoctrineAssert\UniqueEntity('name', message: 'El órgano debe ser único.')]
 class Organ
 {
     use NameToString;

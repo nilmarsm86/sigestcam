@@ -2,46 +2,78 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\State;
+use App\Entity\Traits\State as StateTrait;
 use App\Repository\UserRepository;
+use App\Validator\Password;
+use App\Validator\Username;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'username', columns: ['username'])]
-#[UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[DoctrineAssert\UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use StateTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'El nombre del usuario no puede estar vacío.')]
+    #[Assert\NotNull(message: 'El nombre del usaurio no puede ser nulo.')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z]+$/',
+        message: 'El nombre del usuario debe contener solo letras.',
+    )]
     private ?string $name = null;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Los apellidos del usuario no pueden estar vacío.')]
+    #[Assert\NotNull(message: 'Los apellidos del usaurio no pueden ser nulos.')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Assert\Regex(
+        pattern: '/^[a-zA-Z]+$/',
+        message: 'Los apellidos del usuario deben contener solo letras.',
+    )]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank(message: 'Establezca el nombre de usuario.')]
+    #[Assert\NotNull(message: 'El nombre de usuario no puede ser nulo.')]
+    #[Assert\NoSuspiciousCharacters]
+    #[Username]
     private ?string $username = null;
 
     /**
      * @var string The hashed password
      */
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Establezca el nombre de usuario.')]
+    #[Assert\NotNull(message: 'El nombre de usuario no puede ser nulo.')]
+    #[Password]
     private ?string $password = null;
 
     #[ORM\ManyToMany(targetEntity: Role::class)]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Debe establecer al menos 1 rol para el usuario.',
+    )]
+    #[Assert\All([
+        new Assert\Valid
+    ])]
     private Collection $roles;
-
-    #[ORM\Column]
-    private ?bool $active = null;
 
     public function __construct(string $name, string $lastname, string $username, string $password)
     {
@@ -191,7 +223,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         $encodePassword = $userPasswordHasher->hashPassword($this,$this->password);
         $this->setPassword($encodePassword);
-        $this->setActive(false);
+        $this->setState(State::Inactive);
         $this->addRole($baseRol);
 
         return $this;
@@ -199,14 +231,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isActive(): ?bool
     {
-        return $this->active;
-    }
-
-    public function setActive(bool $active): static
-    {
-        $this->active = $active;
-
-        return $this;
+        return $this->state === State::Active->value;
     }
 
     public function getFullName(): string

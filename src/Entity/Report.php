@@ -22,15 +22,24 @@ class Report
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'El reporte debe de tener un número.')]
+    #[Assert\NotNull(message: 'El número del reporte no puede ser nulo.')]
+    #[Assert\Positive]
     private string $number;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'El reporte debe de tener una especialidad.')]
+    #[Assert\NotNull(message: 'La especialidad del reporte no puede ser nulo.')]
     private string $specialty = 'video_vigilancia';
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'El reporte debe de tener una fecha.')]
+    #[Assert\NotNull(message: 'La fecha del reporte no puede ser nula.')]
+    #[Assert\DateTime]
     private ?DateTimeImmutable $entryDate;
 
     #[ORM\Column(nullable: true)]
+    #[Assert\DateTime]
     private ?DateTimeImmutable $closeDate = null;
 
     #[ORM\Column(length: 255)]
@@ -56,6 +65,7 @@ class Report
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: true)]
+    #[Assert\Valid]
     private ?Equipment $equipment = null;
 
     #[ORM\Column(type: Types::TEXT, nullable: true)]
@@ -68,14 +78,18 @@ class Report
     private ?string $solution = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'El reporte debe de tener una unidad.')]
+    #[Assert\NotNull(message: 'la unidad del reporte no puede ser nula.')]
     private string $unit = 'Unidad 1';
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Valid]
     private User $boss;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Valid]
     private User $managementOfficer;
 
     #[ORM\Column(length: 255)]
@@ -91,6 +105,7 @@ class Report
     private Aim $enumAim;
 
     #[ORM\ManyToOne]
+    #[Assert\Valid]
     private ?Organ $organ = null;
 
     public function __construct()
@@ -334,7 +349,7 @@ class Report
     {
         $this->setType(ReportType::from($this->type));
         $this->setPriority(Priority::from($this->priority));
-        $this->setState(ReportState::from($this->organ));
+        $this->setState(ReportState::from($this->state));
         $this->setAim(Aim::from($this->aim));
     }
 

@@ -8,6 +8,7 @@ use App\Entity\Traits\State as StateTrait;
 use App\Repository\PortRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: PortRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -23,18 +24,27 @@ class Port
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\NotBlank(message: 'Establezca el número del puerto.')]
+    #[Assert\NotNull(message: 'El número del puerto no puede ser nulo.')]
+    #[Assert\PositiveOrZero]
     private string $number;
 
     #[ORM\Column]
+    #[Assert\NotBlank(message: 'Establezca la velocidad del puerto.')]
+    #[Assert\NotNull(message: 'la velocidad del puerto no puede ser nula.')]
+    #[Assert\PositiveOrZero]
     private float $speed = 1;
 
     #[ORM\ManyToOne(inversedBy: 'ports')]
+    #[Assert\Valid]
     private ?Commutator $commutator = null;
 
     #[ORM\ManyToOne(inversedBy: 'ports')]
+    #[Assert\Valid]
     private ?Card $card = null;
 
     #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[Assert\Valid]
     private ?ConnectedElement $connectedElement = null;
 
     public function __construct(string $number)

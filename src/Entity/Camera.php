@@ -24,7 +24,7 @@ class Camera extends ConnectedElement
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'La camara debe de tener una contraseña.')]
-    #[Assert\NotNull(message: 'la contraseña de la camara no puede ser nula.')]
+    #[Assert\NotNull(message: 'La contraseña de la camara no puede ser nula.')]
     private ?string $password = null;
 
     #[ORM\ManyToOne(inversedBy: 'cameras')]

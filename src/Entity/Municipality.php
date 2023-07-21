@@ -5,11 +5,12 @@ namespace App\Entity;
 use App\Entity\Traits\NameToString;
 use App\Repository\MunicipalityRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MunicipalityRepository::class)]
 #[ORM\UniqueConstraint(name: 'name', columns: ['name'])]
-#[Assert\UniqueEntity('name', message: 'El municipio debe ser único.')]
+#[DoctrineAssert\UniqueEntity('name', message: 'El municipio debe ser único.')]
 class Municipality
 {
     use NameToString;
@@ -21,6 +22,7 @@ class Municipality
 
     #[ORM\ManyToOne(inversedBy: 'municipalities')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Assert\Valid]
     private Province $province;
 
     public function getId(): ?int

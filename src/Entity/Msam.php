@@ -6,15 +6,24 @@ use App\Repository\MsamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MsamRepository::class)]
 class Msam extends ConnectedElement
 {
     #[ORM\OneToMany(mappedBy: 'msam', targetEntity: Card::class)]
     #[ORM\OrderBy(['slot' => 'ASC'])]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Debe establecer al menos 1 targeta para este Msam.',
+    )]
+    #[Assert\All([
+        new Assert\Valid
+    ])]
     private Collection $cards;
 
     #[ORM\Column]
+    #[Assert\Positive]
     private ?int $slotAmount = null;
 
     public function __construct()

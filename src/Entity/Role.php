@@ -5,11 +5,11 @@ namespace App\Entity;
 use App\Entity\Traits\NameToString;
 use App\Repository\RoleRepository;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
 #[ORM\Entity(repositoryClass: RoleRepository::class)]
 #[ORM\UniqueConstraint(name: 'name', columns: ['name'])]
-#[UniqueEntity(fields: ['name'], message: 'Ya existe un rol con este nombre.')]
+#[DoctrineAssert\UniqueEntity(fields: ['name'], message: 'Ya existe un rol con este nombre.')]
 class Role
 {
     use NameToString;

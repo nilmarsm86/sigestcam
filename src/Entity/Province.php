@@ -7,11 +7,12 @@ use App\Repository\ProvinceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ProvinceRepository::class)]
 #[ORM\UniqueConstraint(name: 'name', columns: ['name'])]
-#[Assert\UniqueEntity('name', message: 'La provincia debe ser única.')]
+#[DoctrineAssert\UniqueEntity('name', message: 'La provincia debe ser única.')]
 class Province
 {
     use NameToString;
@@ -22,6 +23,13 @@ class Province
     private ?int $id = null;
 
     #[ORM\OneToMany(mappedBy: 'province', targetEntity: Municipality::class)]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Debe establecer al menos 1 municipio para esta provincia.',
+    )]
+    #[Assert\All([
+        new Assert\Valid
+    ])]
     private Collection $municipalities;
 
     public function __construct()
