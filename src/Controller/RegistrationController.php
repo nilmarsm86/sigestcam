@@ -6,7 +6,6 @@ use App\DTO\RegistrationForm;
 use App\Form\RegistrationFormType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -22,6 +21,9 @@ class RegistrationController extends AbstractController
             return $this->redirectToRoute('app_home');
         }
 
+        $error = false;
+        $message = '';
+
         $form = $this->createForm(RegistrationFormType::class);
         $form->handleRequest($request);
 
@@ -33,16 +35,22 @@ class RegistrationController extends AbstractController
             $user = $dto->toEntity();
             $user->register($userPasswordHasher, $roleUser);
 
-            $userRepository->save($user, true);
+            try {
+                $userRepository->save($user, true);
+                // do anything else you need here, like send an email
+                $this->addFlash('success', 'Se a registrado correctamente en el sistema. Espere que le activen el usuario para autenticarse.');
 
-            // do anything else you need here, like send an email
-            $this->addFlash('success', 'Se a registrado correctamente en el sistema. Espere que le activen el usuario para autenticarse.');
-
-            return $this->redirectToRoute('app_login');
+                return $this->redirectToRoute('app_login');
+            }catch (\Exception $exception){
+                $error = true;
+                $message = 'Ha ocurrido un error al registrar al usuario. Revise bien los datos.';
+            }
         }
 
         return $this->render('registration/register.html.twig', [
             'form' => $form->createView(),
+            'error' => $error,
+            'message' => $message
         ]);
     }
 }

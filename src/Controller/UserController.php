@@ -6,6 +6,7 @@ use App\DTO\Paginator;
 use App\Form\ProfileFullNameType;
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -73,7 +74,7 @@ class UserController extends AbstractController
                     'message' => null
                 ];
                 $response = new Response();
-            }catch (\Exception $exception){
+            }catch (Exception $exception){
                 $data = [
                     'type' => 'text-bg-danger',
                     'message' => $exception->getMessage()

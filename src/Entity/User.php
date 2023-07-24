@@ -19,7 +19,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\UniqueConstraint(name: 'username', columns: ['username'])]
-#[DoctrineAssert\UniqueEntity(fields: ['username'], message: 'There is already an account with this username')]
+#[DoctrineAssert\UniqueEntity(fields: ['username'], message: 'Ya existe un usuario con este nombre de usuario.')]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use StateTrait;
@@ -57,7 +58,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?string $username = null;
 
     /**
-     * @var string The hashed password
+     * @var string|null The hashed password
      */
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca el nombre de usuario.')]
@@ -70,9 +71,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         min: 1,
         minMessage: 'Debe establecer al menos 1 rol para el usuario.',
     )]
-    #[Assert\All([
-        new Assert\Valid
-    ])]
     private Collection $roles;
 
     public function __construct(string $name, string $lastname, string $username, string $password)

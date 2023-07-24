@@ -2,7 +2,7 @@
 
 namespace App\DTO;
 
-use \Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
+use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
 
 /**
  * Object paginator for table
@@ -23,7 +23,7 @@ class Paginator
      * Get data to paginate
      * @return DoctrinePaginator|array
      */
-    public function getData(): \Doctrine\ORM\Tools\Pagination\Paginator|array
+    public function getData(): DoctrinePaginator|array
     {
         return $this->paginator;
     }

@@ -17,9 +17,6 @@ trait Port
         min: 1,
         minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
     )]
-    #[Assert\All([
-        new Assert\Valid
-    ])]
     private Collection $ports;
     private int $maximumPortsAmount;
 

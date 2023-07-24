@@ -31,7 +31,7 @@ class ProfileFullNameType extends AbstractType
                 'attr' => [
                     'class' => 'form-control no-border-left'
                 ]
-            ]);
+            ])
         ;
     }
 

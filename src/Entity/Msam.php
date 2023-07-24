@@ -17,9 +17,6 @@ class Msam extends ConnectedElement
         min: 1,
         minMessage: 'Debe establecer al menos 1 targeta para este Msam.',
     )]
-    #[Assert\All([
-        new Assert\Valid
-    ])]
     private Collection $cards;
 
     #[ORM\Column]

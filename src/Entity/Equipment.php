@@ -12,6 +12,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\InheritanceType('JOINED')]
 #[ORM\DiscriminatorColumn(name: 'discr', type: 'string')]
 #[ORM\DiscriminatorMap(['commutator' => 'Commutator', 'conn_element' => 'ConnectedElement'])]
+#[ORM\HasLifecycleCallbacks]
 class Equipment
 {
     use StateTrait;

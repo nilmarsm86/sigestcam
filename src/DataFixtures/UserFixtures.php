@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Enums\State;
 use App\Entity\Role;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -33,7 +34,7 @@ class UserFixtures extends Fixture
                 $user->addRole($role);
             }
         }
-        $user->setActive(true);
+        $user->setState(State::Active);
 
         $manager->persist($user);
     }

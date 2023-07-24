@@ -27,9 +27,6 @@ class Province
         min: 1,
         minMessage: 'Debe establecer al menos 1 municipio para esta provincia.',
     )]
-    #[Assert\All([
-        new Assert\Valid
-    ])]
     private Collection $municipalities;
 
     public function __construct()

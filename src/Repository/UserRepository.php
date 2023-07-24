@@ -63,7 +63,10 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     }
 
     /**
-     * @return User[] Returns an array of User objects
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
      */
     public function findUsers(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {

@@ -35,7 +35,7 @@ export default class extends Controller {
     }
 
     /**
-     * Show back drop
+     * Show backdrop
      * @param event
      */
     showBackdrop(event){
@@ -43,7 +43,7 @@ export default class extends Controller {
     }
 
     /**
-     * Show back drop
+     * Hide backdrop
      * @param event
      */
     hideBackdrop(event){

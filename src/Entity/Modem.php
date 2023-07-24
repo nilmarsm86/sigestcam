@@ -28,9 +28,6 @@ class Modem extends ConnectedElement
         minMessage: 'Debe establecer al menos 1 camara para este modem.',
         maxMessage: 'El modem no puede tener más de 4 cámaras conectadas.'
     )]
-    #[Assert\All([
-        new Assert\Valid
-    ])]
     private Collection $cameras;
 
     public function __construct()

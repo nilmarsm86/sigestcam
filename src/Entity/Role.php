@@ -34,6 +34,7 @@ class Role
 
     /**
      * Return translate rol name
+     * @param string|null $role
      * @return string
      */
     public function capitalizeName(string $role = null): string

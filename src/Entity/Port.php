@@ -31,9 +31,9 @@ class Port
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la velocidad del puerto.')]
-    #[Assert\NotNull(message: 'la velocidad del puerto no puede ser nula.')]
+    #[Assert\NotNull(message: 'La velocidad del puerto no puede ser nula.')]
     #[Assert\PositiveOrZero]
-    private float $speed = 1;
+    private float $speed;
 
     #[ORM\ManyToOne(inversedBy: 'ports')]
     #[Assert\Valid]

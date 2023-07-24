@@ -1,6 +1,8 @@
 {% extends 'register.html.twig' %}
 
-{% block title %}Register{% endblock %}
+{% from 'macros/flashes.html.twig' import flash %}
+
+{% block title %}Registrarse{% endblock %}
 
 {% block content %}
     <div class="col-lg-5 d-none d-lg-flex">
@@ -19,6 +21,9 @@
             </div>
             {{ form_start(form) }}
                 <hr>
+            {% if error %}
+                {{ flash('danger', message) }}
+            {% endif %}
                 <br><br>
                 <div class="row mb-3">
                     <div class="col-sm-6 mb-3 mb-sm-0 input-group" style="width:50%">
