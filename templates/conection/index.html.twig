@@ -1,20 +1,271 @@
-{% extends 'base.html.twig' %}
+{% extends 'content.html.twig' %}
 
-{% block title %}Hello ConectionController!{% endblock %}
+{% block title %}Hello HomeController!{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block content %}
+    <h3 class="text-dark mb-4">Conexiones</h3>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="row">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/php/symfony/sigestcam/src/Controller/ConectionController.php'|file_link(0) }}">src/Controller/ConectionController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/php/symfony/sigestcam/templates/conection/index.html.twig'|file_link(0) }}">templates/conection/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-start-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col me-2">
+                            <div class="text-uppercase text-primary fw-bold text-xs mb-1">
+                                <span>Conexión directa</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+{#                            <i class="fas fa-server fa-2x text-gray-300"></i>#}
+                            <button type="button" class="btn btn-primary">
+                                <i class="fas fa-plus text-gray-300"></i>
+                                Nueva
+                            </button>
+                        </div>
+                    </div>
+
+                    <div>
+                        <ul class="list-unstyled">
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Switch</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Camara</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="row g-0 align-items-center">
+                        <div class="col-auto">
+                            <div class="text-dark fw-bold h5 mb-0 me-3">
+                                <span>50%</span>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+                                    <span class="visually-hidden">50%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-start-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col me-2">
+                            <div class="text-uppercase text-success fw-bold text-xs mb-1">
+                                <span>Conexión simple</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-server fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <ul class="list-unstyled">
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Switch</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Modem</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Camara</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="row g-0 align-items-center">
+                        <div class="col-auto">
+                            <div class="text-dark fw-bold h5 mb-0 me-3">
+                                <span>50%</span>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+                                    <span class="visually-hidden">50%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-start-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col me-2">
+                            <div class="text-uppercase text-info fw-bold text-xs mb-1">
+                                <span>Conexión media</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-server fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <ul class="list-unstyled">
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Switch</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Modem</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Modem esclavo</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Camara</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="row g-0 align-items-center">
+                        <div class="col-auto">
+                            <div class="text-dark fw-bold h5 mb-0 me-3">
+                                <span>50%</span>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+                                    <span class="visually-hidden">50%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6 col-xl-3 mb-4">
+            <div class="card shadow border-start-primary py-2">
+                <div class="card-body">
+                    <div class="row align-items-center no-gutters">
+                        <div class="col me-2">
+                            <div class="text-uppercase text-warning fw-bold text-xs mb-1">
+                                <span>Conexión completa</span>
+                            </div>
+                        </div>
+                        <div class="col-auto">
+                            <i class="fas fa-server fa-2x text-gray-300"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <ul class="list-unstyled">
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Switch</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Msam</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Modem</span>
+                            </li>
+                            <li class="d-flex mb-2">
+                                <span class="bs-icon-xs bs-icon-rounded bs-icon-primary-light bs-icon me-2">
+                                    <svg class="bi bi-check-lg" xmlns="http://www.w3.org/2000/svg" width="1em" height="1em" fill="currentColor" viewBox="0 0 16 16">
+                                        <path d="M12.736 3.97a.733.733 0 0 1 1.047 0c.286.289.29.756.01 1.05L7.88 12.01a.733.733 0 0 1-1.065.02L3.217 8.384a.757.757 0 0 1 0-1.06.733.733 0 0 1 1.047 0l3.052 3.093 5.4-6.425a.247.247 0 0 1 .02-.022Z"></path>
+                                    </svg>
+                                </span>
+                                <span>Camara</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="row g-0 align-items-center">
+                        <div class="col-auto">
+                            <div class="text-dark fw-bold h5 mb-0 me-3">
+                                <span>50%</span>
+                            </div>
+                        </div>
+
+                        <div class="col">
+                            <div class="progress progress-sm">
+                                <div class="progress-bar bg-info" aria-valuenow="50" aria-valuemin="0" aria-valuemax="100" style="width: 50%;">
+                                    <span class="visually-hidden">50%</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
 {% endblock %}
