@@ -39,6 +39,10 @@ class ProfileFullNameType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => User::class,
+            'attr' => [
+                'class' => 'profile_name',
+                'novalidate' => 'novalidate'
+            ]
         ]);
     }
 }

@@ -4,10 +4,10 @@ namespace App\Entity\Enums;
 
 use App\Entity\Traits\Enums;
 
-enum State: string
+enum State: int
 {
     use Enums;
 
-    case Active = 'Activo';
-    case Inactive = 'Inactivo';
+    case Active = 1;
+    case Inactive = 0;
 }

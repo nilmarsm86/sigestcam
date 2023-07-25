@@ -13,17 +13,17 @@ final class RegistrationForm
     #[NotBlank(message: 'Escriba su nombre.')]
     public string $name;
 
-    #[NotBlank(message: 'Escriba sus apellidos')]
+    #[NotBlank(message: 'Escriba sus apellidos.')]
     public string $lastname;
 
-    #[NotBlank(message: 'Escriba el nombre de usuario')]
+    #[NotBlank(message: 'Escriba el nombre de usuario.')]
     #[Username]
     public string $username;
 
-    #[IsTrue(message: 'Debe aprobar los términos')]
+    #[IsTrue(message: 'Debe aprobar los términos.')]
     public string $agreeTerms;
 
-    #[NotBlank(message: 'Escriba la contraseña')]
+    #[NotBlank(message: 'Escriba la contraseña.')]
     #[Password]
     public string $plainPassword;
 

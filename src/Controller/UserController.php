@@ -3,10 +3,10 @@
 namespace App\Controller;
 
 use App\DTO\Paginator;
-use App\Form\ProfileFullNameType;
+
 use App\Repository\RoleRepository;
 use App\Repository\UserRepository;
-use Exception;
+use App\Service\UserService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -36,15 +36,11 @@ class UserController extends AbstractController
 
     #[Route('/add_role', name: 'add_role', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function addRole(Request $request, UserRepository $userRepository, RoleRepository $roleRepository): Response
+    public function addRole(Request $request, UserService $userService): Response
     {
         if($request->isXmlHttpRequest() && ($request->query->get('fetch') === '1')){
-            $user = $userRepository->find($request->request->get('user'));
-            $role = $roleRepository->find($request->request->get('role'));
+            list($user, $role) = $userService->addRole($request);
 
-            $user->addRole($role);
-
-            $userRepository->save($user, true);
             return $this->render('user/_add_remove_role.html.twig', [
                 'id' => 'add_'.$user->getId().'-'.$role->getId(),
                 'role' => $role,
@@ -60,34 +56,19 @@ class UserController extends AbstractController
 
     #[Route('/remove_role', name: 'remove_role', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]
-    public function removeRole(Request $request, UserRepository $userRepository, RoleRepository $roleRepository): Response
+    public function removeRole(Request $request, UserService $userService): Response
     {
         if($request->isXmlHttpRequest() && ($request->query->get('fetch') === '1')){
-            $user = $userRepository->find($request->request->get('user'));
-            $role = $roleRepository->find($request->request->get('role'));
+            list($user, $role, $type, $message, $response) = $userService->removeRole($request, $this->isGranted('ROLE_SUPER_ADMIN'));
 
-            try {
-                $user->removeRole($role, !$this->isGranted('ROLE_SUPER_ADMIN'));
-                $userRepository->save($user, true);
-                $data = [
-                    'type' => 'text-bg-success',
-                    'message' => null
-                ];
-                $response = new Response();
-            }catch (Exception $exception){
-                $data = [
-                    'type' => 'text-bg-danger',
-                    'message' => $exception->getMessage()
-                ];
-                $response = new Response('', 422);
-            } finally {
-                return $this->render('user/_add_remove_role.html.twig', $data + [
+            return $this->render('user/_add_remove_role.html.twig', [
                     'id' => 'remove_'.$user->getId().'-'.$role->getId(),
                     'role' => $role,
                     'user' => $user,
                     'action' => 'Eliminado',
+                    'type' => $type,
+                    'message' => $message
                 ], $response);
-            }
         }
 
         throw new BadRequestHttpException('Ajax request');
@@ -95,22 +76,35 @@ class UserController extends AbstractController
 
     #[Route('/profile', name: 'user_profile')]
     #[IsGranted('ROLE_USER')]
-    public function profile(Request $request, RoleRepository $roleRepository, UserRepository $userRepository): Response
+    public function profile(Request $request, RoleRepository $roleRepository, UserService $userService): Response
     {
-        $form = $this->createForm(ProfileFullNameType::class, $this->getUser());
-        $form->handleRequest($request);
-
-        if($form->isSubmitted() && $form->isValid()){
-            $userRepository->save($this->getUser(), true);
-
-            $this->addFlash('success', 'Datos salvados.');
-        }
+        $formName = $userService->handleNameForm($request);
+        $formPassword = $userService->handlePassword($request);
 
         return $this->render('user/profile.html.twig', [
             'roles' => $roleRepository->findAll(),
-            'form' => $form->createView()
+            'formName' => $formName->createView(),
+            'formPassword' => $formPassword->createView(),
         ]);
     }
 
+    #[Route('/state', name: 'user_state', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
+    public function state(Request $request, UserService $userService): Response
+    {
+        if($request->isXmlHttpRequest() && ($request->query->get('fetch') === '1')){
+            list($user, $action) = $userService->changeState($request);
+
+            return $this->render('user/_activate_deactivate_user.html.twig', [
+                'id' => $action.'_'.$user->getId(),
+                'user' => $user,
+                'action' => ($action === 'activate') ? 'Activado' : 'Inactivo',
+                'type' => 'text-bg-success',
+                'message' => null
+            ]);
+        }
+
+        throw new BadRequestHttpException('Ajax request');
+    }
 
 }

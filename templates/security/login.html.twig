@@ -27,7 +27,11 @@
                 </div>
 
                 {% if error %}
-                    {{ flash('danger', error.messageKey|trans(error.messageData, 'security')) }}
+                    {% if error.code == 1 %}
+                        {{ flash('danger', error.message) }}
+                    {% else %}
+                        {{ flash('danger', error.messageKey|trans(error.messageData, 'security')) }}
+                    {% endif %}
                 {% endif %}
 
                 <br><br>

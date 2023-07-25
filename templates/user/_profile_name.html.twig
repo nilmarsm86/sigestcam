@@ -1,27 +1,27 @@
-{{ form_start(form) }}
+{{ form_start(formName) }}
 <div class="row">
     <div class="col">
         <div class="mb-3">
-            {{ form_label(form.name) }}
+            {{ form_label(formName.name) }}
             <div class="col-sm-6 mb-3 mb-sm-0 input-group">
-                        <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
-                            <i class="fas fa-edit"></i>
-                        </span>
-                {{ form_widget(form.name) }}
+                <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
+                    <i class="fas fa-edit"></i>
+                </span>
+                {{ form_widget(formName.name) }}
             </div>
-            {{ form_errors(form.name) }}
+            {{ form_errors(formName.name) }}
         </div>
     </div>
     <div class="col">
         <div class="mb-3">
-            {{ form_label(form.lastname) }}
+            {{ form_label(formName.lastname) }}
             <div class="col-sm-6 mb-3 mb-sm-0 input-group">
-                        <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
-                            <i class="fas fa-edit"></i>
-                        </span>
-                {{ form_widget(form.lastname) }}
+                <span class="input-group-text" id="basic-addon1" style="background-color: transparent">
+                    <i class="fas fa-edit"></i>
+                </span>
+                {{ form_widget(formName.lastname) }}
             </div>
-            {{ form_errors(form.lastname) }}
+            {{ form_errors(formName.lastname) }}
         </div>
     </div>
 </div>
@@ -31,4 +31,4 @@
         Salvar
     </button>
 </div>
-{{ form_end(form) }}
+{{ form_end(formName) }}

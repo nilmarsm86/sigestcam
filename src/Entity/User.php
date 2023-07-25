@@ -5,7 +5,6 @@ namespace App\Entity;
 use App\Entity\Enums\State;
 use App\Entity\Traits\State as StateTrait;
 use App\Repository\UserRepository;
-use App\Validator\Password;
 use App\Validator\Username;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -61,9 +60,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @var string|null The hashed password
      */
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'Establezca el nombre de usuario.')]
-    #[Assert\NotNull(message: 'El nombre de usuario no puede ser nulo.')]
-    #[Password]
+    #[Assert\NotBlank(message: 'Establezca la contraseña.')]
+    #[Assert\NotNull(message: 'La contraseña no puede ser nula.')]
     private ?string $password = null;
 
     #[ORM\ManyToMany(targetEntity: Role::class)]
@@ -92,7 +90,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->name;
     }
 
-    public function setName(string $name): static
+    public function setName(?string $name): static
     {
         $this->name = $name;
 
@@ -104,7 +102,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->lastname;
     }
 
-    public function setLastname(string $lastname): static
+    public function setLastname(?string $lastname): static
     {
         $this->lastname = $lastname;
 
@@ -223,6 +221,43 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->setPassword($encodePassword);
         $this->setState(State::Inactive);
         $this->addRole($baseRol);
+
+        return $this;
+    }
+
+    /*public function changeFullName(string $name, string $lastname): static
+    {
+        $this->setName($name);
+        $this->setLastname($lastname);
+        return $this;
+    }*/
+
+    public function changePassword(UserPasswordHasherInterface $userPasswordHasher): static
+    {
+        $encodePassword = $userPasswordHasher->hashPassword($this,$this->password);
+        $this->setPassword($encodePassword);
+        return $this;
+    }
+
+    /**
+     * Activate user
+     * @return $this
+     */
+    public function activate(): static
+    {
+        $this->state = null;
+        $this->setState(State::Active);
+        return $this;
+    }
+
+    /**
+     * Deactivate user
+     * @return $this
+     */
+    public function deactivate(): static
+    {
+        $this->state = null;
+        $this->setState(State::Inactive);
 
         return $this;
     }

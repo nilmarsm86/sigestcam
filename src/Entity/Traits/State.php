@@ -8,8 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait State
  {
-    #[ORM\Column(length: 255)]
-    protected string $state;
+    #[ORM\Column]
+    protected ?int $state;
 
     #[Assert\Choice(choices: [StateEnum::Active, StateEnum::Inactive], message: 'Seleccione un estado válido.')]
     protected StateEnum $enumState;
@@ -30,6 +30,7 @@ trait State
     #[ORM\PreUpdate]
     public function onSave(): void
     {
+        dump($this->getState()->value);
         $this->state = $this->getState()->value;
     }
 

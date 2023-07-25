@@ -54,30 +54,7 @@
                             <p class="text-primary m-0 fw-bold">Contraseña</p>
                         </div>
                         <div class="card-body">
-                            <form>
-                                <div class="mb-3">
-                                    <label class="form-label" for="address"><strong>Contraseña actual:</strong></label>
-                                    <input
-                                            class="form-control" type="text" id="address" placeholder=""
-                                            name="address"></div>
-                                <div class="row">
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label"
-                                                                 for="city"><strong>Nueva contraseña:</strong></label><input
-                                                    class="form-control" type="text" id="city" placeholder=""
-                                                    name="city"></div>
-                                    </div>
-                                    <div class="col">
-                                        <div class="mb-3"><label class="form-label"
-                                                                 for="country"><strong>Repetir contraseña:</strong></label><input
-                                                    class="form-control" type="text" id="country" placeholder=""
-                                                    name="country"></div>
-                                    </div>
-                                </div>
-                                <div class="mb-3">
-                                    <button class="btn btn-primary btn-sm" type="submit">Salvar</button>
-                                </div>
-                            </form>
+                            {% include 'user/_profile_password.html.twig' %}
                         </div>
                     </div>
                 </div>

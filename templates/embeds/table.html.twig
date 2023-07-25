@@ -4,7 +4,9 @@
         data-action="
             select-navigate-querystring:onChange->table-list#showBackdrop
             role:startChange->table-list#showBackdrop
-            role:endChange->table-list#hideBackdrop"
+            role:endChange->table-list#hideBackdrop
+            user-state:startChange->table-list#showBackdrop
+            user-state:endChange->table-list#hideBackdrop"
 >
     <div class="card-header py-3">
         <p class="text-primary m-0 fw-bold">{% block card_title %}{% endblock %}</p>
