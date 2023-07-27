@@ -2,6 +2,9 @@
 
 namespace App\Entity\Traits;
 
+use BackedEnum;
+use Symfony\Component\OptionsResolver\Options;
+
 trait Enums
  {
     /**
@@ -16,12 +19,38 @@ trait Enums
     /**
      * Get all values for select
      * @return array
-     */
+
     public static function forSelect(): array
     {
         return array_combine(
             array_column(self::cases(), 'name'),//option label
             array_column(self::cases(), 'value')//option value
         );
+    }*/
+
+    /**
+     * Function fot EnumType
+     * @return callable
+     */
+    public static function getValue(): callable
+    {
+        return static function (Options $options): ?\Closure {
+            return static function (?\BackedEnum $choice): ?string {
+                if (null === $choice) {
+                    return null;
+                }
+
+                return (string) $choice->value;
+            };
+        };
+    }
+
+    /**
+     * Label tag for EnumType
+     * @return callable
+     */
+    public static function getLabel(): callable
+    {
+        return fn (BackedEnum $choice) => self::getLabelFrom($choice);
     }
  }

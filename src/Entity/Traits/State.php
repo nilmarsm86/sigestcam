@@ -30,7 +30,6 @@ trait State
     #[ORM\PreUpdate]
     public function onSave(): void
     {
-        dump($this->getState()->value);
         $this->state = $this->getState()->value;
     }
 

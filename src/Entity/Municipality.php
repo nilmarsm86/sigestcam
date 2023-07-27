@@ -6,6 +6,9 @@ use App\Entity\Traits\NameToString;
 use App\Repository\MunicipalityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
+use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\SerializedName;
+use Symfony\Component\Serializer\Annotation\SerializedPath;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: MunicipalityRepository::class)]
@@ -23,7 +26,13 @@ class Municipality
     #[ORM\ManyToOne(inversedBy: 'municipalities')]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\Valid]
+    #[Ignore]
     private Province $province;
+
+    public function __construct(string $name)
+    {
+        $this->name = $name;
+    }
 
     public function getId(): ?int
     {
@@ -40,6 +49,14 @@ class Municipality
         $this->province = $province;
 
         return $this;
+    }
+
+    public function __serialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+        ];
     }
 
 

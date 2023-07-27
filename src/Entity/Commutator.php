@@ -23,13 +23,13 @@ class Commutator extends Equipment implements Harbor
     #[Assert\NotBlank(message: 'El IP no debe estar vacío.')]
     #[Assert\NotNull(message: 'El IP no debe ser nulo.')]
     #[Assert\Ip(message:'Establezca un IP válido.')]
-    private string $ip;
+    private ?string $ip;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la cantidad de puertos.')]
     #[Assert\NotNull(message: 'La cantidad de puertos no debe ser nula.')]
     #[Assert\Positive]
-    private int $portsAmount;
+    private ?int $portsAmount;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El IP gateway no debe estar vacío.')]
@@ -40,15 +40,15 @@ class Commutator extends Equipment implements Harbor
     /**
      * @throws Exception
      */
-    public function __construct(string $ip, int $portsAmount)
+    public function __construct(?string $ip = null, ?int $portsAmount = null)
     {
         parent::__construct();
         $this->ports = new ArrayCollection();
-        $this->ip = $ip;//validar que es un ip correcto
-        $this->portsAmount = $portsAmount;
-        $this->enumState = StateEnum::Active;
-        $this->maximumPortsAmount = $portsAmount;
-        $this->createPorts($this->portsAmount);
+        //$this->ip = $ip;//validar que es un ip correcto
+        //$this->portsAmount = $portsAmount;
+        //$this->enumState = StateEnum::Active;
+        $this->maximumPortsAmount = 1;
+        //$this->createPorts($this->portsAmount);
     }
 
     public function getIp(): ?string
@@ -56,12 +56,12 @@ class Commutator extends Equipment implements Harbor
         return $this->ip;
     }
 
-    /*public function setIp(string $ip): static
+    public function setIp(string $ip): static
     {
         $this->ip = $ip;
 
         return $this;
-    }*/
+    }
 
     public function configure(string $ip): static
     {
@@ -75,12 +75,12 @@ class Commutator extends Equipment implements Harbor
         return $this->portsAmount;
     }
 
-    /*public function setPortsAmount(int $portsAmount): static
+    public function setPortsAmount(int $portsAmount): static
     {
         $this->portsAmount = $portsAmount;
 
         return $this;
-    }*/
+    }
 
     public function getGateway(): ?string
     {
@@ -102,7 +102,7 @@ class Commutator extends Equipment implements Harbor
         max: 32,
         maxMessage: 'Un switch tiene un máximo de {{ limit }} puertos.',
     )]
-    public function maxPorts(): int
+    public function getMaxPorts(): ?int
     {
         //deberia ser una validacion dinamica en dependencia de la cantidad de puertos pasaados
         return $this->maximumPortsAmount;

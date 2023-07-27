@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Entity\Enums\State as StateEnum;
 use App\Entity\Traits\State as StateTrait;
 use App\Repository\EquipmentRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -43,7 +42,7 @@ class Equipment
 
     public function __construct()
     {
-        $this->enumState = StateEnum::Active;
+        //$this->enumState = StateEnum::Active;
     }
 
     public function getId(): ?int

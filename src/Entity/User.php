@@ -264,7 +264,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function isActive(): ?bool
     {
-        return $this->state === State::Active->value;
+        return $this->getState() === State::Active;
     }
 
     public function getFullName(): string
@@ -283,7 +283,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     public function blockRoles(): bool
     {
-        return in_array('ROLE_ADMIN', $this->getRoles());
+        //return in_array('ROLE_ADMIN', $this->getRoles());
+        return $this->isAdmin();
     }
 
     /**
@@ -293,5 +294,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function isSuperAdmin(): bool
     {
         return in_array('ROLE_SUPER_ADMIN', $this->getRoles());
+    }
+
+    /**
+     * Can change this user roles
+     * @return bool
+     */
+    public function isAdmin(): bool
+    {
+        return in_array('ROLE_ADMIN', $this->getRoles());
     }
 }

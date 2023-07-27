@@ -1,0 +1,40 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Conexiones{% endblock %}
+
+{% block content %}
+    <h3 class="text-dark mb-4">Conexión directa</h3>
+
+    <div class="card shadow mb-3">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <p class="text-primary m-0 fw-bold">Switch</p>
+            <div>
+                <a href="#" class="btn btn-primary btn-sm active" aria-current="page">
+                    <i class="fas fa-plus"></i>
+                    Nuevo
+                </a>
+                <a href="#" class="btn btn-primary btn-sm" aria-current="page">
+                    <i class="fas fa-search"></i>
+                    Existente
+                </a>
+            </div>
+        </div>
+        <div class="card-body">
+            {{ form_start(form) }}
+            {{ form_row(form.physicalAddress) }}
+            {{ form_row(form.physicalSerial) }}
+            {{ form_row(form.state) }}
+            {{ form_row(form.ip) }}
+            {{ form_row(form.portsAmount) }}
+            {{ form_row(form.gateway) }}
+{#            {{ form_row(form.address) }}#}
+            {{ component('Address', {
+                'formType': 'App\\Form\\CommutatorType',
+                'data': commutator
+            }) }}
+
+            <button type="submit">Enviar</button>
+            {{ form_end(form, {render_rest: false}) }}
+        </div>
+    </div>
+{% endblock %}

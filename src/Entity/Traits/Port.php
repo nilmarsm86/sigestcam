@@ -18,7 +18,8 @@ trait Port
         minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
     )]
     private Collection $ports;
-    private int $maximumPortsAmount;
+
+    private ?int $maximumPortsAmount;
 
     /**
      * @return Collection<int, PortEntity>

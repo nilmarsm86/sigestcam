@@ -22,15 +22,16 @@ class Province
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\OneToMany(mappedBy: 'province', targetEntity: Municipality::class)]
+    #[ORM\OneToMany(mappedBy: 'province', targetEntity: Municipality::class, cascade: ['persist'])]
     #[Assert\Count(
         min: 1,
         minMessage: 'Debe establecer al menos 1 municipio para esta provincia.',
     )]
     private Collection $municipalities;
 
-    public function __construct()
+    public function __construct(string $name)
     {
+        $this->name = $name;
         $this->municipalities = new ArrayCollection();
     }
 
@@ -68,4 +69,5 @@ class Province
 
         return $this;
     }*/
+
 }
