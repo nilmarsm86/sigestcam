@@ -5,22 +5,24 @@ namespace App\Entity\Enums;
 use App\Entity\Traits\Enums;
 use BackedEnum;
 
-enum ReportState: int
+enum ReportState: string
 {
     use Enums;
 
-    case Open = 1;
-    case Close = 0;
+    case Null = '';
+    case Open = '1';
+    case Close = '0';
 
-    public static function getLabelFrom(BackedEnum|int $enum): string
+    public static function getLabelFrom(BackedEnum|string $enum): string
     {
-        if(is_int($enum)){
+        if(is_string($enum)){
             $enum = self::from($enum);
         }
 
         return match ($enum) {
             self::Open => 'Abierto',
             self::Close => 'Cerrado',
+            default => '-Seleccione-'
         };
     }
 }

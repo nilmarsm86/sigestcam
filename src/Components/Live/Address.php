@@ -2,6 +2,7 @@
 
 namespace App\Components\Live;
 
+use App\DTO\AddressForm;
 use App\DTO\CommutatorForm;
 use App\Repository\MunicipalityRepository;
 use App\Repository\ProvinceRepository;
@@ -13,7 +14,7 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/address.html.twig')]
+#[AsLiveComponent(template: 'components/live/address.html.twig', csrf: false)]
 class Address
 {
     use DefaultActionTrait;
@@ -41,10 +42,10 @@ class Address
     protected function instantiateForm(): FormInterface
     {
         //if(!is_null($this->data)){
-            /*if(is_null($this->data->address)){
+            if(is_null($this->data->address)){
                 $this->data->address = new AddressForm();
                 $this->data->address->province = $this->provinceRepository->find($this->query);
-            }else{*/
+            }else{
                 if(!is_null($this->data->address->province)){
                     if($this->data->address->province->getId()){
                         $this->query = $this->data->address->province->getId();
@@ -69,7 +70,7 @@ class Address
                         $this->data->address->municipality = null;
                     }
                 }
-            //}
+            }
         //}
 
         $form = $this->formFactory->create($this->formType, $this->data, [

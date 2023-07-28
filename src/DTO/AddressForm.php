@@ -10,13 +10,17 @@ use Symfony\Component\Validator\Constraints\Valid;
 
 final class AddressForm
 {
-    #[NotBlank(message: 'Seleccione una provincia.')]
-    #[NotNull(message: 'Provincia no nula.')]
-    #[Valid]
-    public ?Province $province = null;
+    public function __construct(
+        #[NotBlank(message: 'Seleccione una provincia.')]
+        #[NotNull(message: 'Provincia no nula.')]
+        #[Valid]
+        public ?Province $province = null,
 
-    #[NotBlank(message: 'Seleccione un municipio.')]
-    #[NotNull(message: 'Municipio no nulo.')]
-    #[Valid]
-    public ?Municipality $municipality = null;
+        #[NotBlank(message: 'Seleccione un municipio.')]
+        #[NotNull(message: 'Municipio no nulo.')]
+        #[Valid]
+        public ?Municipality $municipality = null,
+    )
+    {
+    }
 }

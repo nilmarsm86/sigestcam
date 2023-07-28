@@ -3,8 +3,6 @@
 namespace App\DTO;
 
 use App\Entity\Enums\State as StateEnum;
-use App\Repository\MunicipalityRepository;
-use App\Repository\ProvinceRepository;
 use Symfony\Component\Validator\Constraints as Assert;
 
 final class CommutatorForm
@@ -41,28 +39,6 @@ final class CommutatorForm
         #[Assert\Valid]
         public ?AddressForm $address = null
     ) {
-        $this->address = new AddressForm();
-    }
-
-    public function transform(ProvinceRepository $provinceRepository, MunicipalityRepository $municipalityRepository,)
-    {
-        $this->ip = $this->commutator['ip'];
-        $this->portsAmount = (int) $this->commutator['portsAmount'];
-        $this->gateway = $this->commutator['gateway'];
-        $this->physicalAddress = $this->commutator['physicalAddress'];
-        $this->physicalSerial = $this->commutator['physicalSerial'];
-        if(!empty($this->commutator['state'])){
-            $this->state = StateEnum::from($this->commutator['state']);
-        }
-
-        //$this->address = new AddressForm();
-        if($this->commutator['address']['province']){
-            $this->address->province = $provinceRepository->find($this->commutator['address']['province']);
-        }
-
-        if(isset($this->commutator['address']['municipality'])){
-            $this->address->municipality = $municipalityRepository->find($this->commutator['address']['municipality']);
-        }
     }
 
 

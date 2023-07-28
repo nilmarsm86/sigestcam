@@ -29,9 +29,9 @@ class Municipality
     #[Ignore]
     private Province $province;
 
-    public function __construct(string $name)
+    public function __construct()
     {
-        $this->name = $name;
+        //$this->name = $name;
     }
 
     public function getId(): ?int

@@ -35,13 +35,7 @@ trait Enums
     public static function getValue(): callable
     {
         return static function (Options $options): ?\Closure {
-            return static function (?\BackedEnum $choice): ?string {
-                if (null === $choice) {
-                    return null;
-                }
-
-                return (string) $choice->value;
-            };
+            return fn (?\BackedEnum $choice): ?string => (null === $choice) ? null : (string) $choice->value;
         };
     }
 

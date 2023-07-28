@@ -3,13 +3,17 @@
 namespace App\Controller;
 
 use App\DTO\CommutatorForm;
+use App\Entity\Municipality;
+use App\Entity\Province;
 use App\Form\CommutatorType;
 use App\Repository\MunicipalityRepository;
 use App\Repository\ProvinceRepository;
 use App\Resolver\RequestFormPayloadValueResolver;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -27,15 +31,17 @@ class ConectionController extends AbstractController
     #[Route('/direct', name: '_direct')]
     public function direct(
         Request $request,
-        ProvinceRepository $provinceRepository,
-        MunicipalityRepository $municipalityRepository,
-        #[MapRequestPayload(resolver: RequestFormPayloadValueResolver::class)] ?CommutatorForm $commutatorForm = null
+        #[MapRequestPayload(
+            serializationContext: [
+                'entities'=>[Province::class, Municipality::class],
+                'form' => 'commutator'
+            ],
+            resolver: RequestFormPayloadValueResolver::class,
+        )]
+        #[MapEntity]
+        ?CommutatorForm $commutatorForm = null
     ): Response
     {
-        if($request->isMethod(Request::METHOD_POST)){
-            $commutatorForm->transform($provinceRepository, $municipalityRepository);
-        }
-
         $form = $this->createForm(CommutatorType::class, $commutatorForm);
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){

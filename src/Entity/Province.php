@@ -29,9 +29,9 @@ class Province
     )]
     private Collection $municipalities;
 
-    public function __construct(string $name)
+    public function __construct()
     {
-        $this->name = $name;
+        //$this->name = $name;
         $this->municipalities = new ArrayCollection();
     }
 

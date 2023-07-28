@@ -5,19 +5,20 @@ namespace App\Entity\Enums;
 use App\Entity\Traits\Enums;
 use BackedEnum;
 
-enum ReportType: int
+enum ReportType: string
 {
     use Enums;
 
-    case Camera = 1;
-    case Modem = 2;
-    case Msam = 3;
-    case Server = 4;
-    case Switch = 5;
+    case Null = '';
+    case Camera = '1';
+    case Modem = '2';
+    case Msam = '3';
+    case Server = '4';
+    case Switch = '5';
 
-    public static function getLabelFrom(BackedEnum|int $enum): string
+    public static function getLabelFrom(BackedEnum|string $enum): string
     {
-        if(is_int($enum)){
+        if(is_string($enum)){
             $enum = self::from($enum);
         }
 
@@ -27,6 +28,7 @@ enum ReportType: int
             self::Msam => 'Msam',
             self::Server => 'Servidor',
             self::Switch => 'Switch',
+            default => '-Seleccione-'
         };
     }
 }

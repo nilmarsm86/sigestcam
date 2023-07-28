@@ -2,6 +2,10 @@
 
 namespace App\Resolver;
 
+use Doctrine\DBAL\Types\ConversionException;
+use Doctrine\ORM\NoResultException;
+use Doctrine\Persistence\ManagerRegistry;
+use Doctrine\Persistence\ObjectManager;
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,17 +15,13 @@ use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
 use Symfony\Component\Serializer\Exception\UnsupportedFormatException;
 use Symfony\Component\Serializer\Normalizer\DenormalizerInterface;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\ConstraintViolation;
-use Symfony\Component\Validator\ConstraintViolationList;
-use Symfony\Component\Validator\Exception\ValidationFailedException;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Contracts\Translation\TranslatorInterface;
 
 class RequestFormPayloadValueResolver implements ValueResolverInterface, EventSubscriberInterface
 {
@@ -43,8 +43,7 @@ class RequestFormPayloadValueResolver implements ValueResolverInterface, EventSu
 
     public function __construct(
         private readonly SerializerInterface&DenormalizerInterface $serializer,
-        private readonly ?ValidatorInterface $validator = null,
-        private readonly ?TranslatorInterface $translator = null,
+        private readonly ManagerRegistry                           $registry,
     ) {
     }
 
@@ -116,6 +115,7 @@ class RequestFormPayloadValueResolver implements ValueResolverInterface, EventSu
                 try {
                     $payload = $this->$payloadMapper($request, $type, $argument);
                 } catch (PartialDenormalizationException $e) {
+                    dump($e);
                     throw new HttpException($validationFailedCode, implode("\n", array_map(static fn ($e) => $e->getMessage(), $e->getErrors())), $e);
                 }
             //}
@@ -161,7 +161,11 @@ class RequestFormPayloadValueResolver implements ValueResolverInterface, EventSu
         }
 
         if ($data = $request->request->all()) {
-            return $this->serializer->denormalize($data, $type, null, self::CONTEXT_DENORMALIZE + $attribute->serializationContext);
+            if($attribute->serializationContext['form']){
+                $data = $data[$attribute->serializationContext['form']];
+            }
+            $model = $this->serializer->denormalize($data, $type, null, self::CONTEXT_DENORMALIZE + $attribute->serializationContext);
+            return $this->toEntity($model, $data, $attribute->serializationContext['entities']);
         }
 
         if ('' === $data = $request->getContent()) {
@@ -173,11 +177,62 @@ class RequestFormPayloadValueResolver implements ValueResolverInterface, EventSu
         }
 
         try {
-            return $this->serializer->deserialize($data, $type, $format, self::CONTEXT_DESERIALIZE + $attribute->serializationContext);
+            $model = $this->serializer->deserialize($data, $type, $format, self::CONTEXT_DESERIALIZE + $attribute->serializationContext);
+            return $this->toEntity($model, (array)$data, $attribute->serializationContext['entities']);
         } catch (UnsupportedFormatException $e) {
             throw new HttpException(Response::HTTP_UNSUPPORTED_MEDIA_TYPE, sprintf('Unsupported format: "%s".', $format), $e);
         } catch (NotEncodableValueException $e) {
             throw new HttpException(Response::HTTP_BAD_REQUEST, sprintf('Request payload contains invalid "%s" data.', $format), $e);
         }
     }
+
+    /**
+     * Transform corresponds attributes in entities
+     *
+     * @param object $model
+     * @param array $data
+     * @param array $entities
+     * @return object
+     */
+    private function toEntity(object $model, array $data, array $entities): object
+    {
+        foreach (get_object_vars($model) as $key=>$value){
+            if(is_object($value) && !is_subclass_of($value, \BackedEnum::class)){
+                if(!in_array(get_class($value), $entities)){
+                    $model->{$key} = $this->toEntity($value, $data[$key], $entities);
+                }else{
+                    $model->{$key} = null;
+                    if ($manager = $this->registry->getManagerForClass(get_class($value))) {
+                        if($object = $this->find($manager, $data[$key], get_class($value))){
+                            $model->{$key} = $object;
+                        }
+                    }
+                }
+            }
+        }
+
+        return $model;
+    }
+
+    /**
+     * Find entity
+     *
+     * @param ObjectManager $manager
+     * @param string $id
+     * @param string $entityClass
+     * @return object|null
+     */
+    private function find(ObjectManager $manager, string $id, string $entityClass): object|null
+    {
+        if (empty($id)) {
+            return null;
+        }
+
+        try {
+            return $manager->getRepository($entityClass)->find($id);
+        } catch (NoResultException|ConversionException) {
+            return null;
+        }
+    }
+
 }

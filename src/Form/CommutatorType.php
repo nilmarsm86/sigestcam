@@ -30,8 +30,7 @@ class CommutatorType extends AbstractType
             'data_class' => CommutatorForm::class,
             'attr' => [
                 'novalidate' => 'novalidate'
-            ],
-            'csrf_protection' => false
+            ]
         ]);
     }
 

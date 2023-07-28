@@ -44,7 +44,7 @@ class AddressType extends AbstractType
             'class' => Municipality::class,
             'placeholder' => null === $data?->province ? '-Seleccione provincia-' : '-Seleccione-',
             'choices' => (null === $data?->province) ? [] : $data?->province?->getMunicipalities(),
-            'disabled' => (null === $data?->province || $data?->province?->getMunicipalities()->count() === 0),
+            //'disabled' => (null === $data?->province || $data?->province?->getMunicipalities()->count() === 0),
         ]);
     }
 

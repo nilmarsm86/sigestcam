@@ -5,22 +5,24 @@ namespace App\Entity\Enums;
 use App\Entity\Traits\Enums;
 use BackedEnum;
 
-enum Aim: int
+enum Aim: string
 {
     use Enums;
 
-    case Objective = 1;
-    case NoObjective = 0;
+    case Null = '';
+    case Objective = '1';
+    case NoObjective = '0';
 
-    public static function getLabelFrom(BackedEnum|int $enum): string
+    public static function getLabelFrom(BackedEnum|string $enum): string
     {
-        if(is_int($enum)){
+        if(is_string($enum)){
             $enum = self::from($enum);
         }
 
         return match ($enum) {
             self::Objective => 'Objetivo',
             self::NoObjective => 'No objetivo',
+            default => '-Seleccione-'
         };
     }
 }

@@ -5,17 +5,18 @@ namespace App\Entity\Enums;
 use App\Entity\Traits\Enums;
 use BackedEnum;
 
-enum Priority: int
+enum Priority: string
 {
     use Enums;
 
-    case Hight = 1;
-    case Medium = 0;
-    case Low = -1;
+    case Null = '';
+    case Hight = '1';
+    case Medium = '0';
+    case Low = '-1';
 
-    public static function getLabelFrom(BackedEnum|int $enum): string
+    public static function getLabelFrom(BackedEnum|string $enum): string
     {
-        if(is_int($enum)){
+        if(is_string($enum)){
             $enum = self::from($enum);
         }
 
@@ -23,6 +24,7 @@ enum Priority: int
             self::Hight => 'Alta',
             self::Medium => 'Media',
             self::Low => 'Baja',
+            default => '-Seleccione-'
         };
     }
 }
