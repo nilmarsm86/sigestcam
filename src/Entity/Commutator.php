@@ -8,7 +8,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
-use App\Entity\Traits\Port as PortTrait;
+use App\Entity\Traits\PortTrait as PortTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommutatorRepository::class)]

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\NameToString;
+use App\Entity\Traits\NameToStringTrait;
 use App\Repository\ProvinceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -15,7 +15,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[DoctrineAssert\UniqueEntity('name', message: 'La provincia debe ser única.')]
 class Province
 {
-    use NameToString;
+    use NameToStringTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

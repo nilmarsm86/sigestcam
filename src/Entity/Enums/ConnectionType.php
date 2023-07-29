@@ -5,13 +5,16 @@ namespace App\Entity\Enums;
 use App\Entity\Traits\EnumsTrait;
 use BackedEnum;
 
-enum State: string
+enum ConnectionType: string
 {
     use EnumsTrait;
 
     case Null = '';
-    case Active = '1';
-    case Inactive = '0';
+    case Direct = '1';
+    case Simple = '2';
+    case SlaveSwitch = '3';
+    case SlaveModem = '4';
+    case Full = '5';
 
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
@@ -20,8 +23,11 @@ enum State: string
         }
 
         return match ($enum) {
-            self::Active => 'Activo',
-            self::Inactive => 'Inactivo',
+            self::Direct => 'Directa',
+            self::Simple => 'Simple',
+            self::SlaveSwitch => 'Switch esclavo',
+            self::SlaveModem => 'Modem esclavo',
+            self::Full => 'Completa',
             default => '-Seleccione-'
         };
     }

@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\ConnectionType;
+use App\Entity\Enums\ReportType;
 use App\Entity\Enums\State as StateEnum;
 use App\Entity\Interfaces\Harbor;
-use App\Entity\Traits\State as StateTrait;
+use App\Entity\Traits\StateTrait as StateTrait;
 use App\Repository\PortRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
@@ -46,6 +48,20 @@ class Port
     #[ORM\OneToOne(targetEntity: Equipment::class, cascade: ['persist', 'remove'])]
     #[Assert\Valid]
     private ?Equipment $equipment = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private string $connectionType;
+
+    #[Assert\Choice(
+        choices: [
+            ConnectionType::Direct,
+            ConnectionType::Full,
+            ConnectionType::Simple,
+            ConnectionType::SlaveModem,
+            ConnectionType::SlaveSwitch],
+        message: 'Seleccione un tipo de conexion válido.'
+    )]
+    private ConnectionType $enumConnectionType;
 
     public function __construct(string $number)
     {
@@ -276,6 +292,39 @@ class Port
         }
 
         return null;
+    }
+
+    public function getConnectionType(): ConnectionType
+    {
+        return $this->enumConnectionType;
+    }
+
+    private function setConnectionType(ConnectionType $connectionType): static
+    {
+        if(!$this->isFromCommutator()){
+            throw new Exception('Solo los puertos de switch pueden tener el tipo de conexión.');
+        }
+        $this->enumConnectionType = $connectionType;
+
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    #[ORM\PreUpdate]
+    public function onSave(): void
+    {
+        $this->state = $this->getState()->value;
+        $this->connectionType = $this->getConnectionType()->value;
+    }
+
+    /**
+     * @throws Exception
+     */
+    #[ORM\PostLoad]
+    public function onLoad(): void
+    {
+        $this->setState(StateEnum::from($this->state));
+        $this->setConnectionType(ConnectionType::from($this->connectionType));
     }
 
 }

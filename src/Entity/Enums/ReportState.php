@@ -2,12 +2,12 @@
 
 namespace App\Entity\Enums;
 
-use App\Entity\Traits\Enums;
+use App\Entity\Traits\EnumsTrait;
 use BackedEnum;
 
 enum ReportState: string
 {
-    use Enums;
+    use EnumsTrait;
 
     case Null = '';
     case Open = '1';

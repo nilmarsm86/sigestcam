@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\State as StateTrait;
+use App\Entity\Traits\StateTrait as StateTrait;
 use App\Repository\EquipmentRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;

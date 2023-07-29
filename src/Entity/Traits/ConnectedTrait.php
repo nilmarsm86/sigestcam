@@ -6,7 +6,7 @@ use App\Entity\StructuredCable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait Connected
+trait ConnectedTrait
  {
     #[ORM\OneToOne(targetEntity: StructuredCable::class, cascade: ['persist', 'remove'])]
     #[Assert\Valid]

@@ -7,7 +7,7 @@ use App\Repository\CardRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use App\Entity\Traits\Port as PortTrait;
+use App\Entity\Traits\PortTrait as PortTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]

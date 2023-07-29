@@ -5,7 +5,7 @@ namespace App\Entity\Traits;
 use BackedEnum;
 use Symfony\Component\OptionsResolver\Options;
 
-trait Enums
+trait EnumsTrait
  {
     /**
      * Get all posible values

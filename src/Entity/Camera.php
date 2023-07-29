@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\Connected;
+use App\Entity\Traits\ConnectedTrait;
 use App\Repository\CameraRepository;
 use App\Validator\Username;
 use Doctrine\ORM\Mapping as ORM;
@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[Assert\Cascade]
 class Camera extends Equipment
 {
-    use Connected;
+    use ConnectedTrait;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'La camara debe de tener un usuario.')]

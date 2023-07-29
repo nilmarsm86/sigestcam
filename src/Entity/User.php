@@ -3,7 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enums\State;
-use App\Entity\Traits\State as StateTrait;
+use App\Entity\Traits\StateTrait as StateTrait;
 use App\Repository\UserRepository;
 use App\Validator\Username;
 use Doctrine\Common\Collections\ArrayCollection;

@@ -9,7 +9,7 @@ use App\Entity\Port as PortEntity;
 use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait Port
+trait PortTrait
 {
     #[ORM\OneToMany(mappedBy: 'card', targetEntity:PortEntity::class)]
     #[ORM\OrderBy(['number' => 'ASC'])]
@@ -48,7 +48,7 @@ trait Port
         return $this;
     }
 
-    /*public function removePort(Port $port): static
+    /*public function removePort(PortTrait $port): static
     {
         if ($this->ports->removeElement($port)) {
             // set the owning side to null (unless already changed)
@@ -62,7 +62,7 @@ trait Port
 
     /**
      * @param int $amount
-     * @return Port
+     * @return PortTrait
      * @throws Exception
      */
     public function createPorts(int $amount): static

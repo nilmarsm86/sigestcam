@@ -47,7 +47,7 @@ class Report
 
     #[Assert\Choice(
         choices: [ReportType::Camera, ReportType::Server, ReportType::Msam, ReportType::Modem, ReportType::Switch],
-        message: 'Seleccione una prioridad válida.'
+        message: 'Seleccione un tipo de reporte válido.'
     )]
     private ReportType $enumType;
 

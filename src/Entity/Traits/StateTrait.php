@@ -6,7 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Enums\State as StateEnum;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait State
+trait StateTrait
  {
     #[ORM\Column]
     protected ?int $state;

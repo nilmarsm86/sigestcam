@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\NameToString;
+use App\Entity\Traits\NameToStringTrait;
 use App\Repository\RoleRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -12,7 +12,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 #[DoctrineAssert\UniqueEntity(fields: ['name'], message: 'Ya existe un rol con este nombre.')]
 class Role
 {
-    use NameToString;
+    use NameToStringTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

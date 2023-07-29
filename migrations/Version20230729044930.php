@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20230729034615 extends AbstractMigration
+final class Version20230729044930 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -28,7 +28,7 @@ final class Version20230729034615 extends AbstractMigration
         $this->addSql('CREATE TABLE msam (id INT NOT NULL, slot_amount INT NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE municipality (id INT AUTO_INCREMENT NOT NULL, province_id INT NOT NULL, name VARCHAR(255) NOT NULL, INDEX IDX_C6F56628E946114A (province_id), UNIQUE INDEX name (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE organ (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, UNIQUE INDEX name (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
-        $this->addSql('CREATE TABLE port (id INT AUTO_INCREMENT NOT NULL, commutator_id INT DEFAULT NULL, card_id INT DEFAULT NULL, equipment_id INT DEFAULT NULL, number VARCHAR(255) NOT NULL, speed DOUBLE PRECISION NOT NULL, state INT NOT NULL, INDEX IDX_43915DCC35DAD24B (commutator_id), INDEX IDX_43915DCC4ACC9A20 (card_id), UNIQUE INDEX UNIQ_43915DCC517FE9FE (equipment_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE port (id INT AUTO_INCREMENT NOT NULL, commutator_id INT DEFAULT NULL, card_id INT DEFAULT NULL, equipment_id INT DEFAULT NULL, number VARCHAR(255) NOT NULL, speed DOUBLE PRECISION NOT NULL, connection_type VARCHAR(255) DEFAULT NULL, state INT NOT NULL, INDEX IDX_43915DCC35DAD24B (commutator_id), INDEX IDX_43915DCC4ACC9A20 (card_id), UNIQUE INDEX UNIQ_43915DCC517FE9FE (equipment_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE province (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, UNIQUE INDEX name (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE report (id INT AUTO_INCREMENT NOT NULL, equipment_id INT NOT NULL, boss_id INT NOT NULL, management_officer_id INT NOT NULL, organ_id INT DEFAULT NULL, number VARCHAR(255) NOT NULL, specialty VARCHAR(255) NOT NULL, entry_date DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', close_date DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', type INT NOT NULL, interruption_reason LONGTEXT DEFAULT NULL, priority INT NOT NULL, flaw LONGTEXT DEFAULT NULL, observation LONGTEXT DEFAULT NULL, solution LONGTEXT DEFAULT NULL, unit VARCHAR(255) NOT NULL, state INT NOT NULL, aim INT NOT NULL, INDEX IDX_C42F7784517FE9FE (equipment_id), INDEX IDX_C42F7784261FB672 (boss_id), INDEX IDX_C42F77842972046C (management_officer_id), INDEX IDX_C42F7784E4445171 (organ_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE role (id INT AUTO_INCREMENT NOT NULL, name VARCHAR(255) NOT NULL, UNIQUE INDEX name (name), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');

@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\NameToString;
+use App\Entity\Traits\NameToStringTrait;
 use App\Repository\MunicipalityRepository;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
@@ -16,7 +16,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[DoctrineAssert\UniqueEntity('name', message: 'El municipio debe ser único.')]
 class Municipality
 {
-    use NameToString;
+    use NameToStringTrait;
 
     #[ORM\Id]
     #[ORM\GeneratedValue]

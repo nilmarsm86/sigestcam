@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Entity\Traits\Connected;
+use App\Entity\Traits\ConnectedTrait;
 use App\Repository\ModemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Entity(repositoryClass: ModemRepository::class)]
 class Modem extends Equipment
 {
-    use Connected;
+    use ConnectedTrait;
 
     const MAXIMUM_CAMERA_NUMBER = 4;
 

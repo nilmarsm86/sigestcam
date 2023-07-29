@@ -40,7 +40,7 @@ class PortRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Port[] Returns an array of Port objects
+//     * @return PortTrait[] Returns an array of PortTrait objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -54,7 +54,7 @@ class PortRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Port
+//    public function findOneBySomeField($value): ?PortTrait
 //    {
 //        return $this->createQueryBuilder('p')
 //            ->andWhere('p.exampleField = :val')

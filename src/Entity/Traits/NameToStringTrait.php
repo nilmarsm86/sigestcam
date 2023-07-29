@@ -5,7 +5,7 @@ namespace App\Entity\Traits;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
-trait NameToString
+trait NameToStringTrait
  {
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El nombre no debe estar vacio.')]
