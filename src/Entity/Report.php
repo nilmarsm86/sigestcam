@@ -64,7 +64,7 @@ class Report
     private Priority $enumPriority;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: false)]
     #[Assert\Valid]
     private ?Equipment $equipment = null;
 

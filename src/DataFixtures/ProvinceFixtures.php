@@ -25,7 +25,7 @@ class ProvinceFixtures extends Fixture
                 };
 
                 if(!$result){
-                    $manager->persist(new Province($provinceName));
+                    $manager->persist((new Province())->setName($provinceName));
                 }
             }
         }
@@ -35,9 +35,9 @@ class ProvinceFixtures extends Fixture
 
     public function addProvinceMunicipality(ObjectManager $manager, string $provinceName, array $municipalities): bool
     {
-        $province = new Province($provinceName);
+        $province = (new Province())->setName($provinceName);
         foreach ($municipalities as $municipality){
-            $province->addMunicipality(new Municipality($municipality));
+            $province->addMunicipality((new Municipality())->setName($municipality));
         }
 
         $manager->persist($province);

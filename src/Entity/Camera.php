@@ -6,12 +6,12 @@ use App\Entity\Traits\Connected;
 use App\Repository\CameraRepository;
 use App\Validator\Username;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CameraRepository::class)]
 #[Assert\Cascade]
-#[ORM\HasLifecycleCallbacks]
-class Camera extends ConnectedElement
+class Camera extends Equipment
 {
     use Connected;
 
@@ -85,6 +85,60 @@ class Camera extends ConnectedElement
         $this->electronicSerial = $electronicSerial;
 
         return $this;
+    }
+
+    public function hasModem(): bool
+    {
+        return !is_null($this->modem);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function setStructuredCable(StructuredCable $structuredCable): static
+    {
+        if(!$this->canHaveStructureCable()){
+            throw new Exception('Solo pueden tener cable estructurado aquellas cámaras conectadas a un modem conectado a un Msam.');
+        }
+
+        $this->structuredCable = $structuredCable;
+
+        return $this;
+    }
+
+    public function modemHasPort(): bool
+    {
+        if(!$this->hasModem()){
+            return false;
+        }
+
+        if(!$this->modem->hasPort()){
+            return false;
+        }
+
+        return true;
+    }
+
+    public function modemInCardPort(): bool
+    {
+        if(!$this->modemHasPort()){
+            return false;
+        }
+
+        if(!$this->modem->isInCardPort()){
+            return false;
+        }
+
+        return true;
+    }
+
+    public function canHaveStructureCable(): bool
+    {
+        if(!$this->modemInCardPort()){
+            return false;
+        }
+
+        return true;
     }
 
 }

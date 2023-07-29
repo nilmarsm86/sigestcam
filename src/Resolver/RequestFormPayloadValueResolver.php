@@ -15,7 +15,6 @@ use Symfony\Component\HttpKernel\Controller\ValueResolverInterface;
 use Symfony\Component\HttpKernel\ControllerMetadata\ArgumentMetadata;
 use Symfony\Component\HttpKernel\Event\ControllerArgumentsEvent;
 use Symfony\Component\HttpKernel\Exception\HttpException;
-use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\Exception\PartialDenormalizationException;
@@ -86,39 +85,12 @@ class RequestFormPayloadValueResolver implements ValueResolverInterface, EventSu
                 throw new \LogicException(sprintf('Could not resolve the "$%s" controller argument: argument should be typed.', $argument->metadata->getName()));
             }
 
-            /*if ($this->validator && $request->getContentTypeFormat() !== null) {
-                $violations = new ConstraintViolationList();
-                try {
-                    $payload = $this->$payloadMapper($request, $type, $argument);
-                } catch (PartialDenormalizationException $e) {
-                    $trans = $this->translator ? $this->translator->trans(...) : fn ($m, $p) => strtr($m, $p);
-                    foreach ($e->getErrors() as $error) {
-                        $parameters = ['{{ type }}' => implode('|', $error->getExpectedTypes())];
-                        if ($error->canUseMessageForUser()) {
-                            $parameters['hint'] = $error->getMessage();
-                        }
-                        $template = 'This value should be of type {{ type }}.';
-                        $message = $trans($template, $parameters, 'validators');
-                        $violations->add(new ConstraintViolation($message, $template, $parameters, null, $error->getPath(), null));
-                    }
-                    $payload = $e->getData();
-                }
-
-                if (null !== $payload) {
-                    $violations->addAll($this->validator->validate($payload, null, $argument->validationGroups ?? null));
-                }
-
-                if (\count($violations)) {
-                    throw new HttpException($validationFailedCode, implode("\n", array_map(static fn ($e) => $e->getMessage(), iterator_to_array($violations))), new ValidationFailedException($payload, $violations));
-                }
-            } else {*/
-                try {
-                    $payload = $this->$payloadMapper($request, $type, $argument);
-                } catch (PartialDenormalizationException $e) {
-                    dump($e);
-                    throw new HttpException($validationFailedCode, implode("\n", array_map(static fn ($e) => $e->getMessage(), $e->getErrors())), $e);
-                }
-            //}
+            try {
+                $payload = $this->$payloadMapper($request, $type, $argument);
+            } catch (PartialDenormalizationException $e) {
+                dump($e);
+                throw new HttpException($validationFailedCode, implode("\n", array_map(static fn ($e) => $e->getMessage(), $e->getErrors())), $e);
+            }
 
             if (null === $payload) {
                 $payload = match (true) {

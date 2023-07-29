@@ -43,9 +43,9 @@ class Port
     #[Assert\Valid]
     private ?Card $card = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: Equipment::class, cascade: ['persist', 'remove'])]
     #[Assert\Valid]
-    private ?ConnectedElement $connectedElement = null;
+    private ?Equipment $equipment = null;
 
     public function __construct(string $number)
     {
@@ -117,21 +117,21 @@ class Port
         return !is_null($this->getCard());
     }
 
-    public function getConnectedElement(): ?ConnectedElement
+    public function getEquipment(): ?Equipment
     {
-        return $this->connectedElement;
+        return $this->equipment;
     }
 
     /**
      * @throws Exception
      */
-    public function setConnectedElement(?ConnectedElement $connectedElement): static
+    public function setEquipment(?Equipment $equipment): static
     {
         if ($this->isFromCard() && !$this->hasConnectedModem()) {
             throw new Exception('Only modems can be connected directly to the card ports.');
         }
 
-        $this->connectedElement = $connectedElement;
+        $this->equipment = $equipment;
 
         return $this;
     }
@@ -141,7 +141,7 @@ class Port
      */
     public function connectCamera(Camera $camera): static
     {
-        return $this->setConnectedElement($camera);
+        return $this->setEquipment($camera);
     }
 
     /**
@@ -149,7 +149,7 @@ class Port
      */
     public function connectMsam(Msam $msam): static
     {
-        return $this->setConnectedElement($msam);
+        return $this->setEquipment($msam);
     }
 
     /**
@@ -157,7 +157,7 @@ class Port
      */
     public function connectModem(Modem $modem): static
     {
-        return $this->setConnectedElement($modem);
+        return $this->setEquipment($modem);
     }
 
     /**
@@ -165,27 +165,40 @@ class Port
      */
     public function connectServer(Server $server): static
     {
-        return $this->setConnectedElement($server);
+        return $this->setEquipment($server);
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function connectCommutator(Commutator $commutator): static
+    {
+        return $this->setEquipment($commutator);
     }
 
     public function hasConnectedCamera(): bool
     {
-        return $this->getConnectedElement() instanceof Camera;
+        return $this->getEquipment() instanceof Camera;
     }
 
     public function hasConnectedMsam(): bool
     {
-        return $this->getConnectedElement() instanceof Msam;
+        return $this->getEquipment() instanceof Msam;
     }
 
     public function hasConnectedModem(): bool
     {
-        return $this->getConnectedElement() instanceof Modem;
+        return $this->getEquipment() instanceof Modem;
     }
 
     public function hasConnectedServer(): bool
     {
-        return $this->getConnectedElement() instanceof Server;
+        return $this->getEquipment() instanceof Server;
+    }
+
+    public function hasConnectedCommutator(): bool
+    {
+        return $this->getEquipment() instanceof Commutator;
     }
 
     public function configure(float $speed): static
@@ -202,18 +215,18 @@ class Port
      */
     public function disabled(?Port $port): static
     {
-        if (!is_null($this->connectedElement) && is_null($port)) {
+        if (!is_null($this->equipment) && is_null($port)) {
             throw new Exception('This port must be disabled, but the equipment connected to it must be placed in another free port.');
         }
 
         //este puerto se desabilita
         $this->setState(StateEnum::Inactive);
 
-        if (!is_null($this->getConnectedElement())) {
+        if (!is_null($this->getEquipment())) {
             //si el puerto tiene conectado algun equipo, ese equipo debe pasarce a otro puerto libre
-            $port->setConnectedElement($this->getConnectedElement());
+            $port->setEquipment($this->getEquipment());
             //debo quitar el equipo de este puerto
-            $this->setConnectedElement(null);
+            $this->setEquipment(null);
         }
 
         return $this;
@@ -225,7 +238,7 @@ class Port
      */
     public function isFree(): bool
     {
-        return is_null($this->getConnectedElement());
+        return is_null($this->getEquipment());
     }
 
     /**

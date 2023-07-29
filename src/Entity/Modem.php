@@ -11,7 +11,7 @@ use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: ModemRepository::class)]
-class Modem extends ConnectedElement
+class Modem extends Equipment
 {
     use Connected;
 
@@ -33,6 +33,7 @@ class Modem extends ConnectedElement
     public function __construct()
     {
         parent::__construct();
+        $this->ip = null;
         $this->cameras = new ArrayCollection();
     }
 
@@ -88,6 +89,16 @@ class Modem extends ConnectedElement
         }
 
         return $this;
+    }
+
+    public function hasPort(): bool
+    {
+        return !is_null($this->port);
+    }
+
+    public function isInCardPort(): bool
+    {
+        return $this->port->isFromCard();
     }
 
 }

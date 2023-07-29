@@ -44,7 +44,9 @@ class Address
         //if(!is_null($this->data)){
             if(is_null($this->data->address)){
                 $this->data->address = new AddressForm();
-                $this->data->address->province = $this->provinceRepository->find($this->query);
+                if(!empty($this->query)){
+                    $this->data->address->province = $this->provinceRepository->find($this->query);
+                }
             }else{
                 if(!is_null($this->data->address->province)){
                     if($this->data->address->province->getId()){
@@ -53,7 +55,9 @@ class Address
                         if(empty($this->query)){
                             $this->data->address->province = null;
                         }else{
-                            $this->data->address->province = $this->provinceRepository->find($this->query);
+                            if(!empty($this->query)) {
+                                $this->data->address->province = $this->provinceRepository->find($this->query);
+                            }
                         }
                     }
 
@@ -62,7 +66,9 @@ class Address
                         $this->data->address->municipality = $this->municipalityRepository->find($data);
                     }*/
                 }else{
-                    $this->data->address->province = $this->provinceRepository->find($this->query);
+                    if(!empty($this->query)) {
+                        $this->data->address->province = $this->provinceRepository->find($this->query);
+                    }
                 }
 
                 if(!is_null($this->data->address->municipality)){

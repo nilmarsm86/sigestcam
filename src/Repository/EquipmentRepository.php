@@ -40,7 +40,7 @@ class EquipmentRepository extends ServiceEntityRepository
     }
 
 //    /**
-//     * @return Equipment[] Returns an array of ConnectedElement objects
+//     * @return Equipment[] Returns an array of Equipment objects
 //     */
 //    public function findByExampleField($value): array
 //    {

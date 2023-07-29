@@ -6,14 +6,10 @@ use App\DTO\CommutatorForm;
 use App\Entity\Municipality;
 use App\Entity\Province;
 use App\Form\CommutatorType;
-use App\Repository\MunicipalityRepository;
-use App\Repository\ProvinceRepository;
 use App\Resolver\RequestFormPayloadValueResolver;
-use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\HttpKernel\Attribute\MapQueryParameter;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Annotation\Route;
 
@@ -38,7 +34,6 @@ class ConectionController extends AbstractController
             ],
             resolver: RequestFormPayloadValueResolver::class,
         )]
-        #[MapEntity]
         ?CommutatorForm $commutatorForm = null
     ): Response
     {
@@ -46,7 +41,7 @@ class ConectionController extends AbstractController
         $form->handleRequest($request);
         if($form->isSubmitted() && $form->isValid()){
             dump($commutatorForm);
-            die();
+            //die();
         }
 
         return $this->render('conection/direct.html.twig', [
