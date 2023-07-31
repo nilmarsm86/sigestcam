@@ -5,7 +5,7 @@ namespace App\Repository\Traits;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 
-trait Paginate
+trait PaginateTarit
  {
     /**
      * @param Query $dql

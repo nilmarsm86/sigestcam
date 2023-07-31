@@ -1,5 +1,5 @@
 <div
-        class="card shadow"
+        class="card shadow {% block card_css_class %}{% endblock %}"
         {{ stimulus_controller('table-list') }}
         data-action="
             select-navigate-querystring:onChange->table-list#showBackdrop
@@ -8,8 +8,9 @@
             user-state:startChange->table-list#showBackdrop
             user-state:endChange->table-list#hideBackdrop"
 >
-    <div class="card-header py-3">
+    <div class="card-header {% block card_header_css_class %}{% endblock %}">
         <p class="text-primary m-0 fw-bold">{% block card_title %}{% endblock %}</p>
+        {% block card_options %}{% endblock %}
     </div>
     <div class="card-body">
         <div class="row">
@@ -93,6 +94,8 @@
                 </nav>
             </div>
         </div>
+
+        {% block extra %}{% endblock %}
     </div>
     <backdrop-component {{ stimulus_target('table-list', 'backdropComponent') }}></backdrop-component>
 </div>

@@ -11,11 +11,11 @@ class Paginator
 {
 
     /**
-     * @param DoctrinePaginator $paginator
+     * @param DoctrinePaginator|array $paginator
      * @param int $amount
      * @param int $page
      */
-    public function __construct(private readonly  DoctrinePaginator $paginator, private readonly int $amount, private readonly int $page)
+    public function __construct(private readonly  DoctrinePaginator|array $paginator, private readonly int $amount, private readonly int $page)
     {
     }
 
@@ -34,7 +34,11 @@ class Paginator
      */
     public function getMaxPage(): int
     {
-        return ceil($this->paginator->count() / $this->amount);
+        if(is_array($this->paginator)){
+            return ceil(count($this->paginator) / $this->amount);
+        }else{
+            return ceil($this->paginator->count() / $this->amount);
+        }
     }
 
     /**
@@ -52,7 +56,12 @@ class Paginator
      */
     public function to(): int
     {
-        return (($this->page * $this->amount) < $this->paginator->count()) ? $this->page * $this->amount : $this->paginator->count();
+        if(is_array($this->paginator)){
+            return (($this->page * $this->amount) < count($this->paginator)) ? $this->page * $this->amount : count($this->paginator);
+        }else{
+            return (($this->page * $this->amount) < $this->paginator->count()) ? $this->page * $this->amount : $this->paginator->count();
+        }
+
     }
 
     /**
@@ -61,7 +70,11 @@ class Paginator
      */
     public function getTotal(): int
     {
-        return $this->paginator->count();
+        if(is_array($this->paginator)){
+            return count($this->paginator);
+        }else{
+            return $this->paginator->count();
+        }
     }
 
     /**

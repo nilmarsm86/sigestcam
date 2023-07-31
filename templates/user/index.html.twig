@@ -5,6 +5,8 @@
 {% block content %}
     <h3 class="text-dark mb-4">Gestión de usuarios y roles</h3>
     {% embed "embeds/table.html.twig" with {'paginator': paginator} %}
+        {% block card_header_css_class %}py-3{% endblock %}
+
         {% block card_title %}
             Usuarios y roles
         {% endblock %}
@@ -68,6 +70,12 @@
                         {% endfor %}
                     </tr>
                 {% endif %}
+            {% else %}
+                <tr>
+                    <td colspan="7">
+                    No se encontraron registros
+                    </td>
+                </tr>
             {% endfor %}
         {% endblock %}
 

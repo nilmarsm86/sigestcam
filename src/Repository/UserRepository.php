@@ -3,7 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\User;
-use App\Repository\Traits\Paginate;
+use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\Query;
 use Doctrine\ORM\QueryBuilder;
@@ -23,7 +23,7 @@ use Symfony\Component\Security\Core\User\PasswordUpgraderInterface;
  */
 class UserRepository extends ServiceEntityRepository implements PasswordUpgraderInterface
 {
-    use Paginate;
+    use PaginateTarit;
 
     public function __construct(ManagerRegistry $registry)
     {
@@ -72,13 +72,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
     {
         $builder = $this->createQueryBuilder('u');
         if($filter){
-            $builder->andWhere('u.username LIKE :username')
-                    ->orWhere('u.name LIKE :name')
-                    ->orWhere('u.lastname LIKE :lastname')
+            $builder->andWhere('u.username LIKE :filter')
+                    ->orWhere('u.name LIKE :fiter')
+                    ->orWhere('u.lastname LIKE :filter')
                     ->setParameters([
-                        ':username' => '%'.$filter.'%',
-                        ':name' => '%'.$filter.'%',
-                        ':lastname' => '%'.$filter.'%',
+                        ':filter' => '%'.$filter.'%',
+                        //':name' => '%'.$filter.'%',
+                        //':lastname' => '%'.$filter.'%',
                     ]);
         }
 

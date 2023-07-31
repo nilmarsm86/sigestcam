@@ -45,7 +45,7 @@ class Port
     #[Assert\Valid]
     private ?Card $card = null;
 
-    #[ORM\OneToOne(targetEntity: Equipment::class, cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(mappedBy: 'port', targetEntity: Equipment::class, cascade: ['persist', 'remove'])]
     #[Assert\Valid]
     private ?Equipment $equipment = null;
 
