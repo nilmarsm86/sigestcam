@@ -15,7 +15,7 @@ trait PaginateTarit
      */
      private function paginate(Query $dql, int $page, int $limit): Paginator
     {
-        $paginator = new Paginator($dql);
+        $paginator = new Paginator($dql, false);
         $paginator->getQuery()
             ->setFirstResult($limit * ($page - 1)) // Offset
             ->setMaxResults($limit); // Limit

@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Commutator;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -51,6 +52,7 @@ class CommutatorRepository extends ServiceEntityRepository
      */
     public function findCommutator(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
+        //$builder = $this->createQueryBuilder('c')->addSelect('m');
         $builder = $this->createQueryBuilder('c');
         if($filter){
             $builder->andWhere('c.physicalAddress LIKE :filter')
@@ -61,12 +63,16 @@ class CommutatorRepository extends ServiceEntityRepository
                 ->orWhere('c.ip LIKE :filter')
                 ->orWhere('c.model LIKE :filter')
                 ->orWhere('c.physicalSerial LIKE :filter')
+                //->innerJoin('c.municipality1 m')
                 ->setParameters([
-                    ':filer' => '%'.$filter.'%',
+                    ':filter' => '%'.$filter.'%',
                 ]);
         }
 
+        //$query = $builder->/*select(['c.ip', 'm.name'])->*/join('c.municipality', 'm')->orderBy('c.id', 'ASC')->getQuery();
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        //innerJoin('c.municipality', 'm')->orderBy('c.id', 'ASC')->getQuery();
+        //dd($query->getDQL());
         return $this->paginate($query, $page, $amountPerPage);
     }
 

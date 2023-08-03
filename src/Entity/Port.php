@@ -61,13 +61,16 @@ class Port
             ConnectionType::SlaveSwitch],
         message: 'Seleccione un tipo de conexion válido.'
     )]
-    private ConnectionType $enumConnectionType;
+    private ?ConnectionType $enumConnectionType = null;
 
-    public function __construct(string $number)
+    public function __construct(?string $number = null, ?ConnectionType $connectionType = null)
     {
         $this->number = $number;
         $this->speed = 1;
         $this->enumState = StateEnum::Active;
+        if(!is_null($connectionType)){
+            $this->enumConnectionType = $connectionType;
+        }
     }
 
     public function getId(): ?int
@@ -294,7 +297,7 @@ class Port
         return null;
     }
 
-    public function getConnectionType(): ConnectionType
+    public function getConnectionType(): ?ConnectionType
     {
         return $this->enumConnectionType;
     }
@@ -314,7 +317,9 @@ class Port
     public function onSave(): void
     {
         $this->state = $this->getState()->value;
-        $this->connectionType = $this->getConnectionType()->value;
+        if(!is_null($this->enumConnectionType)){
+            $this->connectionType = $this->getConnectionType()->value;
+        }
     }
 
     /**
@@ -324,7 +329,9 @@ class Port
     public function onLoad(): void
     {
         $this->setState(StateEnum::from($this->state));
-        $this->setConnectionType(ConnectionType::from($this->connectionType));
+        if(!is_null($this->connectionType)){
+            $this->setConnectionType(ConnectionType::from($this->connectionType));
+        }
     }
 
 }

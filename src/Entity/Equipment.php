@@ -20,6 +20,7 @@ use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
     'server' => 'Server',
     'commutator' => 'Commutator'
 ])]
+#[ORM\HasLifecycleCallbacks]
 class Equipment
 {
     use StateTrait;
@@ -30,8 +31,8 @@ class Equipment
     protected ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(message: 'El tipo no debe estar vacío.')]
-    #[Assert\NotNull(message: 'El tipo no debe ser nulo.')]
+    //#[Assert\NotBlank(message: 'El tipo no debe estar vacío.')]
+    //#[Assert\NotNull(message: 'El tipo no debe ser nulo.')]
     protected ?string $brand = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -51,36 +52,36 @@ class Equipment
     protected string $physicalAddress;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Regex(
+    /*#[Assert\Regex(
         pattern: '/^[a-zA-Z0-9_\-\.]+$/',
         message: 'El número de serie físico solo debe contener letras, números, guiones y punto.',
-    )]
-    protected string $physicalSerial;
+    )]*/
+    protected ?string $physicalSerial;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\Valid]
-    protected Municipality $municipality;
+    protected ?Municipality $municipality = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Regex(
+    /*#[Assert\Regex(
         pattern: '/^[a-zA-Z0-9_\-\.]+$/',
         message: 'El número de inventario solo debe contener letras, números, guiones y punto.',
-    )]
-    protected string $model;
+    )]*/
+    protected ?string $model;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Regex(
+    /*#[Assert\Regex(
         pattern: '/^[a-zA-Z0-9_\-\.]+$/',
         message: 'El número de inventario solo debe contener letras, números, guiones y punto.',
-    )]
+    )]*/
     protected ?string $inventory = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\Regex(
+    /*#[Assert\Regex(
         pattern: '/^[a-zA-Z0-9_\-\.]+$/',
         message: 'El contic solo debe contener letras, números, guiones y punto.',
-    )]
+    )]*/
     protected ?string $contic = null;
 
     #[ORM\OneToOne(inversedBy: 'equipment', targetEntity: Port::class)]
@@ -134,36 +135,36 @@ class Equipment
         return $this;
     }
 
-    public function getPhysicalSerial(): string
+    public function getPhysicalSerial(): ?string
     {
         return $this->physicalSerial;
     }
 
-    public function setPhysicalSerial(string $physicalSerial): static
+    public function setPhysicalSerial(?string $physicalSerial): static
     {
         $this->physicalSerial = $physicalSerial;
 
         return $this;
     }
 
-    public function getMunicipality(): Municipality
+    public function getMunicipality(): ?Municipality
     {
         return $this->municipality;
     }
 
-    public function setMunicipality(Municipality $municipality): static
+    public function setMunicipality(?Municipality $municipality): static
     {
         $this->municipality = $municipality;
 
         return $this;
     }
 
-    public function getModel(): string
+    public function getModel(): ?string
     {
         return $this->model;
     }
 
-    public function setModel(string $model): static
+    public function setModel(?string $model): static
     {
         $this->model = $model;
 
@@ -209,8 +210,12 @@ class Equipment
     public function __toString(): string
     {
         $namespace = explode('\\', static::class);
-        $className = $namespace[count($namespace) - 1];
-        $data = $className.': ('.$this->getPhysicalSerial().')';
+        //$className = $namespace[count($namespace) - 1];
+        $data = $namespace[count($namespace) - 1];
+        if(!is_null($this->getPhysicalSerial())){
+            $data .= ': ('.$this->getPhysicalSerial().')';
+        }
+
         if(!is_null($this->getIp())){
             $data .= '['.$this->getIp().']';
         }

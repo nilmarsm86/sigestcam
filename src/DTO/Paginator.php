@@ -9,14 +9,37 @@ use Doctrine\ORM\Tools\Pagination\Paginator as DoctrinePaginator;
  */
 class Paginator
 {
-
     /**
-     * @param DoctrinePaginator|array $paginator
-     * @param int $amount
-     * @param int $page
+     * @param DoctrinePaginator|array|null $data
+     * @param int|null $amount
+     * @param int|null $page
+     * @param int|null $fake
      */
-    public function __construct(private readonly  DoctrinePaginator|array $paginator, private readonly int $amount, private readonly int $page)
+    public function __construct(
+        private readonly DoctrinePaginator|array|null $data = [],
+        private ?int                         $amount = 10,
+        private ?int                         $page = 1,
+        private ?int                         $fake = null
+    )
     {
+    }
+
+    public function setFake(int $fake): static
+    {
+        $this->fake = $fake;
+        return $this;
+    }
+
+    public function setAmount(int $amount): static
+    {
+        $this->amount = $amount;
+        return $this;
+    }
+
+    public function setPage(int $page): static
+    {
+        $this->page = $page;
+        return $this;
     }
 
     /**
@@ -25,7 +48,7 @@ class Paginator
      */
     public function getData(): DoctrinePaginator|array
     {
-        return $this->paginator;
+        return $this->data;
     }
 
     /**
@@ -34,11 +57,7 @@ class Paginator
      */
     public function getMaxPage(): int
     {
-        if(is_array($this->paginator)){
-            return ceil(count($this->paginator) / $this->amount);
-        }else{
-            return ceil($this->paginator->count() / $this->amount);
-        }
+        return ceil($this->getTotal() / $this->amount);
     }
 
     /**
@@ -47,6 +66,7 @@ class Paginator
      */
     public function from(): int
     {
+        //arreglar bug cuando se pone una cantidad a mostrar mayor que la que hay y esta fuera de rango la pagina
         return ($this->page * $this->amount) - $this->amount + 1;
     }
 
@@ -56,12 +76,8 @@ class Paginator
      */
     public function to(): int
     {
-        if(is_array($this->paginator)){
-            return (($this->page * $this->amount) < count($this->paginator)) ? $this->page * $this->amount : count($this->paginator);
-        }else{
-            return (($this->page * $this->amount) < $this->paginator->count()) ? $this->page * $this->amount : $this->paginator->count();
-        }
-
+        $total = $this->getTotal();
+        return (($this->page * $this->amount) < $total) ? $this->page * $this->amount : $total;
     }
 
     /**
@@ -70,11 +86,16 @@ class Paginator
      */
     public function getTotal(): int
     {
-        if(is_array($this->paginator)){
-            return count($this->paginator);
+        if(is_null($this->fake)){
+            if(is_array($this->data)){
+                return count($this->data);
+            }else{
+                return $this->data->count();
+            }
         }else{
-            return $this->paginator->count();
+             return $this->fake;
         }
+
     }
 
     /**

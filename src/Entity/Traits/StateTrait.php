@@ -2,8 +2,8 @@
 
 namespace App\Entity\Traits;
 
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Enums\State as StateEnum;
+use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 
 trait StateTrait
@@ -37,5 +37,37 @@ trait StateTrait
     public function onLoad(): void
     {
         $this->setState(StateEnum::from($this->state));
+    }
+
+    /**
+     * Is active or not
+     * @return bool
+     */
+    public function isActive():bool
+    {
+        return $this->enumState === StateEnum::Active;
+    }
+
+    /**
+     * Activate
+     * @return $this
+     */
+    public function activate(): static
+    {
+        $this->state = null;
+        $this->setState(StateEnum::Active);
+        return $this;
+    }
+
+    /**
+     * Deactivate
+     * @return $this
+     */
+    public function deactivate(): static
+    {
+        $this->state = null;
+        $this->setState(StateEnum::Inactive);
+
+        return $this;
     }
  }

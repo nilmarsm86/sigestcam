@@ -37,15 +37,15 @@
                                     'url':path('user_state'),
                                 }) }}
                                 >
+                                    <input
+                                            class="form-check-input"
+                                            type="checkbox"
+                                            {{ stimulus_action('user-state', 'onChange', 'change') }}
+                                            role="switch"
+                                            {% if user.isActive() %}checked{% endif %}
+                                    >
+                                </div>
                             {% endif %}
-                                <input
-                                        class="form-check-input"
-                                        type="checkbox"
-                                        {{ stimulus_action('user-state', 'onChange', 'change') }}
-                                        role="switch"
-                                        {% if user.isActive() %}checked{% endif %}
-                                >
-                            </div>
                         </td>
                         <td>{{ user.getFullName() }}</td>
                         <td>{{ user.username }}</td>

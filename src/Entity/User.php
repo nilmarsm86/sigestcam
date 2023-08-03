@@ -239,29 +239,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    /**
-     * Activate user
-     * @return $this
-     */
-    public function activate(): static
-    {
-        $this->state = null;
-        $this->setState(State::Active);
-        return $this;
-    }
-
-    /**
-     * Deactivate user
-     * @return $this
-     */
-    public function deactivate(): static
-    {
-        $this->state = null;
-        $this->setState(State::Inactive);
-
-        return $this;
-    }
-
     public function isActive(): ?bool
     {
         return $this->getState() === State::Active;

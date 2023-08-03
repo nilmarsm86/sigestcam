@@ -71,21 +71,21 @@
                         <ul class="pagination">
                             <li class="page-item {% if paginator.currentPage == 1 %}disabled{% endif %}">
                                 <a class="page-link" aria-label="Previous"
-                                   href="{{ path('user_list',{'page':1, 'filter':filter, 'amount':paginator.amount}) }}">
+                                   href="{{ path(url ? url: app.request.attributes.get('_route'),{'page':1, 'filter':filter, 'amount':paginator.amount}) }}">
                                     <span aria-hidden="true">«</span>
                                 </a>
                             </li>
                             {% for item in 1..paginator.maxPage %}
                                 <li class="page-item {% if paginator.currentPage == item %}active{% endif %}">
                                     <a class="page-link"
-                                       href="{{ path('user_list', {'page':item, 'filter':filter, 'amount':paginator.amount}) }}">
+                                       href="{{ path(url ? url: app.request.attributes.get('_route'), {'page':item, 'filter':filter, 'amount':paginator.amount}) }}">
                                         {{ item }}
                                     </a>
                                 </li>
                             {% endfor %}
                             <li class="page-item {% if paginator.currentPage == paginator.maxPage %}disabled{% endif %}">
                                 <a class="page-link" aria-label="Next"
-                                   href="{{ path('user_list', {'page':paginator.maxPage, 'filter':filter, 'amount':paginator.amount}) }}">
+                                   href="{{ path(url ? url: app.request.attributes.get('_route'), {'page':paginator.maxPage, 'filter':filter, 'amount':paginator.amount}) }}">
                                     <span aria-hidden="true">»</span>
                                 </a>
                             </li>

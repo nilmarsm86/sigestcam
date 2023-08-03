@@ -3,6 +3,7 @@
 namespace App\Entity\Traits;
 
 use App\Entity\Card;
+use App\Entity\Enums\ConnectionType;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Port as PortEntity;
@@ -11,14 +12,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait PortTrait
 {
-    #[ORM\OneToMany(mappedBy: 'card', targetEntity:PortEntity::class)]
-    #[ORM\OrderBy(['number' => 'ASC'])]
-    #[Assert\Count(
-        min: 1,
-        minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
-    )]
-    private Collection $ports;
-
     private ?int $maximumPortsAmount;
 
     /**
@@ -62,17 +55,19 @@ trait PortTrait
 
     /**
      * @param int $amount
+     * @param ConnectionType|null $connectionType
      * @return PortTrait
      * @throws Exception
      */
-    public function createPorts(int $amount): static
+    public function createPorts(int $amount, ?ConnectionType $connectionType = null): static
     {
         if($this->ports->count() === $this->maximumPortsAmount){
             throw new Exception('Ha alcanzado el número máximo de puertos permitidos para este puerto.');
         }
 
         for ($i = 0; $i < $amount; $i++) {
-            $this->addPort(new PortEntity($i + 1));
+
+            $this->addPort(new PortEntity($i + 1, $connectionType));
         }
 
         return $this;

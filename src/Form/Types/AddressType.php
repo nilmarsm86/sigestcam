@@ -2,9 +2,9 @@
 
 namespace App\Form\Types;
 
-use App\DTO\AddressForm;
 use App\Entity\Municipality;
 use App\Entity\Province;
+use App\Form\Models\AddressFormModel;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -20,7 +20,7 @@ class AddressType extends AbstractType
             ->add('province', EntityType::class, [
                 'class' => Province::class,
                 'attr' => [
-                    'data-model' => 'query'
+                    'data-model' => 'province'
                 ],
                 'placeholder' => '-Seleccione-',
             ])
@@ -31,7 +31,7 @@ class AddressType extends AbstractType
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => AddressForm::class,
+            'data_class' => AddressFormModel::class,
         ]);
     }
 
@@ -45,6 +45,9 @@ class AddressType extends AbstractType
             'placeholder' => null === $data?->province ? '-Seleccione provincia-' : '-Seleccione-',
             'choices' => (null === $data?->province) ? [] : $data?->province?->getMunicipalities(),
             'disabled' => (null === $data?->province || $data?->province?->getMunicipalities()->count() === 0),
+            'attr' => [
+                'data-model' => 'municipality'
+            ],
         ]);
     }
 

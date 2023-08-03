@@ -3,8 +3,10 @@
 namespace App\Entity;
 
 use App\Entity\Interfaces\Harbor;
+use App\Entity\Port as PortEntity;
 use App\Repository\CardRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
 use App\Entity\Traits\PortTrait as PortTrait;
@@ -21,6 +23,14 @@ class Card implements Harbor
     #[ORM\GeneratedValue]
     #[ORM\Column]
     private ?int $id = null;
+
+    #[ORM\OneToMany(mappedBy: 'card', targetEntity:PortEntity::class, cascade: ['persist'])]
+    #[ORM\OrderBy(['number' => 'ASC'])]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
+    )]
+    private Collection $ports;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El nombre no debe estar vacío.')]
@@ -45,7 +55,7 @@ class Card implements Harbor
     {
         $this->ports = new ArrayCollection();
         $this->maximumPortsAmount = self::MAXIMUM_PORTS_NUMBER;
-        $this->createPorts(self::MAXIMUM_PORTS_NUMBER);
+        $this->createPorts(self::MAXIMUM_PORTS_NUMBER, null);
     }
 
     public function getId(): ?int

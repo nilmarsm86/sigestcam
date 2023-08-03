@@ -2,19 +2,31 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\ConnectionType;
+use App\Entity\Enums\State;
 use App\Entity\Interfaces\Harbor;
+use App\Entity\Port as PortEntity;
 use App\Repository\CommutatorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Exception;
-use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 use App\Entity\Traits\PortTrait as PortTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommutatorRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Commutator extends Equipment implements Harbor
 {
     use PortTrait;
+
+    #[ORM\OneToMany(mappedBy: 'commutator', targetEntity:PortEntity::class, cascade: ['persist'])]
+    #[ORM\OrderBy(['number' => 'ASC'])]
+    #[Assert\Count(
+        min: 1,
+        minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
+    )]
+    private Collection $ports;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la cantidad de puertos.')]
@@ -29,17 +41,22 @@ class Commutator extends Equipment implements Harbor
     private ?string $gateway = null;
 
     /**
+     * @param string|null $ip
+     * @param int|null $portsAmount
+     * @param ConnectionType|null $connectionType
      * @throws Exception
      */
-    public function __construct(?string $ip = null, ?int $portsAmount = null)
+    public function __construct(?string $ip = null, ?int $portsAmount = null, ?ConnectionType $connectionType = null)
     {
         parent::__construct();
         $this->ports = new ArrayCollection();
-        //$this->ip = $ip;//validar que es un ip correcto
-        //$this->portsAmount = $portsAmount;
-        //$this->enumState = StateEnum::Active;
-        $this->maximumPortsAmount = 1;
-        //$this->createPorts($this->portsAmount);
+        $this->ip = $ip;//validar que es un ip correcto
+        $this->portsAmount = $portsAmount;
+        $this->enumState = State::Active;
+        $this->maximumPortsAmount = $portsAmount;
+        if(!is_null($portsAmount)){
+            $this->createPorts($this->portsAmount, $connectionType);
+        }
     }
 
     /*public function configure(string $ip): static

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\DTO;
+namespace App\Form\Models;
 
 use App\Entity\Municipality;
 use App\Entity\Province;
@@ -8,7 +8,7 @@ use Symfony\Component\Validator\Constraints\NotBlank;
 use Symfony\Component\Validator\Constraints\NotNull;
 use Symfony\Component\Validator\Constraints\Valid;
 
-final class AddressForm
+final class AddressFormModel
 {
     public function __construct(
         #[NotBlank(message: 'Seleccione una provincia.')]
