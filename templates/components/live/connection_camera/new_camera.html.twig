@@ -1,0 +1,35 @@
+{% from 'macros/flashes.html.twig' import flash %}
+
+<div {{ attributes }}>
+    {% if port is null and modem is null %}
+        {{ flash('danger', 'Para crear una nueva camara debe seleccionar el puerto o  modem a donde estará conectada.', false) }}
+    {% else %}
+        {% if isSuccessful == false %}
+            {% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}
+
+            {{ form_start(form, {
+                attr: {
+                    'data-action': 'live#action',
+                    'data-action-name': 'prevent|save',
+                }
+            }) }}
+            {{ form_row(form.ip) }}
+            {{ form_row(form.physicalAddress) }}
+            {{ form_row(form.physicalSerial) }}
+            {{ form_row(form.electronicSerial) }}
+            {{ form_row(form.brand) }}
+            {{ form_row(form.model) }}
+            {{ form_row(form.inventory) }}
+            {{ form_row(form.contic) }}
+            {{ form_row(form.user) }}
+            {{ form_row(form.password) }}
+
+            <button type="submit" class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}">
+                <i class="fas fa-save"></i>
+                Salvar
+            </button>
+            {{ form_row(form._token) }}
+            {{ form_end(form, {render_rest: false}) }}
+        {% endif %}
+    {% endif %}
+</div>

@@ -18,49 +18,21 @@
             </nav>
         </div>
     </div>
-
-    {{ component('ConnectionSwitch',{
-        data:data,
-        filter: filter,
-        paginator: paginator,
-        amount: amountPerPage,
-        page: pageNumber,
-        fake: fake,
-        url: app.request.attributes.get('_route'),
-        connection: connection
+    {{ component('ConnectionCommutator', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::Direct')
     }) }}
 
-    <div class="card shadow mb-3">
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <p class="text-primary m-0 fw-bold">Camara</p>
-            <div>
-                <a href="#" class="btn btn-primary btn-sm active" aria-current="page">
-                    <i class="fas fa-plus"></i>
-                    Nuevo
-                </a>
-                <a href="#" class="btn btn-primary btn-sm" aria-current="page">
-                    <i class="fas fa-search"></i>
-                    Existente
-                </a>
-            </div>
+    {{ component('ConnectionCamera') }}
+
+    <div class="row mb-3">
+        <div class="col-8">
+
         </div>
-        <div class="card-body">
-
-
-
+        <div class="col-4">
+            <button type="button" class="btn btn-primary btn-lg">Crear conexion</button>
         </div>
     </div>
 
-    <!-- Modal -->
-    {{ component('ModalForm', {
-        title: 'Agregar Switch',
-        src: 'CommutatorForm',
-        vars: {
-            'fromComponent': true,
-            'formType': 'App\\Form\\CommutatorType',
-        },
-        type: 'component',
-        id: 'add-switch'
-    }) }}
-    <!-- Modal -->
+
+
 {% endblock %}

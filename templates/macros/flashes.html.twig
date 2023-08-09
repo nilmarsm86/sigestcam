@@ -6,9 +6,11 @@
     {% endfor %}
 {% endmacro %}
 
-{% macro flash(type, message) %}
+{% macro flash(type, message, close=true) %}
     <div class="alert alert-{{ type }} alert-dismissible fade show" role="alert">
-        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="float: right"></button>
+        {% if close %}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close" style="float: right"></button>
+        {% endif %}
         <div>{{ message }}</div>
     </div>
 {% endmacro %}

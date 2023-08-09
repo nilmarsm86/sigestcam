@@ -42,8 +42,8 @@ class Report
     #[Assert\DateTime]
     private ?DateTimeImmutable $closeDate = null;
 
-    #[ORM\Column]
-    private int $type;
+    #[ORM\Column(length: 255)]
+    private string $type;
 
     #[Assert\Choice(
         choices: [ReportType::Camera, ReportType::Server, ReportType::Msam, ReportType::Modem, ReportType::Switch],
@@ -54,8 +54,8 @@ class Report
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $interruptionReason = null;
 
-    #[ORM\Column]
-    private int $priority;
+    #[ORM\Column(length: 255)]
+    private string $priority;
 
     #[Assert\Choice(
         choices: [Priority::Hight, Priority::Medium, Priority::Low],
@@ -92,14 +92,14 @@ class Report
     #[Assert\Valid]
     private User $managementOfficer;
 
-    #[ORM\Column]
-    private int $state;
+    #[ORM\Column(length: 255)]
+    private string $state;
 
     #[Assert\Choice(choices: [ReportState::Open, ReportState::Close], message: 'Seleccione un estado válido.')]
     private ReportState $enumState;
 
-    #[ORM\Column]
-    private int $aim;
+    #[ORM\Column(length: 255)]
+    private string $aim;
 
     #[Assert\Choice(choices: [Aim::NoObjective, Aim::Objective], message: 'Seleccione un aim válido.')]
     private Aim $enumAim;

@@ -4,18 +4,32 @@ namespace App\Form\Types;
 
 use App\Entity\Municipality;
 use App\Entity\Province;
-use App\Form\Models\AddressFormModel;
+use Doctrine\ORM\EntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Symfony\Component\Form\FormEvent;
-use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class AddressType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $provinceConstraints = [];
+        if(!$options['province']){
+            $provinceConstraints = [
+                new NotBlank(message: 'Seleccione una provincia.')
+            ];
+        }
+
+        $municipalityConstraints = [];
+        if(!$options['municipality']){
+            $municipalityConstraints = [
+                new NotBlank(message: 'Seleccione un municipio.')
+            ];
+        }
+
         $builder
             ->add('province', EntityType::class, [
                 'class' => Province::class,
@@ -23,32 +37,41 @@ class AddressType extends AbstractType
                     'data-model' => 'province'
                 ],
                 'placeholder' => '-Seleccione-',
+                'label' => 'Provincia:',
+                'label_attr' => [
+                    'class' => 'fw-bold'
+                ],
+                'mapped' => false,
+                'constraints' => $provinceConstraints
             ])
-            ->addEventListener(FormEvents::PRE_SET_DATA, [$this, 'onPreSetData'])
+            ->add('municipality', EntityType::class, [
+                'class' => Municipality::class,
+                'placeholder' => $options['province'] ? '-Seleccione provincia-' : '-Seleccione-',
+                'query_builder' => function (EntityRepository $er) use ($options): QueryBuilder|array {
+                    return $er->createQueryBuilder('m')->where('m.province = '.$options['province']);
+                },
+                'disabled' => $options['province'] ? false : true,
+                'attr' => [
+                    'data-model' => 'municipality'
+                ],
+                'label' => 'Municipio:',
+                'label_attr' => [
+                    'class' => 'fw-bold'
+                ],
+                'constraints' => $municipalityConstraints
+            ])
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => AddressFormModel::class,
+            'province' => 0,
+            'municipality' => 0,
         ]);
-    }
 
-    public function onPreSetData(FormEvent $event)
-    {
-        $data = $event->getData();
-        $form = $event->getForm();
-
-        $form->add('municipality', EntityType::class, [
-            'class' => Municipality::class,
-            'placeholder' => null === $data?->province ? '-Seleccione provincia-' : '-Seleccione-',
-            'choices' => (null === $data?->province) ? [] : $data?->province?->getMunicipalities(),
-            'disabled' => (null === $data?->province || $data?->province?->getMunicipalities()->count() === 0),
-            'attr' => [
-                'data-model' => 'municipality'
-            ],
-        ]);
+        $resolver->setAllowedTypes('province', 'int');
+        $resolver->setAllowedTypes('municipality', 'int');
     }
 
 }

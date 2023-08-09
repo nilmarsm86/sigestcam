@@ -8,8 +8,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait StateTrait
  {
-    #[ORM\Column]
-    protected ?int $state;
+    #[ORM\Column(length: 255)]
+    protected ?string $state = null;
 
     #[Assert\Choice(choices: [StateEnum::Active, StateEnum::Inactive], message: 'Seleccione un estado válido.')]
     protected StateEnum $enumState;

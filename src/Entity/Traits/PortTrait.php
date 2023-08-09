@@ -4,6 +4,7 @@ namespace App\Entity\Traits;
 
 use App\Entity\Card;
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Port;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Port as PortEntity;
@@ -12,7 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 trait PortTrait
 {
-    private ?int $maximumPortsAmount;
+    private ?int $maximumPortsAmount = null;
 
     /**
      * @return Collection<int, PortEntity>
@@ -66,10 +67,20 @@ trait PortTrait
         }
 
         for ($i = 0; $i < $amount; $i++) {
-
             $this->addPort(new PortEntity($i + 1, $connectionType));
         }
 
         return $this;
+    }
+
+    /**
+     * @return void
+     */
+    private function deactivatePorts(): void
+    {
+        foreach ($this->getPorts() as $port) {
+            /** @var Port $port */
+            $port->deactivate();
+        }
     }
 }

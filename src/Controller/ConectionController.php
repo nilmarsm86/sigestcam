@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\DTO\Paginator;
 use App\Entity\Enums\ConnectionType;
-use App\Form\Models\CommutatorFormModel;
 use App\Repository\CommutatorRepository;
 use Doctrine\ORM\AbstractQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;

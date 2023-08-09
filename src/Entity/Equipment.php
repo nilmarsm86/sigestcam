@@ -37,7 +37,7 @@ class Equipment
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\When(
-        expression: '$this instanceof Camera || $this instanceof Msam || $this instanceof Server || $this instanceof Commutator',
+        expression: 'this.getClass() == "Camera" || this.getClass() == "Msam" || this.getClass() == "Server" || this.getClass() == "Commutator"',
         constraints: [
             new Assert\NotBlank(message: 'Establezca el IP del equipo.'),
             new Assert\NotNull(message: 'El IP del equipo no puede ser nulo.')
@@ -56,7 +56,7 @@ class Equipment
         pattern: '/^[a-zA-Z0-9_\-\.]+$/',
         message: 'El número de serie físico solo debe contener letras, números, guiones y punto.',
     )]*/
-    protected ?string $physicalSerial;
+    protected ?string $physicalSerial = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
@@ -68,7 +68,7 @@ class Equipment
         pattern: '/^[a-zA-Z0-9_\-\.]+$/',
         message: 'El número de inventario solo debe contener letras, números, guiones y punto.',
     )]*/
-    protected ?string $model;
+    protected ?string $model = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     /*#[Assert\Regex(
@@ -116,6 +116,10 @@ class Equipment
         return $this->ip;
     }
 
+    /**
+     * @param string|null $ip
+     * @return $this
+     */
     public function setIp(?string $ip): static
     {
         $this->ip = $ip;
@@ -200,8 +204,14 @@ class Equipment
         return $this->port;
     }
 
+    /**
+     * @throws \Exception
+     */
     public function setPort(?port $port): static
     {
+        if(!is_null($port)){
+            $port->setEquipment($this);
+        }
         $this->port = $port;
 
         return $this;
@@ -221,6 +231,26 @@ class Equipment
         }
 
         return $data;
+    }
+
+    public function getClass()
+    {
+        $namespace = explode('\\', static::class);
+        return $namespace[count($namespace) - 1];
+    }
+
+    public function disconnect(): static
+    {
+        $this->port->setEquipment(null);
+        $this->port = null;
+        $this->deactivate();
+
+        return $this;
+    }
+
+    public function getShortName(): string
+    {
+        return substr($this->getClass(), 0 , 3);
     }
 
 }

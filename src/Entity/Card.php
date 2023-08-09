@@ -2,8 +2,9 @@
 
 namespace App\Entity;
 
-use App\Entity\Interfaces\Harbor;
+use App\Entity\Interfaces\HarborInterface;
 use App\Entity\Port as PortEntity;
+use App\Entity\Traits\NameToStringTrait;
 use App\Repository\CardRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -13,9 +14,10 @@ use App\Entity\Traits\PortTrait as PortTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
-class Card implements Harbor
+class Card implements HarborInterface
 {
     use PortTrait;
+    use NameToStringTrait;
 
     const MAXIMUM_PORTS_NUMBER = 16;
 
@@ -32,10 +34,10 @@ class Card implements Harbor
     )]
     private Collection $ports;
 
-    #[ORM\Column(length: 255)]
+    /*#[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El nombre no debe estar vacío.')]
     #[Assert\NotNull(message: 'El nombre no debe ser nulo.')]
-    private string $name;
+    private string $name;*/
 
     #[ORM\ManyToOne(inversedBy: 'cards')]
     #[ORM\JoinColumn(nullable: false)]
@@ -63,7 +65,7 @@ class Card implements Harbor
         return $this->id;
     }
 
-    public function getName(): string
+    /*public function getName(): string
     {
         return $this->name;
     }
@@ -73,7 +75,7 @@ class Card implements Harbor
         $this->name = $name;
 
         return $this;
-    }
+    }*/
 
     public function getMsam(): ?Msam
     {
@@ -103,13 +105,17 @@ class Card implements Harbor
      * No se pone en trait debido a la validación
      * @return int
      */
-    #[Assert\Count(
-        max: 16,
-        maxMessage: 'Una targeta tiene un máximo de {{ limit }} puertos.',
-    )]
+    #[Assert\LessThanOrEqual(16)]
     public function maxPorts(): int
     {
         return $this->maximumPortsAmount;
+    }
+
+    public function deactivate(): static
+    {
+        $this->deactivatePorts();
+
+        return $this;
     }
 
 }

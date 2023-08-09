@@ -1,29 +1,25 @@
 <?php
 
-namespace App\Components\Live;
+namespace App\Components\Live\ConnectionCommutator;
 
 use App\Entity\Commutator;
-use App\Entity\Enums\ConnectionType;
 use App\Repository\CommutatorRepository;
-use http\Message;
-use Symfony\Component\Validator\ConstraintViolationList;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
-use Symfony\Component\Validator\Constraints as Assert;
 
-#[AsLiveComponent(template: 'components/live/switch_detail_edit_inline.html.twig', csrf: false)]
-class SwitchDetailEditInline
+#[AsLiveComponent(template: 'components/live/connection_commutator/commutator_detail_edit_inline.html.twig', csrf: false)]
+class CommutatorhDetailEditInline
 {
     use DefaultActionTrait;
 
     #[LiveProp]
     public ?string $label = null;
 
-    #[LiveProp(writable: true)]
+    #[LiveProp(writable: true )]
     public ?string $data = null;
 
     #[LiveProp]
@@ -87,7 +83,7 @@ class SwitchDetailEditInline
             if ($existing && count($existing) > 1) {
                 $this->errors[] = 'Ya existe un Switch con este IP (' . $this->data . ')';
             } else {
-                if ($existing[0]->getId() !== $commutator->getId()) {
+                if (isset($existing[0]) && $existing[0]->getId() !== $commutator->getId()) {
                     $this->errors[] = 'Ya existe un Switch con este IP (' . $this->data . ')';
                 }
             }

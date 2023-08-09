@@ -31,7 +31,6 @@ class Province
 
     public function __construct()
     {
-        //$this->name = $name;
         $this->municipalities = new ArrayCollection();
     }
 

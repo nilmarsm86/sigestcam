@@ -5,8 +5,6 @@ namespace App\Controller;
 use App\Entity\Municipality;
 use App\Entity\Province;
 use App\Form\CommutatorType;
-use App\Form\Models\CommutatorFormModel;
-use App\Repository\CommutatorRepository;
 use App\Resolver\RequestFormPayloadValueResolver;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -25,7 +23,7 @@ class CommutatorController extends AbstractController
         ]);
     }
 
-    #[Route('/new', name: '_new')]
+    /*#[Route('/new', name: '_new')]
     public function new(Request $request,
         #[MapRequestPayload(
             serializationContext: [
@@ -34,7 +32,7 @@ class CommutatorController extends AbstractController
             ],
             resolver: RequestFormPayloadValueResolver::class,
         )]
-        ?CommutatorFormModel    $commutatorForm = null,
+        ?CameraFormModel        $commutatorForm = null,
         bool                    $fromComponent = false
     ): Response
     {
@@ -56,5 +54,5 @@ class CommutatorController extends AbstractController
     {
         dump("OK");
         die();
-    }
+    }*/
 }

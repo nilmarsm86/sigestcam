@@ -1,0 +1,49 @@
+<div {{ attributes }}>
+    {% embed "embeds/async_table.html.twig" %}
+        {% block table_head %}
+            <tr>
+                <th>Ip</th>
+                <th>Puerta de enlace</th>
+                <th>Número de inventario</th>
+                <th>Dirección física</th>
+                <th>Marca</th>
+                <th>Modelo</th>
+                <th>Contic</th>
+                <th>Serie</th>
+                <th></th>
+            </tr>
+        {% endblock %}
+
+        {% block table_body %}
+            {% for commutator in paginator.getData() %}
+                <tr>
+                    <td>{{ commutator.ip }}</td>
+                    <td>{{ commutator.gateway }}</td>
+                    <td>{{ commutator.inventory }}</td>
+                    <td>{{ commutator.physicalAddress }}</td>
+                    <td>{{ commutator.brand }}</td>
+                    <td>{{ commutator.model }}</td>
+                    <td>{{ commutator.contic }}</td>
+                    <td>{{ commutator.physicalSerial }}</td>
+                    <td>
+                        <button
+                                type="button"
+                                class="btn btn-primary"
+                                aria-current="page"
+                                data-action="live#action"
+                                data-action-name="prevent|detail(commutatorId={{ commutator.id }})">
+                            <i class="fas fa-eye"></i>
+                            Detalle
+                        </button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">
+                        No se encontraron registros
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+    {% endembed %}
+</div>

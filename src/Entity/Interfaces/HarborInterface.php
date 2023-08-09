@@ -4,7 +4,7 @@ namespace App\Entity\Interfaces;
 
 use App\Entity\Enums\ConnectionType;
 
-interface Harbor
+interface HarborInterface
 {
     public function createPorts(int $amount, ConnectionType $connectionType): static;
 }

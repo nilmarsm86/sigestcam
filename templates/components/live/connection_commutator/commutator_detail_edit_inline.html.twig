@@ -7,7 +7,7 @@
             <input
                     type="text"
                     name="ip"
-                    data-model="data"
+                    data-model="norender|data"
                     class="form-control form-control-sm {% if errors %}border-danger{% endif %}"
             >
             {% if errors %}
@@ -18,7 +18,6 @@
         {% else %}
             {{ data }}
         {% endif %}
-
     </li>
     <li class="list-group-item w-10" style="
         {% if last == false %}
@@ -43,4 +42,5 @@
             {% endif %}
         {% endif  %}
     </li>
+{#    <backdrop-component data-loading="addClass(d-block)" style="display: none;position: absolute;width: 100%;height: 100%;"></backdrop-component>#}
 </ul>

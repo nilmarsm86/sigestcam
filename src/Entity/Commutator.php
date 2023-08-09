@@ -4,7 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Enums\State;
-use App\Entity\Interfaces\Harbor;
+use App\Entity\Enums\State as StateEnum;
+use App\Entity\Interfaces\HarborInterface;
 use App\Entity\Port as PortEntity;
 use App\Repository\CommutatorRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -16,16 +17,16 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CommutatorRepository::class)]
 #[ORM\HasLifecycleCallbacks]
-class Commutator extends Equipment implements Harbor
+class Commutator extends Equipment implements HarborInterface
 {
     use PortTrait;
 
     #[ORM\OneToMany(mappedBy: 'commutator', targetEntity:PortEntity::class, cascade: ['persist'])]
     #[ORM\OrderBy(['number' => 'ASC'])]
-    #[Assert\Count(
+    /*#[Assert\Count(
         min: 1,
         minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
-    )]
+    )]*/
     private Collection $ports;
 
     #[ORM\Column]
@@ -39,6 +40,8 @@ class Commutator extends Equipment implements Harbor
     #[Assert\NotNull(message: 'El IP gateway no debe ser nulo.')]
     #[Assert\Ip(message:'Establezca un IP gateway válido.')]
     private ?string $gateway = null;
+
+    private mixed $pepe = null;
 
     /**
      * @param string|null $ip
@@ -54,6 +57,7 @@ class Commutator extends Equipment implements Harbor
         $this->portsAmount = $portsAmount;
         $this->enumState = State::Active;
         $this->maximumPortsAmount = $portsAmount;
+        $this->pepe = $connectionType;
         if(!is_null($portsAmount)){
             $this->createPorts($this->portsAmount, $connectionType);
         }
@@ -74,7 +78,7 @@ class Commutator extends Equipment implements Harbor
     public function setPortsAmount(int $portsAmount): static
     {
         $this->portsAmount = $portsAmount;
-
+        $this->maximumPortsAmount = $portsAmount;
         return $this;
     }
 
@@ -91,17 +95,21 @@ class Commutator extends Equipment implements Harbor
     }
 
     /**
-     * No se pone en trait debido a la validación
-     * @return int
+     * Deactivate
+     * @return $this
      */
-    #[Assert\Count(
-        max: 32,
-        maxMessage: 'Un switch tiene un máximo de {{ limit }} puertos.',
-    )]
-    public function getMaxPorts(): ?int
+    public function deactivate(): static
     {
-        //deberia ser una validacion dinamica en dependencia de la cantidad de puertos pasaados
-        return $this->maximumPortsAmount;
+        $this->deactivatePorts();
+        return parent::deactivate();
+    }
+
+    #[ORM\PrePersist]
+    public function onCreatePort(): void
+    {
+        if(!is_null($this->getPortsAmount()) && $this->ports->count() === 0){
+            $this->createPorts($this->portsAmount);
+        }
     }
 
 }

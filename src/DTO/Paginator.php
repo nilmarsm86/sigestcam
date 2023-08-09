@@ -67,6 +67,9 @@ class Paginator
     public function from(): int
     {
         //arreglar bug cuando se pone una cantidad a mostrar mayor que la que hay y esta fuera de rango la pagina
+        if($this->getTotal() === 0){
+            return 0;
+        }
         return ($this->page * $this->amount) - $this->amount + 1;
     }
 

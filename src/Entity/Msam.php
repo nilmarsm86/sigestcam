@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\State as StateEnum;
 use App\Repository\MsamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -27,10 +28,10 @@ class Msam extends Equipment
     public function __construct()
     {
         parent::__construct();
-        $this->inventory = null;
+        /*$this->inventory = null;
         $this->physicalSerial = null;
         $this->contic = null;
-        $this->ip = null;
+        $this->ip = null;*/
         $this->cards = new ArrayCollection();
     }
 
@@ -90,6 +91,19 @@ class Msam extends Equipment
     public function setIp(?string $ip): static
     {
         throw new Exception('Msam no tiene Ip');
+    }
+
+    /**
+     * Deactivate
+     * @return $this
+     */
+    public function deactivate(): static
+    {
+        foreach ($this->getCards() as $card){
+            /** @var Card $card */
+            $card->deactivate();
+        }
+        return parent::deactivate();
     }
 
 }

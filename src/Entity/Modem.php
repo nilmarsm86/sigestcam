@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\State as StateEnum;
 use App\Entity\Traits\ConnectedTrait;
 use App\Repository\ModemRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -99,6 +100,31 @@ class Modem extends Equipment
     public function isInCardPort(): bool
     {
         return $this->port->isFromCard();
+    }
+
+    /**
+     * Deactivate
+     * @return $this
+     */
+    public function deactivate(): static
+    {
+        $this->slaveModem?->deactivate();
+        $this->deactivateCameras();
+
+        return parent::deactivate();
+    }
+
+    /**
+     * @return Modem
+     */
+    private function deactivateCameras(): static
+    {
+        foreach ($this->getCameras() as $camera) {
+            /** @var Camera $camera */
+            $camera->deactivate();
+        }
+
+        return $this;
     }
 
 }

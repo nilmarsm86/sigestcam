@@ -1,7 +1,8 @@
+{% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}
+
 {% if type and type is same as 'component' %}
     {{ form_start(form, {
         attr: {
-            'novalidate': true,
             'data-action': 'live#action',
             'data-action-name': 'prevent|save',
         }
@@ -9,24 +10,25 @@
 {% else %}
     {{ form_start(form) }}
 {% endif %}
-
     {{ form_row(form.ip) }}
     {{ form_row(form.gateway) }}
     {{ form_row(form.portsAmount) }}
     {{ form_row(form.physicalAddress) }}
     {{ form_row(form.physicalSerial) }}
-    {{ form_row(form.state) }}
     {{ form_row(form.brand) }}
     {{ form_row(form.model) }}
     {{ form_row(form.inventory) }}
     {{ form_row(form.contic) }}
 
     {{ component('AddressFileds', {
-        'formType': 'App\\Form\\CommutatorType',
-        'data': data,
+        formType: 'App\\Form\\CommutatorType',
+        data: data,
+        formTheme: 'form/bootstrap_5_horizontal_layout_sm.html.twig'
     }) }}
 
-    <button type="submit" class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}">Enviar</button>
-    <button type="button" class="" data-action="live#action" data-action-name="prevent|save">DO</button>
+    <button type="submit" class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}">
+        <i class="fas fa-save"></i>
+        Salvar
+    </button>
     {{ form_row(form._token) }}
 {{ form_end(form, {render_rest: false}) }}

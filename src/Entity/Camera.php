@@ -2,6 +2,8 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\ConnectionType;
+use App\Entity\Enums\State;
 use App\Entity\Traits\ConnectedTrait;
 use App\Repository\CameraRepository;
 use App\Validator\Username;
@@ -11,6 +13,7 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CameraRepository::class)]
 #[Assert\Cascade]
+#[ORM\HasLifecycleCallbacks]
 class Camera extends Equipment
 {
     use ConnectedTrait;
@@ -33,11 +36,21 @@ class Camera extends Equipment
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NoSuspiciousCharacters]
-    #[Assert\Regex(
+    /*#[Assert\Regex(
         pattern: '/^[a-zA-Z0-9_\-\.]+$/',
         message: 'El número de serie electrónico solo debe contener letras, números, guiones y punto.',
-    )]
+    )]*/
     private ?string $electronicSerial = null;
+
+    /**
+     * @param string|null $ip
+     */
+    public function __construct(?string $ip = null)
+    {
+        parent::__construct();
+        $this->ip = $ip;//validar que es un ip correcto
+        $this->enumState = State::Active;
+    }
 
     public function getUser(): ?string
     {
@@ -140,5 +153,17 @@ class Camera extends Equipment
 
         return true;
     }
+
+    public function disconnect(): static
+    {
+        parent::disconnect();
+
+        $this->modem->removeCamera($this);
+        //$this->deactivate();
+
+        return $this;
+    }
+
+
 
 }

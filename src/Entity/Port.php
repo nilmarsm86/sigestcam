@@ -5,7 +5,7 @@ namespace App\Entity;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Enums\ReportType;
 use App\Entity\Enums\State as StateEnum;
-use App\Entity\Interfaces\Harbor;
+use App\Entity\Interfaces\HarborInterface;
 use App\Entity\Traits\StateTrait as StateTrait;
 use App\Repository\PortRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -25,11 +25,11 @@ class Port
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca el número del puerto.')]
     #[Assert\NotNull(message: 'El número del puerto no puede ser nulo.')]
     #[Assert\PositiveOrZero]
-    private string $number;
+    private ?int $number = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la velocidad del puerto.')]
@@ -50,7 +50,7 @@ class Port
     private ?Equipment $equipment = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private string $connectionType;
+    private ?string $connectionType = null;
 
     #[Assert\Choice(
         choices: [
@@ -63,7 +63,7 @@ class Port
     )]
     private ?ConnectionType $enumConnectionType = null;
 
-    public function __construct(?string $number = null, ?ConnectionType $connectionType = null)
+    public function __construct(?int $number = null, ?ConnectionType $connectionType = null)
     {
         $this->number = $number;
         $this->speed = 1;
@@ -78,7 +78,7 @@ class Port
         return $this->id;
     }
 
-    public function getNumber(): string
+    public function getNumber(): int
     {
         return $this->number;
     }
@@ -146,7 +146,7 @@ class Port
      */
     public function setEquipment(?Equipment $equipment): static
     {
-        if ($this->isFromCard() && !$this->hasConnectedModem()) {
+        if (!is_null($equipment) && $this->isFromCard() && !$this->hasConnectedModem()) {
             throw new Exception('Only modems can be connected directly to the card ports.');
         }
 
@@ -261,10 +261,10 @@ class Port
     }
 
     /**
-     * @param Harbor|null $harbor
+     * @param HarborInterface|null $harbor
      * @return $this
      */
-    public function setHarbor(?Harbor $harbor): static
+    public function setHarbor(?HarborInterface $harbor): static
     {
         if($harbor instanceof Card){
             $this->setCard($harbor);
@@ -282,9 +282,9 @@ class Port
     }
 
     /**
-     * @return Harbor|null
+     * @return HarborInterface|null
      */
-    public function getHarbor(): ?Harbor
+    public function getHarbor(): ?HarborInterface
     {
         if($this->isFromCard()){
             return $this->getCard();
@@ -332,6 +332,19 @@ class Port
         if(!is_null($this->connectionType)){
             $this->setConnectionType(ConnectionType::from($this->connectionType));
         }
+    }
+
+    /**
+     * Deactivate
+     * @return $this
+     */
+    public function deactivate(): static
+    {
+        $this->getEquipment()?->deactivate();
+        $this->state = null;
+        $this->setState(StateEnum::Inactive);
+
+        return $this;
     }
 
 }
