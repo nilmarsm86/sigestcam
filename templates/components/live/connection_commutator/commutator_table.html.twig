@@ -30,8 +30,11 @@
                                 type="button"
                                 class="btn btn-primary"
                                 aria-current="page"
-                                data-action="live#action"
-                                data-action-name="prevent|detail(commutatorId={{ commutator.id }})">
+                                {% if entityId is not same as commutator.id %}
+                                    data-action="live#action"
+                                    data-action-name="prevent|detail(entityId={{ commutator.id }})"
+                                {% endif %}
+                        >
                             <i class="fas fa-eye"></i>
                             Detalle
                         </button>
@@ -46,4 +49,5 @@
             {% endfor %}
         {% endblock %}
     {% endembed %}
+{#    <backdrop-component class="card-backdrop d-block"></backdrop-component>#}
 </div>

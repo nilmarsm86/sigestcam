@@ -45,7 +45,7 @@ trait StateTrait
      */
     public function isActive():bool
     {
-        return $this->enumState === StateEnum::Active;
+        return $this->enumState->name === StateEnum::Active->name;
     }
 
     /**

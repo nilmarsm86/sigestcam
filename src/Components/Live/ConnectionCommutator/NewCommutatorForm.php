@@ -2,7 +2,9 @@
 
 namespace App\Components\Live\ConnectionCommutator;
 
+use App\Components\Live\Traits\ComponentNewForm;
 use App\Entity\Commutator;
+use App\Entity\Enums\ConnectionType;
 use App\Form\CommutatorType;
 use App\Repository\CommutatorRepository;
 use App\Repository\MunicipalityRepository;
@@ -21,12 +23,10 @@ class NewCommutatorForm extends AbstractController
     use DefaultActionTrait;
     use ComponentWithFormTrait;
     use ComponentToolsTrait;
+    use ComponentNewForm;
 
     const FORM_SUCCESS = 'new_commutator_form:form:success';
     const MODAL_CLOSE = 'modal-form:close';
-
-    #[LiveProp(writable: true)]
-    public bool $isSuccessful = false;
 
     #[LiveProp]
     public ?Commutator $commut = null;
@@ -37,10 +37,8 @@ class NewCommutatorForm extends AbstractController
     #[LiveProp(writable: true)]
     public ?string $municipality = null;
 
-    public function hasValidationErrors(): bool
-    {
-        return $this->getForm()->isSubmitted() && !$this->getForm()->isValid();
-    }
+    #[LiveProp]
+    public ?ConnectionType $connection = null;
 
     protected function instantiateForm(): FormInterface
     {
@@ -55,27 +53,30 @@ class NewCommutatorForm extends AbstractController
     {
         $this->submitForm();
 
-        if($this->getForm()->isSubmitted() && $this->getForm()->isValid()){
+        if($this->isSubmitAndValid()){
+            //lanzar evento a JS
+            $this->dispatchBrowserEvent(static::MODAL_CLOSE);
             $commutator = $this->mapped($municipalityRepository, $this->getForm()->getData());
             $commutatorRepository->save($commutator, true);
 
-            $this->isSuccessful = true;
-            //lanzar evento a lo componentes que lo escucen
-            $this->emit(static::FORM_SUCCESS, [
+            $this->emitSuccess([
                 'commutator' => $commutator->getId(),
             ]);
-            //lanzar evento a JS
-            $this->dispatchBrowserEvent(static::MODAL_CLOSE/*, [
-                'commutator' => $commutator->getId(),
-            ]*/);
-            $this->resetForm();
         }
     }
 
     private function mapped(MunicipalityRepository $municipalityRepository, Commutator $commutator): Commutator
     {
         $commutator->setMunicipality($municipalityRepository->find($this->municipality));
-        //$commutator->createPorts($commutator->getPortsAmount());
         return $commutator;
+    }
+
+    /**
+     * Get form success event name
+     * @return string
+     */
+    private function getSuccessFormEventName(): string
+    {
+        return static::FORM_SUCCESS.':'.$this->connection->name;
     }
 }

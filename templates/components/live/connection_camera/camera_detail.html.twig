@@ -1,114 +1,296 @@
-<div class="col">
+<div class="col-12" {{ attributes }}>
+    {% if camera is not null %}
+        <h4>Características de la cámara:{{ camera.id }}</h4>
+        <hr>
+        <div class="card border-primary">
+            <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
+                <p class="text-white m-0 fw-bold">Detalles:</p>
+                <div class="row">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                        <!-- BOTON DE DESCONETAR -->
+                        <input
+                                type="checkbox"
+                                class="btn-check btn-primary"
+                                id="btncheck2"
+                                autocomplete="off"
+                                {% if active %}checked{% endif %}
+                                data-action="change->live#action"
+                                {% if active %}
+                                    data-action-name="deactivate(entityId={{ camera.id }})"
+                                {% else %}
+                                    data-action-name="activate(entityId={{ camera.id }})"
+                                {% endif %}
+                        >
+                        <label class="btn btn-primary" for="btncheck2"><i class="fas fa-plug text-white"></i></label>
+                        <!-- BOTON DE DESCONETAR -->
 
-    <ul class="list-group list-group-horizontal list-group-flush border-0">
-        <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-            IP
-        </li>
-        <li class="list-group-item w-50" style="border-radius: 0">
-            1.1.1.2
-        </li>
-        <li class="list-group-item w-10" style="border-radius: 0">
-            <i class="fas fa-edit text-dark"
-               data-action="click->live#action"
-               data-action-name="prevent|activateEditing"
-               title="Click para editar!"
-            ></i>
-        </li>
-    </ul>
+                        <!-- BOTON DE DESACTIVAR -->
+                        <input type="checkbox" class="btn-check btn-primary" id="btncheck1" autocomplete="off">
+                        <label class="btn btn-primary" for="btncheck1"><i
+                                    class="fas fa-check-circle text-white"></i></label>
+                        <!-- BOTON DE DESACTIVAR -->
+                        <button type="button" class="btn btn-primary">
+                            <i class="fas fa-edit text-white"></i>
+                            Editar
+                        </button>
+                    </div>
+                </div>
+            </div>
 
-    <ul class="list-group list-group-horizontal list-group-flush border-0">
-        <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-            Usuario
-        </li>
-        <li class="list-group-item w-50" style="border-radius: 0">
-            user
-        </li>
-        <li class="list-group-item w-10" style="border-radius: 0">
-            <i class="fas fa-edit text-dark"
-               data-action="click->live#action"
-               data-action-name="prevent|activateEditing"
-               title="Click para editar!"
-            ></i>
-        </li>
-    </ul>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col">
 
-    <ul class="list-group list-group-horizontal list-group-flush border-0">
-        <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-            Password
-        </li>
-        <li class="list-group-item w-50" style="border-radius: 0">
-            *****
-        </li>
-        <li class="list-group-item w-10" style="border-radius: 0">
-            <i class="fas fa-edit text-dark"
-               data-action="click->live#action"
-               data-action-name="prevent|activateEditing"
-               title="Click para editar!"
-            ></i>
-        </li>
-    </ul>
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold"
+                                style="border-radius: 0;border-top-width: var(--bs-list-group-border-width)">
+                                IP
+                            </li>
+                            <li class="list-group-item w-50">
+                                1.1.1.2
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
 
-    <ul class="list-group list-group-horizontal list-group-flush border-0">
-        <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-            Modem
-        </li>
-        <li class="list-group-item w-50" style="border-radius: 0">
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Usuario
+                            </li>
+                            <li class="list-group-item w-50">
+                                user
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
 
-        </li>
-        <li class="list-group-item w-10" style="border-radius: 0">
-            <i class="fas fa-edit text-dark"
-               data-action="click->live#action"
-               data-action-name="prevent|activateEditing"
-               title="Click para editar!"
-            ></i>
-        </li>
-    </ul>
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Password
+                            </li>
+                            <li class="list-group-item w-50">
+                                *****
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
 
-    <ul class="list-group list-group-horizontal list-group-flush border-0">
-        <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-            Numero de serie electronico
-        </li>
-        <li class="list-group-item w-50" style="border-radius: 0">
-            123-abcd
-        </li>
-        <li class="list-group-item w-10" style="border-radius: 0">
-            <i class="fas fa-edit text-dark"
-               data-action="click->live#action"
-               data-action-name="prevent|activateEditing"
-               title="Click para editar!"
-            ></i>
-        </li>
-    </ul>
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Modem
+                            </li>
+                            <li class="list-group-item w-50">
 
-    <ul class="list-group list-group-horizontal list-group-flush border-0">
-        <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-            Switch
-        </li>
-        <li class="list-group-item w-50" style="border-radius: 0">
-            1.1.1.1
-        </li>
-        <li class="list-group-item w-10" style="border-radius: 0">
-            <i class="fas fa-edit text-dark"
-               data-action="click->live#action"
-               data-action-name="prevent|activateEditing"
-               title="Click para editar!"
-            ></i>
-        </li>
-    </ul>
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
 
-    <ul class="list-group list-group-horizontal list-group-flush border-0">
-        <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-            Puerto
-        </li>
-        <li class="list-group-item w-50" style="border-radius: 0">
-            1
-        </li>
-        <li class="list-group-item w-10" style="border-radius: 0">
-            <i class="fas fa-edit text-dark"
-               data-action="click->live#action"
-               data-action-name="prevent|activateEditing"
-               title="Click para editar!"
-            ></i>
-        </li>
-    </ul>
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Numero de serie electronico
+                            </li>
+                            <li class="list-group-item w-50">
+                                123-abcd
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Switch
+                            </li>
+                            <li class="list-group-item w-50">
+                                1.1.1.1
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Puerto
+                            </li>
+                            <li class="list-group-item w-50">
+                                1
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0;border-bottom-width: 1px;">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="col">
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold"
+                                style="border-radius: 0;border-top-width: var(--bs-list-group-border-width)">
+                                Modelo
+                            </li>
+                            <li class="list-group-item w-50">
+                                modelo camara
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Marca
+                            </li>
+                            <li class="list-group-item w-50">
+                                marca camara
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Numero de serie
+                            </li>
+                            <li class="list-group-item w-50">
+                                abc-123
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Inventario
+                            </li>
+                            <li class="list-group-item w-50">
+                                741
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Contic
+                            </li>
+                            <li class="list-group-item w-50">
+
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Provincia
+                            </li>
+                            <li class="list-group-item w-50">
+                                La Habana
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Municipio
+                            </li>
+                            <li class="list-group-item w-50">
+                                10 de Octubre
+                            </li>
+                            <li class="list-group-item w-10" style="border-radius: 0">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+
+                        <ul class="list-group list-group-horizontal list-group-flush border-0">
+                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
+                                Direccion fisica
+                            </li>
+                            <li class="list-group-item w-50">
+                                Calle Georgia
+                            </li>
+                            <li class="list-group-item w-10"
+                                style="border-top-right-radius: 0;border-bottom-right-radius: var(--bs-card-inner-border-radius);border-bottom-width: 1px;">
+                                <i class="fas fa-edit text-dark"
+                                   data-action="click->live#action"
+                                   data-action-name="prevent|activateEditing"
+                                   title="Click para editar!"
+                                ></i>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    {% endif %}
 </div>
+

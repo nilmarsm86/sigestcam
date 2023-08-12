@@ -27,7 +27,7 @@ export default class extends Controller {
         }
 
         // or call an action
-        this.component.action('deactivate', { commutator: this.commutatorValue });
+        this.component.action('deactivate', { entityId: this.commutatorValue });
         //this.component.render();
     }
 }

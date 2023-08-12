@@ -3,8 +3,10 @@
 namespace App\Repository;
 
 use App\Entity\Camera;
+use App\Entity\Commutator;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -43,15 +45,8 @@ class CameraRepository extends ServiceEntityRepository
         }
     }
 
-    /**
-     * @param string $filter
-     * @param int $amountPerPage
-     * @param int $page
-     * @return Paginator Returns an array of User objects
-     */
-    public function findCameras(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    private function addFiter(QueryBuilder $builder, string $filter)
     {
-        $builder = $this->createQueryBuilder('c');
         if($filter){
             $builder->andWhere('c.physicalAddress LIKE :filter')
                 ->orWhere('c.brand LIKE :filter')
@@ -66,6 +61,33 @@ class CameraRepository extends ServiceEntityRepository
                     ':filter' => '%'.$filter.'%',
                 ]);
         }
+    }
+
+    /**
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
+     */
+    public function findCameras(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c');
+        $this->addFiter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findCamerasByCommutator(Commutator $commutator, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $portsId = [];
+        foreach ($commutator->getPorts() as $port){
+            $portsId[] = $port->getId();
+        }
+
+        $builder = $this->createQueryBuilder('c');
+        $builder->leftJoin('c.port', 'p');
+        $builder->andWhere($builder->expr()->in('p.id', $portsId));
+        $this->addFiter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
     }

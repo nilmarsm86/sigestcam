@@ -3,23 +3,18 @@
 namespace App\Components\Live\ConnectionCamera;
 
 use App\Components\Live\ConnectionCommutator\CommutatorTable;
-use App\Components\Live\ConnectionCommutator\PortDetail;
 use App\Components\Live\Traits\ComponentNewForm;
 use App\Entity\Camera;
-use App\Entity\Commutator;
+use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
 use App\Entity\Port;
 use App\Form\CameraType;
-use App\Form\CommutatorType;
 use App\Repository\CameraRepository;
-use App\Repository\CommutatorRepository;
-use App\Repository\MunicipalityRepository;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
-use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
@@ -46,6 +41,9 @@ class NewCamera extends AbstractController
     #[LiveProp]
     public ?Modem $modem = null;
 
+    #[LiveProp]
+    public ?ConnectionType $connection = null;
+
     protected function instantiateForm(): FormInterface
     {
         return $this->createForm(CameraType::class, $this->cam);
@@ -53,36 +51,39 @@ class NewCamera extends AbstractController
 
     /**
      * Caundo se selecciona un puerto
-     * @param Port $port
+     * @param Port|null $port
      * @return void
-     */
-    #[LiveListener(PortDetail::SELECTED_PORT)]
-    public function onCommutatorSelectedPort(#[LiveArg] Port $port): void
+
+    #[LiveListener(PortList::SELECTED_PORT.':Direct')]
+    public function onCommutatorSelectedPortDirect(#[LiveArg] ?Port $port): void
     {
-        $this->port = $port;
-        //una vez obtenido el puerto puedo obtener el commutator del mismo y demas datos
-    }
+        if(is_null($port->getEquipment())){
+            $this->port = $port;
+        }else{
+            $this->port = null;
+        }
+    }*/
 
     /**
      * Caundo se selecciona un modem
      * @param Modem $modem
      * @return void
 
-    //#[LiveListener(PortDetail::SELECTED_PORT)]
-    public function onModemSelected(#[LiveArg] Modem $modem): void
+    //#[LiveListener(PortDetail::SELECTED_PORT.':Direct')]
+    public function onModemSelectedDirect(#[LiveArg] Modem $modem): void
     {
         $this->modem = $modem;
     }*/
 
-    #[LiveListener(CommutatorTable::SHOW_DETAIL)]
-    public function onCommutatorTableShowDetail(#[LiveArg] Commutator $commutator): void
+    /*#[LiveListener(CommutatorTable::SHOW_DETAIL.':Direct')]
+    public function onCommutatorTableShowDetailDirect(#[LiveArg] Commutator $entity): void
     {
         $this->port = null;
         $this->modem = null;
-    }
+    }*/
 
-    #[LiveListener(CommutatorTable::CHANGE_TABLE)]
-    public function onCommutatorTableChange(): void
+    #[LiveListener(CommutatorTable::CHANGE_TABLE.':Direct')]
+    public function onCommutatorTableChangeDirect(): void
     {
         $this->port = null;
         $this->modem = null;
@@ -123,7 +124,7 @@ class NewCamera extends AbstractController
      */
     private function getSuccessFormEventName(): string
     {
-        return static::FORM_SUCCESS;
+        return static::FORM_SUCCESS.':'.$this->connection->name;
     }
 
 

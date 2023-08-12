@@ -5,6 +5,7 @@ namespace App\Form;
 use App\Entity\Commutator;
 use App\Form\Types\AddressType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
@@ -19,10 +20,13 @@ class CommutatorType extends AbstractType
             ->add('gateway', null, [
                 'label' => 'Gateway:',
             ])
+            ->add('multicast', null, [
+                'label' => 'Dirección multicast:',
+            ])
             ->add('portsAmount', null, [
                 'label' => 'Cantidad de puertos:',
             ])
-            ->add('physicalAddress', null, [
+            ->add('physicalAddress', TextareaType::class, [
                 'label' => 'Dirección física:',
             ])
             ->add('physicalSerial', null, [

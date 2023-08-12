@@ -1,4 +1,4 @@
-<div>
+<div class="row">
     <div class="row">
         <div class="col-md-6 text-nowrap">
             {# Show amount #}
@@ -28,6 +28,7 @@
                                 data-model="filter"
                                 data-action="live#action"
                                 data-action-name="changeFilter()"
+                                {% block table_filter %}{% endblock %}
                         >
                     </label>
                 </form>

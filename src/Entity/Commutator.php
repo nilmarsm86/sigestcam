@@ -41,7 +41,9 @@ class Commutator extends Equipment implements HarborInterface
     #[Assert\Ip(message:'Establezca un IP gateway válido.')]
     private ?string $gateway = null;
 
-    private mixed $pepe = null;
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Assert\NotBlank(message: 'La direccion multicast no debe estar vacía.')]
+    private ?string $multicast = null;
 
     /**
      * @param string|null $ip
@@ -110,6 +112,17 @@ class Commutator extends Equipment implements HarborInterface
         if(!is_null($this->getPortsAmount()) && $this->ports->count() === 0){
             $this->createPorts($this->portsAmount);
         }
+    }
+
+    public function getMulticast(): ?string
+    {
+        return $this->multicast;
+    }
+
+    public function setMulticast(string $multicast): static
+    {
+        $this->multicast = $multicast;
+        return $this;
     }
 
 }

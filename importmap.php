@@ -28,12 +28,12 @@ return [
     '@symfony/ux-live-component' => [
         'path' => '@symfony/ux-live-component/live_controller.js',
     ],
-    'bootstrap' => [
-        'downloaded_to' => 'vendor/bootstrap.js',
+    /*'bootstrap' => [
+        'downloaded_to' => 'bootstrap/js/bootstrap.min.js',
         'url' => 'https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/+esm',
     ],
     '@popperjs/core' => [
         'downloaded_to' => 'vendor/@popperjs/core.js',
         'url' => 'https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/+esm',
-    ],
+    ],*/
 ];

@@ -83,4 +83,10 @@ trait PortTrait
             $port->deactivate();
         }
     }
+
+    /*public function hasPort(int $portId): bool
+    {
+        $this->ports->containsKey();
+        return false;
+    }*/
 }

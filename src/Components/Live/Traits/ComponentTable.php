@@ -28,6 +28,9 @@ trait ComponentTable
     #[LiveProp(writable: true)]
     public ?int $fake = null;
 
+    #[LiveProp]
+    public ?int $entityId = null;
+
     public function mount(): void
     {
         $this->amount = 10;
@@ -52,9 +55,19 @@ trait ComponentTable
         return ':change:table';
     }
 
+    /**
+     * Get show detail event name
+     * @return string
+     */
+    private function getShowDetailEventName(): string
+    {
+        return ':show:detail';
+    }
+
     #[LiveAction]
     public function changeAmount(): void
     {
+        $this->page = 1;
         $this->reload();
         $this->emit($this->getChangeTableEventName());
     }
@@ -74,5 +87,14 @@ trait ComponentTable
         $this->emit($this->getChangeTableEventName());
     }
 
+    #[LiveAction]
+    public function detail(#[LiveArg] int $entityId): void
+    {
+        $this->reload();
+        $this->entityId = $entityId;
+        $this->emit($this->getShowDetailEventName(), [
+            'entity' => $entityId
+        ]);
+    }
 
 }

@@ -2,7 +2,7 @@
 
 <div {{ attributes }}>
     {% if port is null and modem is null %}
-        {{ flash('danger', 'Para crear una nueva camara debe seleccionar el puerto o  modem a donde estará conectada.', false) }}
+        {{ flash('danger', 'Para crear una nueva camara debe seleccionar el puerto o  modem  qiue tenga disponibilidad, a donde estará conectada.', false) }}
     {% else %}
         {% if isSuccessful == false %}
             {% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}

@@ -1,49 +1,60 @@
 <div {{ attributes }}>
-    {% embed "embeds/async_table.html.twig" %}
-        {% block table_head %}
-            <tr>
-                <th>Ip</th>
-{#                <th>Puerta de enlace</th>#}
-                <th>Número de inventario</th>
-                <th>Dirección física</th>
-                <th>Marca</th>
-                <th>Modelo</th>
-                <th>Contic</th>
-                <th>Serie</th>
-                <th></th>
-            </tr>
-        {% endblock %}
+    {% if port is not null or modem is not null %}
+        {% embed "embeds/async_table.html.twig" %}
+            {% block table_filter %}
+                {% if port.hasConnectedCamera() %}
+                    readonly
+                {% endif %}
+            {% endblock %}
 
-        {% block table_body %}
-            {% for camera in paginator.getData() %}
+            {% block table_head %}
+                {{ commutator.id }}
+                {{ port.id }}
                 <tr>
-                    <td>{{ camera.ip }}</td>
-{#                    <td>{{ commutator.gateway }}</td>#}
-                    <td>{{ camera.inventory }}</td>
-                    <td>{{ camera.physicalAddress }}</td>
-                    <td>{{ camera.brand }}</td>
-                    <td>{{ camera.model }}</td>
-                    <td>{{ camera.contic }}</td>
-                    <td>{{ camera.physicalSerial }}</td>
-                    <td>
-                        <button
-                                type="button"
-                                class="btn btn-primary"
-                                aria-current="page"
-                                data-action="live#action"
-                                data-action-name="prevent|detail(cameraId={{ camera.id }})">
-                            <i class="fas fa-eye"></i>
-                            Detalle
-                        </button>
-                    </td>
+                    <th>Ip</th>
+                    <th>Número de inventario</th>
+                    <th>Dirección física</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Contic</th>
+                    <th>Serie</th>
+                    <th></th>
                 </tr>
-            {% else %}
-                <tr>
-                    <td colspan="7">
-                        No se encontraron registros
-                    </td>
-                </tr>
-            {% endfor %}
-        {% endblock %}
-    {% endembed %}
+            {% endblock %}
+
+            {% block table_body %}
+                {% for camera in paginator.getData() %}
+                    <tr>
+                        <td>{{ camera.ip }}</td>
+                        <td>{{ camera.inventory }}</td>
+                        <td>{{ camera.physicalAddress }}</td>
+                        <td>{{ camera.brand }}</td>
+                        <td>{{ camera.model }}</td>
+                        <td>{{ camera.contic }}</td>
+                        <td>{{ camera.physicalSerial }}</td>
+                        <td>
+                            <button
+                                    type="button"
+                                    class="btn btn-primary"
+                                    aria-current="page"
+                                    {% if entityId is not same as camera.id %}
+                                        data-action="live#action"
+                                        data-action-name="prevent|detail(entityId={{ camera.id }})"
+                                    {% endif %}
+                            >
+                                <i class="fas fa-eye"></i>
+                                Detalle
+                            </button>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">
+                            No se encontraron registros
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endblock %}
+        {% endembed %}
+    {% endif %}
 </div>

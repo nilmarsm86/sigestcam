@@ -302,7 +302,7 @@ class Port
         return $this->enumConnectionType;
     }
 
-    private function setConnectionType(ConnectionType $connectionType): static
+    public function setConnectionType(ConnectionType $connectionType): static
     {
         if(!$this->isFromCommutator()){
             throw new Exception('Solo los puertos de switch pueden tener el tipo de conexión.');

@@ -59,7 +59,7 @@ class Equipment
     protected ?string $physicalSerial = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Assert\Valid]
     protected ?Municipality $municipality = null;
 

@@ -1,14 +1,24 @@
 <div {{ attributes }}>
+
     {% embed "embeds/card.html.twig" %}
         {% block card_css_class %}mb-4{% endblock %}
 
         {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
 
-        {% block card_title %}Camara{% endblock %}
+        {% block card_title %}Cámara{% endblock %}
 
         {% block card_header_options %}
             <div>
-                <button class="btn btn-primary btn-sm active" aria-current="page" data-bs-toggle="modal" data-bs-target="#add-camera">
+                <button class="btn btn-primary btn-sm
+                        {% if port is null %}
+                            disabled
+                        {% else %}
+                            {% if port.equipment is not null %}disabled{% endif %}
+                        {% endif %}"
+                        aria-current="page"
+                        data-bs-toggle="modal"
+                        data-bs-target="#add-camera"
+                >
                     <i class="fas fa-plus"></i>
                     Nueva
                 </button>
@@ -16,55 +26,30 @@
         {% endblock %}
 
         {% block card_body %}
-            {{ component('CameraTable') }}
-{#            {% if camera %}#}
-                <div class="row">
-                    <div class="col-12">
-                        <h4>Características del switch:</h4>
-                        <hr>
-                        <div class="card border-primary">
-                            <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
-                                <p class="text-white m-0 fw-bold">Detalles:</p>
-                                <div class="row">
-                                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                                        <!-- BOTON DE DESCONETAR -->
-                                        <input type="checkbox" class="btn-check btn-primary" id="btncheck2" autocomplete="off">
-                                        <label class="btn btn-primary" for="btncheck2"><i class="fas fa-plug text-white"></i></label>
-                                        <!-- BOTON DE DESCONETAR -->
-
-                                        <!-- BOTON DE DESACTIVAR -->
-                                        <input type="checkbox" class="btn-check btn-primary" id="btncheck1" autocomplete="off">
-                                        <label class="btn btn-primary" for="btncheck1"><i class="fas fa-check-circle text-white"></i></label>
-                                        <!-- BOTON DE DESACTIVAR -->
-                                        <button type="button" class="btn btn-primary">
-                                            <i class="fas fa-edit text-white"></i>
-                                            Editar
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-{#                            <div class="card-body">#}
-                                <div class="row">
-                                    {{ include('components/live/connection_camera/camera_detail.html.twig') }}
-                                    {{ include('components/live/connection_camera/camera_detail2.html.twig') }}
-                                </div>
-{#                            </div>#}
-                        </div>
+            {% if port is not null %}
+                {{ component('CameraTable', {connection:connection, commutator: commutator, port: port}) }}
+{#                {% if port.equipment is not null %}#}
+                    <div class="row">
+                        {{ component('CameraDetail', {connection:connection, port: port}) }}
                     </div>
-                </div>
-{#            {% endif %}#}
+{#                {% endif %}#}
+            {% endif %}
         {% endblock %}
     {% endembed %}
 
-    <!-- Modal -->
-    {{ component('ModalForm', {
-        title: 'Agregar Cámara',
-        src: 'NewCamera',
-        vars: {
-            'data-live-id': 'new-camera-form'
-        },
-        type: 'component',
-        id: 'add-camera'
-    }) }}
-    <!-- Modal -->
+    {% if port is not null %}
+        <!-- Modal -->
+        {{ component('ModalForm', {
+            title: 'Agregar Cámara',
+            src: 'NewCamera',
+            vars: {
+                connection:connection,
+                port: port
+            },
+            type: 'component',
+            id: 'add-camera'
+        }) }}
+        <!-- Modal -->
+    {% endif %}
 </div>
+

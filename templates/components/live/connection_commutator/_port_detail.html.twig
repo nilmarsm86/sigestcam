@@ -1,56 +1,61 @@
-<div class="col-3 mb-4" {{ attributes }}>
-    <div class="card text-white {{ port.connection }} {% if selected %}shadow-lg border-danger{% endif %}" >
+{# SIN PORT-DETAIL #}
+<div class="col-3 mb-4">
+    <div class="card text-white {{ port.connection }} {% if selected is same as port.id %}shadow-lg border-danger{% endif %}" >
         <div class="card-body" style="padding: 0.5rem">
             <div
                     class="row align-items-center no-gutters"
-                    {% if port.equipment is null and active and selected == false %}
+                    {% if port.isSelectable %}
                         data-action="dblclick->live#action"
-                        data-action-name="select(port={{ port.id }})"
+                        data-action-name="select(portId={{ port.id }})"
                     {% endif %}
             >
                 <div class="col-auto">
                     <i class="fas {% if port.equipment %}fa-check-circle{% else %}fa-circle{% endif %} fa-2x text-gray-300"></i>
-{#                    <i data-loading="show" class="fas fa-sync fa-2x text-gray-300"></i>#}
+                    {% if port.state %}<span>{% endif %}
                     <div class="form-check form-switch">
                         <input
                                 class="form-check-input"
                                 type="checkbox"
                                 role="switch"
-                                {% if active %}checked{% endif %}
+                                {% if port.state %}checked{% endif %}
                                 data-action="change->live#action"
-                                {% if active %}
-                                    data-action-name="deactivate(port={{ port.id }})"
+                                {% if port.state %}
+                                    data-action-name="deactivatePort(portId={{ port.id }})"
                                 {% else %}
-                                    data-action-name="activate(port={{ port.id }})"
+                                    data-action-name="activatePort(portId={{ port.id }})"
                                 {% endif %}
                         >
                     </div>
+                    {% if port.state %}</span>{% endif %}
                 </div>
                 <div class="col me-2">
                     <div class="text-uppercase text-white fw-bold text-xs mb-1">
-                        {% if isEditing %}
+                        {% if editing == port.id %}
                             <input
                                     type="text"
-                                    data-model="norender|data"
+                                    data-model="norender|speed"
                                     class="w-25"
-                                    data-action="blur->live#action change->live#action"
+                                    data-action="change->live#action"
                                     data-action-name="save(port={{ port.id }})"
                             >
                         {% else %}
                             <span
                                     class="w-25 d-inline-block"
                                     data-action="click->live#action"
-                                    data-action-name="activateEditing()"
+                                    data-action-name="activateEditing(portId={{ port.id }}, speed={{ port.speed }})"
                                     style="cursor: pointer"
                             >
-                                {{ data }}
+                                {{ port.speed }}
                             </span>
                         {% endif %}
-                        <span>mb/s - {{ port.equipment }}</span>
+                        <span>{{ constant('App\\Entity\\Port::SPEED_TYPE')}} - {{ port.equipment }}</span>
                     </div>
                     <div class="text-white fw-bold h5 mb-0"><span>Puerto: {{ port.number }}</span></div>
                 </div>
             </div>
         </div>
+{#        <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>#}
     </div>
+
+
 </div>

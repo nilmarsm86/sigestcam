@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
-import {Modal} from 'bootstrap';
+import '../bootstrap/js/bootstrap.min.js';
+
 /*
  * This is an example Stimulus controller!
  *
@@ -15,7 +16,7 @@ export default class extends Controller {
     modal = null;
 
     initialize() {
-        this.modal = Modal.getOrCreateInstance(this.element);
+        this.modal = bootstrap.Modal.getOrCreateInstance(this.element);
         window.addEventListener('modal-form:close', () => {
             //this.modal.hide();
             this.element.querySelector('button[class=btn-close]').click();

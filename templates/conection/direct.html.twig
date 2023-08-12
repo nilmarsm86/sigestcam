@@ -22,17 +22,11 @@
         connection: constant('App\\Entity\\Enums\\ConnectionType::Direct')
     }) }}
 
-    {{ component('ConnectionCamera') }}
+    {{ component('ConnectionCamera', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::Direct')
+    }) }}
 
-    <div class="row mb-3">
-        <div class="col-8">
-
-        </div>
-        <div class="col-4">
-            <button type="button" class="btn btn-primary btn-lg">Crear conexion</button>
-        </div>
-    </div>
-
-
-
+{#    {{ component('ConnectionSave', {#}
+{#        connection: constant('App\\Entity\\Enums\\ConnectionType::Direct')#}
+{#    }) }}#}
 {% endblock %}
