@@ -23,7 +23,7 @@ trait ComponentNewForm
      */
     private function getSuccessFormEventName(): string
     {
-        return ':form:success';
+        return ':form_success';
     }
 
     private function isSubmitAndValid(): bool

@@ -16,12 +16,12 @@
         {% endblock %}
 
         {% block card_body %}
-            {{ component('CommutatorTable', {connection: connection}) }}
+            {{ component('ConnectionCommutatorTable', {connection: connection}) }}
 {#            {% if commutator is not null %}#}
 {#                {{ dump(commutator.id) }}#}
                 <div class="row">
-                    {{ component('CommutatorDetail', {connection: connection}) }}
-                    {{ component('PortList', {connection: connection}) }}
+                    {{ component('ConnectionCommutatorDetail', {connection: connection}) }}
+                    {{ component('ConnectionCommutatorPortList', {connection: connection}) }}
                 </div>
 {#            {% endif %}#}
         {% endblock %}
@@ -30,7 +30,7 @@
     <!-- Modal -->
     {{ component('ModalForm', {
         title: 'Agregar Switch',
-        src: 'NewCommutatorForm',
+        src: 'ConnectionCommutatorNew',
         vars: {
             connection: connection
         },

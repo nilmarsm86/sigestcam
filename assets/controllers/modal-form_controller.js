@@ -11,14 +11,14 @@ import '../bootstrap/js/bootstrap.min.js';
  * Delete this file or adapt it for your use!
  */
 
-
 export default class extends Controller {
     modal = null;
 
     initialize() {
         this.modal = bootstrap.Modal.getOrCreateInstance(this.element);
-        window.addEventListener('modal-form:close', () => {
-            //this.modal.hide();
+        window.addEventListener('modal_form_close', () => {
+            // this.modal.hide();
+            // this.modal.dispose();
             this.element.querySelector('button[class=btn-close]').click();
         });
     }

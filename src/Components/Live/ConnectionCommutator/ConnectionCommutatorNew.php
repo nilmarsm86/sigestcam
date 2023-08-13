@@ -17,16 +17,16 @@ use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/connection_commutator/new_commutator_form.html.twig')]
-class NewCommutatorForm extends AbstractController
+#[AsLiveComponent(template: 'components/live/connection_commutator/new.html.twig')]
+class ConnectionCommutatorNew extends AbstractController
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
     use ComponentToolsTrait;
     use ComponentNewForm;
 
-    const FORM_SUCCESS = 'new_commutator_form:form:success';
-    const MODAL_CLOSE = 'modal-form:close';
+    const FORM_SUCCESS = self::class.'_form_success';
+    const MODAL_CLOSE = 'modal_form_close';
 
     #[LiveProp]
     public ?Commutator $commut = null;
@@ -77,6 +77,6 @@ class NewCommutatorForm extends AbstractController
      */
     private function getSuccessFormEventName(): string
     {
-        return static::FORM_SUCCESS.':'.$this->connection->name;
+        return static::FORM_SUCCESS.'_'.$this->connection->name;
     }
 }

@@ -18,7 +18,7 @@ trait ComponentActiveInactive
      */
     private function getDeactivateEventName(): string
     {
-        return ':deactivate:switch';
+        return ':deactivate';
     }
 
     /**
@@ -27,7 +27,7 @@ trait ComponentActiveInactive
      */
     private function getActivateEventName(): string
     {
-        return ':activate:switch';
+        return ':activate';
     }
 
     #[LiveAction]

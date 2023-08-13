@@ -2,11 +2,13 @@
 
 namespace App\Components\Live;
 
-use App\Components\Live\ConnectionCamera\CameraTable;
-use App\Components\Live\ConnectionCommutator\CommutatorTable;
+use App\Components\Live\ConnectionCamera\ConnectionCameraTable;
+use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
+use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
 use App\Components\Live\Traits\ComponentActiveInactive;
 use App\Entity\Camera;
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Port;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -36,10 +38,16 @@ class ConnectionSave extends AbstractController
     {
     }
 
-    #[LiveListener(CameraTable::SHOW_DETAIL.':Direct')]
-    public function onCameraTableShowDetailDirect(#[LiveArg] Camera $entity): void
+    #[LiveListener(ConnectionCameraTable::DETAIL.'_Direct')]
+    public function onConnectionCameraTableDetailDirect(#[LiveArg] Camera $entity): void
     {
         $this->camera = $entity;
+    }
+
+    #[LiveListener(ConnectionCameraTable::CHANGE.'_Direct')]
+    public function onConnectionCameraTableChangeDirect(): void
+    {
+        $this->camera = null;
     }
 
     /**
@@ -75,8 +83,8 @@ class ConnectionSave extends AbstractController
      * Update table from filter, amount or page just in direct connections
      * @return void
      */
-    #[LiveListener(CommutatorTable::CHANGE_TABLE.':Direct')]
-    public function onCommutatorTableChangeTableDirect(): void
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
+    public function onConnectionCommutatorTableChangeDirect(): void
     {
         $this->camera = null;
     }
@@ -85,8 +93,14 @@ class ConnectionSave extends AbstractController
      * Update table from filter, amount or page just in direct connections
      * @return void
      */
-    #[LiveListener(CommutatorTable::SHOW_DETAIL.':Direct')]
-    public function onCommutatorTableShowDetailDirect(): void
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
+    public function onConnectionCommutatorTableDetailDirect(): void
+    {
+        $this->camera = null;
+    }
+
+    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_Direct')]
+    public function onConnectionCommutatorPortListSelectedDirect(#[LiveArg] ?Port $port): void
     {
         $this->camera = null;
     }

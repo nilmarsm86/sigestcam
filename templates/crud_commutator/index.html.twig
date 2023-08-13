@@ -1,0 +1,55 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Commutator index{% endblock %}
+
+{% block body %}
+    <h1>Commutator index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Brand</th>
+                <th>Ip</th>
+                <th>PhysicalAddress</th>
+                <th>PhysicalSerial</th>
+                <th>Model</th>
+                <th>Inventory</th>
+                <th>Contic</th>
+                <th>State</th>
+                <th>PortsAmount</th>
+                <th>Gateway</th>
+                <th>Multicast</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for commutator in commutators %}
+            <tr>
+                <td>{{ commutator.id }}</td>
+                <td>{{ commutator.brand }}</td>
+                <td>{{ commutator.ip }}</td>
+                <td>{{ commutator.physicalAddress }}</td>
+                <td>{{ commutator.physicalSerial }}</td>
+                <td>{{ commutator.model }}</td>
+                <td>{{ commutator.inventory }}</td>
+                <td>{{ commutator.contic }}</td>
+                <td>{{ commutator.state }}</td>
+                <td>{{ commutator.portsAmount }}</td>
+                <td>{{ commutator.gateway }}</td>
+                <td>{{ commutator.multicast }}</td>
+                <td>
+                    <a href="{{ path('app_crud_commutator_show', {'id': commutator.id}) }}">show</a>
+                    <a href="{{ path('app_crud_commutator_edit', {'id': commutator.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="13">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('app_crud_commutator_new') }}">Create new</a>
+{% endblock %}

@@ -42,7 +42,7 @@
             </div>
 
             {# no es necesario usar updateFromParent, en el data, pues se pasa el data-live-id y esto lleva a que el componente se construya completo #}
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'IP:',
                 data: commutator.ip,
                 id: commutator.id,
@@ -55,7 +55,7 @@
                 'data-live-id': 'ip-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Gateway:',
                 data: commutator.gateway,
                 id: commutator.id,
@@ -68,7 +68,7 @@
                 'data-live-id': 'gateway-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Inventario:',
                 data: commutator.inventary,
                 id: commutator.id,
@@ -77,7 +77,7 @@
                 'data-live-id': 'inventory-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Dirección física:',
                 data: commutator.physical_address,
                 id: commutator.id,
@@ -89,7 +89,7 @@
                 'data-live-id': 'physical_address-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Marca:',
                 data: commutator.brand,
                 id: commutator.id,
@@ -98,7 +98,7 @@
                 'data-live-id': 'brand-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Modelo:',
                 data: commutator.model,
                 id: commutator.id,
@@ -107,7 +107,7 @@
                 'data-live-id': 'model-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Contic:',
                 data: commutator.contic,
                 id: commutator.id,
@@ -116,7 +116,7 @@
                 'data-live-id': 'contic-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Serie:',
                 data: commutator.serial,
                 id: commutator.id,
@@ -125,7 +125,7 @@
                 'data-live-id': 'serial-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Provincia:',
                 data: commutator.province,
                 id: commutator.id,
@@ -134,7 +134,7 @@
                 'data-live-id': 'province-'~ commutator.id
             }) }}
 
-            {{ component('CommutatorDetailEditInline', {
+            {{ component('ConnectionCommutatorDetailEditInline', {
                 label: 'Municipio:',
                 data: commutator.municipality,
                 last: true,

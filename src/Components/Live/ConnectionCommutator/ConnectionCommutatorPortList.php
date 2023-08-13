@@ -2,7 +2,9 @@
 
 namespace App\Components\Live\ConnectionCommutator;
 
+use App\Components\Live\ConnectionCamera\ConnectionCameraNew;
 use App\Components\Live\Traits\ComponentActiveInactive;
+use App\Entity\Camera;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Port;
@@ -17,15 +19,15 @@ use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent(template: 'components/live/connection_commutator/port_list.html.twig')]
-class PortList
+class ConnectionCommutatorPortList
 {
     use DefaultActionTrait;
     use ComponentActiveInactive;
     use ComponentToolsTrait;
 
-    const DEACTIVATE_PORT = 'port_list:deactivate:port';
-    const ACTIVATE_PORT = 'port_list:activate:port';
-    const SELECTED_PORT = 'port_list:selected:port';
+    const DEACTIVATE = self::class.'_deactivate';
+    const ACTIVATE = self::class.'_activate';
+    const SELECTED = self::class.'_selected';
 
     #[LiveProp]
     public ?array $ports = null;
@@ -56,7 +58,7 @@ class PortList
      */
     private function getDeactivateEventName(): string
     {
-        return static::DEACTIVATE_PORT.':'.$this->connection->name;
+        return static::DEACTIVATE.'_'.$this->connection->name;
     }
 
     /**
@@ -65,14 +67,15 @@ class PortList
      */
     private function getActivateEventName(): string
     {
-        return static::ACTIVATE_PORT.':'.$this->connection->name;
+        return static::ACTIVATE.'_'.$this->connection->name;
     }
 
     #[LiveAction]
     public function select(#[LiveArg] ?int $portId): void
     {
         $this->selected = $portId;
-        $this->emit(static::SELECTED_PORT.':'.$this->connection->name, [
+        $this->ports[$portId]['isSelectable'] = false;
+        $this->emit(static::SELECTED.'_'.$this->connection->name, [
             'port' => $portId,
         ]);
     }
@@ -132,27 +135,27 @@ class PortList
         return $data;
     }
 
-    #[LiveListener(CommutatorTable::SHOW_DETAIL.':Direct')]
-    public function onCommutatorShowDetailDirect(#[LiveArg] Commutator $entity): void
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
+    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
     {
 
         $this->ports = $this->portsInfo($entity);
         $this->selected = null;
-        //$this->select(null);//ya NewCamera escucha CommutatorTable::SHOW_DETAIL
+        //$this->select(null);//ya ConnectionCameraNew escucha ConnectionCameraTable::SHOW_DETAIL
     }
 
     /**
      * Update table from filter, amount or page
      * @return void
      */
-    #[LiveListener(CommutatorTable::CHANGE_TABLE.':Direct')]
-    public function onChangeTableDirect(): void
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
+    public function onConnectionCommutatorTableChangeDirect(): void
     {
         $this->ports = null;
     }
 
-    #[LiveListener(CommutatorDetail::DEACTIVATE_SWITCH.':Direct')]
-    public function onDeactivateSwitchDirect(#[LiveArg] Commutator $entity): void
+    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_Direct')]
+    public function onConnectionCommutatorDetailDeactivateDirect(#[LiveArg] Commutator $entity): void
     {
         $this->select(null);
         foreach($this->ports as $key=>$value){
@@ -187,6 +190,13 @@ class PortList
         $port->configure($this->speed);
         $portRepository->save($port, true);
         $this->editing = null;
+    }
+
+    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Direct')]
+    public function onConnectionCameraNewFormSuccessDirect(#[LiveArg] Camera $camera): void
+    {
+        $this->ports[$camera->getPort()->getId()]['equipment'] = $camera->getShortName();
+        $this->ports[$camera->getPort()->getId()]['isSelectable'] = false;
     }
 
 }

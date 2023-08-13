@@ -13,13 +13,13 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/connection_commutator/commutator_detail_edit_inline.html.twig', csrf: false)]
-class CommutatorDetailEditInline
+#[AsLiveComponent(template: 'components/live/connection_commutator/edit_inline.html.twig', csrf: false)]
+class ConnectionCommutatorDetailEditInline
 {
     use DefaultActionTrait;
     use ComponentToolsTrait;
 
-    const SAVE = 'commutator_detail_edit_inline:save';
+    const SAVE = self::class.'_save';
 
     #[LiveProp]
     public ?string $label = null;
@@ -66,7 +66,7 @@ class CommutatorDetailEditInline
             try{
                 $commutatorRepository->save($commutator, true);
                 $this->isEditing = false;
-                $this->emit(static::SAVE.':'.$this->connection->name);
+                $this->emit(static::SAVE.'_'.$this->connection->name);
 
             }catch (\Exception $exception){
                 $this->errors[] = $exception->getMessage();

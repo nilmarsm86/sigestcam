@@ -30,6 +30,8 @@
             </button>
             {{ form_row(form._token) }}
             {{ form_end(form, {render_rest: false}) }}
+        {% else %}
+            {{ flash('info', 'Acaba de agregar una camara en el puerto o modem seleccionado.', false) }}
         {% endif %}
     {% endif %}
 </div>

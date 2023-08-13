@@ -13,13 +13,13 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/connection_camera/camera_detail_edit_inline.html.twig', csrf: false)]
-class CameraDetailEditInline
+#[AsLiveComponent(template: 'components/live/connection_camera/edit_inline.html.twig', csrf: false)]
+class ConnectionCameraEditInline
 {
     use DefaultActionTrait;
     use ComponentToolsTrait;
 
-    const SAVE = 'commutator_detail_edit_inline:save';
+    const SAVE = self::class.'_save';
 
     #[LiveProp]
     public ?string $label = null;
@@ -62,11 +62,11 @@ class CameraDetailEditInline
         $this->validateUniqueIp($commutatorRepository, $commutator);
 
         if (count($this->errors) === 0) {
-            call_user_func_array([$commutator, $this->setter], [$this->data]);
+//            call_user_func_array([$commutator, $this->setter], [$this->data]);
             try{
-                $commutatorRepository->save($commutator, true);
+//                $commutatorRepository->save($commutator, true);
                 $this->isEditing = false;
-                $this->emit(static::SAVE.':'.$this->connection->name);
+                $this->emit(static::SAVE.'_'.$this->connection->name);
 
             }catch (\Exception $exception){
                 $this->errors[] = $exception->getMessage();
@@ -89,14 +89,14 @@ class CameraDetailEditInline
     {
         //este codigo se podria convertir en un validador
         if ($this->setter === 'setIp') {
-            $existing = $commutatorRepository->findBy(['ip' => $this->data]);
-            if ($existing && count($existing) > 1) {
-                $this->errors[] = 'Ya existe un Switch con este IP (' . $this->data . ')';
-            } else {
-                if (isset($existing[0]) && $existing[0]->getId() !== $commutator->getId()) {
-                    $this->errors[] = 'Ya existe un Switch con este IP (' . $this->data . ')';
-                }
-            }
+//            $existing = $commutatorRepository->findBy(['ip' => $this->data]);
+//            if ($existing && count($existing) > 1) {
+//                $this->errors[] = 'Ya existe un Switch con este IP (' . $this->data . ')';
+//            } else {
+//                if (isset($existing[0]) && $existing[0]->getId() !== $commutator->getId()) {
+//                    $this->errors[] = 'Ya existe un Switch con este IP (' . $this->data . ')';
+//                }
+//            }
         }
     }
 

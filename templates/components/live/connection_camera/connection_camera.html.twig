@@ -27,21 +27,21 @@
 
         {% block card_body %}
             {% if port is not null %}
-                {{ component('CameraTable', {connection:connection, commutator: commutator, port: port}) }}
+                {{ component('ConnectionCameraTable', {connection:connection, commutator: commutator, port: port}) }}
 {#                {% if port.equipment is not null %}#}
                     <div class="row">
-                        {{ component('CameraDetail', {connection:connection, port: port}) }}
+                        {{ component('ConnectionCameraDetail', {connection:connection, port: port}) }}
                     </div>
 {#                {% endif %}#}
             {% endif %}
         {% endblock %}
     {% endembed %}
 
-    {% if port is not null %}
+    {% if port is not null and port.equipment is null %}
         <!-- Modal -->
         {{ component('ModalForm', {
             title: 'Agregar Cámara',
-            src: 'NewCamera',
+            src: 'ConnectionCameraNew',
             vars: {
                 connection:connection,
                 port: port

@@ -14,14 +14,14 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/connection_commutator/commutator_detail.html.twig')]
-class CommutatorDetail
+#[AsLiveComponent(template: 'components/live/connection_commutator/detail.html.twig')]
+class ConnectionCommutatorDetail
 {
     use DefaultActionTrait;
     use ComponentToolsTrait;
     use ComponentActiveInactive;
 
-    const DEACTIVATE_SWITCH = 'switch_detail:deactivate:switch';
+    const DEACTIVATE = self::class.'_deactivate';
 
     #[LiveProp()]
     public ?array $commutator = null;
@@ -40,11 +40,11 @@ class CommutatorDetail
      */
     private function getDeactivateEventName(): string
     {
-        return static::DEACTIVATE_SWITCH.':'.$this->connection->name;
+        return static::DEACTIVATE.'_'.$this->connection->name;
     }
 
-    #[LiveListener(CommutatorTable::SHOW_DETAIL.':Direct')]
-    public function onShowDetailDirect(#[LiveArg] Commutator $entity): void
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
+    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
     {
         if(isset($this->commutator['id'])){
             if($this->commutator['id'] !== $entity->getId()){
@@ -123,8 +123,8 @@ class CommutatorDetail
      * Update table from filter, amount or page
      * @return void
      */
-    #[LiveListener(CommutatorTable::CHANGE_TABLE.':Direct')]
-    public function onChangeTableDirect(): void
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
+    public function onConnectionCommutatorTableChangeDirect(): void
     {
         $this->commutator = null;
     }

@@ -13,15 +13,15 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/connection_commutator/commutator_table.html.twig')]
-class CommutatorTable
+#[AsLiveComponent(template: 'components/live/connection_commutator/table.html.twig')]
+class ConnectionCommutatorTable
 {
     use DefaultActionTrait;
     use ComponentToolsTrait;
     use ComponentTable;
 
-    const CHANGE_TABLE = 'commutator_table:change:table';
-    const SHOW_DETAIL = 'commutator_table:show:detail';
+    const CHANGE = self::class.'_change';
+    const DETAIL = self::class.'_detail';
 
     #[LiveProp]
     public ?ConnectionType $connection = null;
@@ -42,8 +42,8 @@ class CommutatorTable
      * @param Commutator $commutator
      * @return void
      */
-    #[LiveListener(NewCommutatorForm::FORM_SUCCESS.':Direct')]
-    public function onFormSuccessDirect(#[LiveArg] Commutator $commutator): void
+    #[LiveListener(ConnectionCommutatorNew::FORM_SUCCESS.'_Direct')]
+    public function onConnectionCommutatorNewFormSuccessDirect(#[LiveArg] Commutator $commutator): void
     {
         $this->filter = $commutator->getIp();
         $this->changeFilter();
@@ -55,7 +55,7 @@ class CommutatorTable
      */
     public function getChangeTableEventName(): string
     {
-        return static::CHANGE_TABLE.':'.$this->connection->name;
+        return static::CHANGE.'_'.$this->connection->name;
     }
 
     /**
@@ -64,23 +64,11 @@ class CommutatorTable
      */
     private function getShowDetailEventName(): string
     {
-        return static::SHOW_DETAIL.':'.$this->connection->name;
+        return static::DETAIL.'_'.$this->connection->name;
     }
 
-    /**
-     * When save new commutator table filer by it
-     * @param Commutator $commutator
-     * @return void
-     */
-    #[LiveListener(NewCommutatorForm::FORM_SUCCESS.':Direct')]
-    public function onNewCommutatorFormSuccessDirect(#[LiveArg] Commutator $commutator): void
-    {
-        $this->filter = $commutator->getIp();
-        $this->changeFilter();
-    }
-
-    #[LiveListener(CommutatorDetailEditInline::SAVE.':Direct')]
-    public function onCommutatorDetailEditInlineSaveDirect(): void
+    #[LiveListener(ConnectionCommutatorDetailEditInline::SAVE.'_Direct')]
+    public function onConnectionCommutatorDetailEditInlineSaveDirect(): void
     {
         $this->reload();
     }

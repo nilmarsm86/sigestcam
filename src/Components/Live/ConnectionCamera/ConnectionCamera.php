@@ -1,8 +1,8 @@
 <?php
 namespace App\Components\Live\ConnectionCamera;
 
-use App\Components\Live\ConnectionCommutator\CommutatorTable;
-use App\Components\Live\ConnectionCommutator\PortList;
+use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
+use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Port;
@@ -29,16 +29,16 @@ class ConnectionCamera
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-    #[LiveListener(PortList::SELECTED_PORT.':Direct')]
-    public function onPortListSelectedPortDirect(#[LiveArg] ?Port $port): void
+    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_Direct')]
+    public function onConnectionCommutatorPortListSelectedDirect(#[LiveArg] ?Port $port): void
     {
         $this->commutator = null;
         $this->port = $port;
         $this->commutator = $port?->getCommutator();
     }
 
-    #[LiveListener(CommutatorTable::SHOW_DETAIL.':Direct')]
-    public function onShowDetailDirect(#[LiveArg] Commutator $entity): void
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
+    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
     {
         $this->commutator = $entity;
         $this->port = null;
@@ -48,8 +48,8 @@ class ConnectionCamera
      * Update table from filter, amount or page just in direct connections
      * @return void
      */
-    #[LiveListener(CommutatorTable::CHANGE_TABLE.':Direct')]
-    public function onCommutatorTableChangeTableDirect(): void
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
+    public function onConnectionCommutatorTableChangeDirect(): void
     {
         $this->commutator = null;
         $this->port = null;
