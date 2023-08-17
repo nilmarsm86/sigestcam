@@ -1,6 +1,6 @@
 {# SIN PORT-DETAIL #}
 <div class="col-3 mb-4">
-    <div class="card text-white {{ port.connection }} {% if selected is same as port.id %}shadow-lg border-danger{% endif %}" >
+    <div class="card text-white {{ port.connection }} {% if selected is same as port.id %}shadow-lg border-dark{% endif %}" >
         <div class="card-body" style="padding: 0.5rem">
             <div
                     class="row align-items-center no-gutters"
@@ -30,19 +30,19 @@
                 </div>
                 <div class="col me-2">
                     <div class="text-uppercase text-white fw-bold text-xs mb-1">
-                        {% if editing == port.id %}
+                        {% if editingSpeed == port.id %}
                             <input
                                     type="text"
                                     data-model="norender|speed"
                                     class="w-25"
-                                    data-action="change->live#action"
-                                    data-action-name="save(port={{ port.id }})"
+                                    data-action="blur->live#action"
+                                    data-action-name="saveSpeed(port={{ port.id }})"
                             >
                         {% else %}
                             <span
                                     class="w-25 d-inline-block"
                                     data-action="click->live#action"
-                                    data-action-name="activateEditing(portId={{ port.id }}, speed={{ port.speed }})"
+                                    data-action-name="activateEditingSpeed(portId={{ port.id }}, speed={{ port.speed }})"
                                     style="cursor: pointer"
                             >
                                 {{ port.speed }}
@@ -50,7 +50,30 @@
                         {% endif %}
                         <span>{{ constant('App\\Entity\\Port::SPEED_TYPE')}} - {{ port.equipment }}</span>
                     </div>
-                    <div class="text-white fw-bold h5 mb-0"><span>Puerto: {{ port.number }}</span></div>
+                    <h5 class="card-title">Puerto: <span class="fw-bold">{{ port.number }}</span></h5>
+                    {% if editingType == port.id %}
+                        <select style="font-size: 11.5px"
+                                data-model="norender|type"
+                                data-action="change->live#action blur->live#action"
+                                data-action-name="saveType(port={{ port.id }})"
+                        >
+                            {% for label, value in forSelect %}
+                                {% if value is not same as "" %}
+                                    <option value="{{ value }}">
+                                        {{ label }}
+                                    </option>
+                                {% endif %}
+                            {% endfor %}
+                        </select>
+                    {% else %}
+                        <h6 class="card-subtitle mb-2"
+                            data-action="click->live#action"
+                            data-action-name="activateEditingType(portId={{ port.id }}, type={{ port.type_value }})"
+                        >
+                            {{ port.type_label }}
+                        </h6>
+                    {% endif %}
+
                 </div>
             </div>
         </div>

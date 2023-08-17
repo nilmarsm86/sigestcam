@@ -15,7 +15,7 @@ export default class extends HTMLElement {
      * Evento que se dispara para motrar el backdrop
      * @param event
      */
-    onShow(event){
+    show(event){
         this.style.display = 'flex';
     }
 
@@ -23,7 +23,7 @@ export default class extends HTMLElement {
      * Evento que se dispara para ocultar el backdrop
      * @param event
      */
-    onHide(event){
+    hide(event){
         this.style.display = 'none';
     }
 
@@ -35,17 +35,19 @@ export default class extends HTMLElement {
         this.style.position = 'absolute';
         this.style.width = '100%';
         this.style.height = '100%';
+        this.style.top = '0';
+        this.style.left = '0';
 
-        this.addEventListener(SHOW_EVENT, this.onShow.bind(this));
-        this.addEventListener(HIDE_EVENT, this.onHide.bind(this));
+        this.addEventListener(SHOW_EVENT, this.show.bind(this));
+        this.addEventListener(HIDE_EVENT, this.hide.bind(this));
     }
 
     /**
      * Cuando se quita el backdrop del DOM
      */
     disconnectedCallback(){
-        this.removeEventListener(SHOW_EVENT, this.onShow.bind(this));
-        this.removeEventListener(HIDE_EVENT, this.onHide.bind(this));
+        this.removeEventListener(SHOW_EVENT, this.show.bind(this));
+        this.removeEventListener(HIDE_EVENT, this.hide.bind(this));
     }
 
     /**

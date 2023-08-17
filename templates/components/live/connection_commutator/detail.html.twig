@@ -1,7 +1,7 @@
 <div
         class="col-4"
         {% if commutator is not null %}
-            {{ attributes.defaults(stimulus_controller('commutator-detail', { commutator: commutator.id })) }}
+            {{ attributes.defaults(stimulus_controller('connection-commutator-detail', { commutator: commutator.id })) }}
         {% else %}
             {{ attributes }}
         {% endif %}
@@ -18,31 +18,31 @@
                         <input
                                 type="checkbox"
                                 class="btn-check btn-primary"
-                                id="btncheck1"
+                                id="switch{{ commutator.id }}"
                                 autocomplete="off"
                                 {% if active %}checked{% endif %}
                                 {% if active %}
-                                    data-action="change->commutator-detail#deactivate"
+                                    data-action="change->connection-commutator-detail#deactivate"
                                 {% else %}
                                     data-action="change->live#action"
                                     data-action-name="activate(entityId={{ commutator.id }})"
                                 {% endif %}
                         >
-                        <label class="btn btn-primary" for="btncheck1">
+                        <label class="btn btn-primary" for="switch{{ commutator.id }}">
                             <i class="fas {% if active %}fa-check-circle text-white{% else %}fa-circle text-white-50{% endif %} "></i>
                         </label>
                         <!-- BOTON DE DESACTIVAR -->
-                        <button type="button" class="btn btn-primary">
+                        <a href="{{ path('app_crud_commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary">
                             <i class="fas fa-edit text-white"></i>
                             Editar
-                        </button>
+                        </a>
                     </div>
 
                 </div>
             </div>
 
             {# no es necesario usar updateFromParent, en el data, pues se pasa el data-live-id y esto lleva a que el componente se construya completo #}
-            {{ component('ConnectionCommutatorDetailEditInline', {
+            {{ component('ConnectionDetailEditInline', {
                 label: 'IP:',
                 data: commutator.ip,
                 id: commutator.id,
@@ -52,11 +52,13 @@
                     {'class': 'NotBlank', 'options': {message:'Establezca el IP del equipo.'}},
                     {'class': 'Ip', 'options': {message:'Establezca un IP válido.'}}
                 ],
-                'data-live-id': 'ip-'~ commutator.id
+                'data-live-id': 'commutator-ip-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig'
             }) }}
 
-            {{ component('ConnectionCommutatorDetailEditInline', {
-                label: 'Gateway:',
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Puerta de enlace:',
                 data: commutator.gateway,
                 id: commutator.id,
                 setter: 'setGateway',
@@ -65,19 +67,83 @@
                     {'class': 'NotBlank', 'options': {message:'Establezca el IP gateway del equipo.'}},
                     {'class': 'Ip', 'options': {message:'Establezca un IP gateway válido.'}}
                 ],
-                'data-live-id': 'gateway-'~ commutator.id
+                'data-live-id': 'commutator-gateway-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig'
             }) }}
 
-            {{ component('ConnectionCommutatorDetailEditInline', {
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Dirección multicast:',
+                data: commutator.multicast,
+                id: commutator.id,
+                setter: 'setMulticast',
+                connection: connection,
+                'data-live-id': 'commutator-gateway-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig'
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
                 label: 'Inventario:',
                 data: commutator.inventary,
                 id: commutator.id,
                 setter: 'setInventory',
                 connection: connection,
-                'data-live-id': 'inventory-'~ commutator.id
+                'data-live-id': 'commutator-inventory-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
+                refreshTable: false
             }) }}
 
-            {{ component('ConnectionCommutatorDetailEditInline', {
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Marca:',
+                data: commutator.brand,
+                id: commutator.id,
+                setter: 'setBrand',
+                connection: connection,
+                'data-live-id': 'commutator-brand-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Modelo:',
+                data: commutator.model,
+                id: commutator.id,
+                setter: 'setModel',
+                connection: connection,
+                'data-live-id': 'commutator-model-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Contic:',
+                data: commutator.contic,
+                id: commutator.id,
+                setter: 'setContic',
+                connection: connection,
+                'data-live-id': 'commutator-contic-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Serie:',
+                data: commutator.serial,
+                id: commutator.id,
+                setter: 'setPhysicalSerial',
+                connection: connection,
+                'data-live-id': 'commutator-serial-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
                 label: 'Dirección física:',
                 data: commutator.physical_address,
                 id: commutator.id,
@@ -86,63 +152,36 @@
                 constraints: [
                     {'class': 'NotBlank', 'options': {message:'La dirección física no debe estar vacía.'}}
                 ],
-                'data-live-id': 'physical_address-'~ commutator.id
+                'data-live-id': 'commutator-physical_address-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
+                textarea: true,
+                refreshTable: false
             }) }}
 
-            {{ component('ConnectionCommutatorDetailEditInline', {
-                label: 'Marca:',
-                data: commutator.brand,
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Municipio:',
+                data: commutator.municipality,
                 id: commutator.id,
-                setter: 'setBrand',
+                editable: false,
                 connection: connection,
-                'data-live-id': 'brand-'~ commutator.id
+                'data-live-id': 'commutator-municipality-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig'
             }) }}
 
-            {{ component('ConnectionCommutatorDetailEditInline', {
-                label: 'Modelo:',
-                data: commutator.model,
-                id: commutator.id,
-                setter: 'setModel',
-                connection: connection,
-                'data-live-id': 'model-'~ commutator.id
-            }) }}
-
-            {{ component('ConnectionCommutatorDetailEditInline', {
-                label: 'Contic:',
-                data: commutator.contic,
-                id: commutator.id,
-                setter: 'setContic',
-                connection: connection,
-                'data-live-id': 'contic-'~ commutator.id
-            }) }}
-
-            {{ component('ConnectionCommutatorDetailEditInline', {
-                label: 'Serie:',
-                data: commutator.serial,
-                id: commutator.id,
-                setter: 'setPhysicalSerial',
-                connection: connection,
-                'data-live-id': 'serial-'~ commutator.id
-            }) }}
-
-            {{ component('ConnectionCommutatorDetailEditInline', {
+            {{ component('ConnectionDetailEditInline', {
                 label: 'Provincia:',
                 data: commutator.province,
                 id: commutator.id,
                 editable: false,
                 connection: connection,
-                'data-live-id': 'province-'~ commutator.id
-            }) }}
-
-            {{ component('ConnectionCommutatorDetailEditInline', {
-                label: 'Municipio:',
-                data: commutator.municipality,
+                'data-live-id': 'commutator-province-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
                 last: true,
-                id: commutator.id,
-                editable: false,
-                connection: connection,
-                'data-live-id': 'municipality-'~ commutator.id
             }) }}
+            <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
         </div>
     {% endif %}
 </div>

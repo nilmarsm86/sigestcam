@@ -1,15 +1,22 @@
-<ul class="list-group list-group-horizontal list-group-flush border-0" {{ attributes }}>
+<ul class="list-group list-group-horizontal list-group-flush border-0" {{ attributes }} style="position: relative">
     <li class="list-group-item w-50 fw-bold" {% if last == false %}style="border-radius: 0"{% endif %}>
         {{ label }}
     </li>
     <li class="list-group-item w-50" style="border-radius: 0">
         {% if isEditing %}
-            <input
-                    type="text"
-                    name="ip"
+            {% if textarea %}
+                <textarea
                     data-model="norender|data"
                     class="form-control form-control-sm {% if errors %}border-danger{% endif %}"
-            >
+                ></textarea>
+            {% else %}
+                <input
+                    type="{% if secure %}password{% else %}text{% endif %}"
+                    data-model="norender|data"
+                    class="form-control form-control-sm {% if errors %}border-danger{% endif %}"
+                >
+            {% endif %}
+
             {% if errors %}
                 {% for error in errors %}
                     <p class="invalid-feedback m-0" style="display: block">{{ error }}</p>
@@ -30,7 +37,7 @@
             {% if isEditing %}
                 <i class="fas fa-save text-dark align-bottom"
                    data-action="click->live#action"
-                   data-action-name="prevent|save(commutator={{ id }})"
+                   data-action-name="prevent|save(entity={{ id }})"
                    title="Click para salvar!"
                 ></i>
             {% else %}
@@ -42,4 +49,5 @@
             {% endif %}
         {% endif  %}
     </li>
+{#    <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>#}
 </ul>

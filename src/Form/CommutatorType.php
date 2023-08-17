@@ -7,6 +7,8 @@ use App\Form\Types\AddressType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 
 class CommutatorType extends AbstractType
@@ -18,13 +20,10 @@ class CommutatorType extends AbstractType
                 'label' => 'IP:',
             ])
             ->add('gateway', null, [
-                'label' => 'Gateway:',
+                'label' => 'Puerta de enlace:',
             ])
             ->add('multicast', null, [
                 'label' => 'Dirección multicast:',
-            ])
-            ->add('portsAmount', null, [
-                'label' => 'Cantidad de puertos:',
             ])
             ->add('physicalAddress', TextareaType::class, [
                 'label' => 'Dirección física:',
@@ -49,6 +48,21 @@ class CommutatorType extends AbstractType
                 'municipality' => $options['municipality'],
                 'mapped' => false,
             ])
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+                $commutator = $event->getData();
+                $form = $event->getForm();
+
+                if (!$commutator || null === $commutator->getId()) {
+                    $form->add('portsAmount', null, [
+                        'label' => 'Cantidad de puertos:',
+                        'attr' => [
+                            'min' => 1,
+                            'max' => 36,
+                            'list' => 'ports_amount'
+                        ]
+                    ]);
+                }
+            })
         ;
     }
 

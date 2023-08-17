@@ -1,0 +1,23 @@
+<div {{ attributes }}>
+    {% embed "embeds/card.html.twig" %}
+        {% block card_css_class %}mb-4{% endblock %}
+
+        {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+        {% block card_title %}{{ title }}{% endblock %}
+
+        {% block card_header_options %}
+            <div>
+                <a class="btn btn-primary btn-sm active" href="{{ newHref }}">
+                    <i class="fas fa-plus"></i>
+                    Nueva
+                </a>
+            </div>
+        {% endblock %}
+
+        {% block card_body %}
+            {{ component('ConnectionListTable', {connection: connection, filter: filter}) }}
+        {% endblock %}
+    {% endembed %}
+</div>
+

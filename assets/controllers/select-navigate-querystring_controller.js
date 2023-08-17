@@ -23,20 +23,10 @@ export default class extends Controller {
      * @param event change select event
      */
     onChange(event){
-        this.dispatch('onChange');
         let currentPath = new URL(document.location);
         currentPath.searchParams.set(this.queryNameValue, event.currentTarget.value);
+        super.dispatch('onChange', {detail:{url:currentPath}});
         document.location = currentPath.toString();
     }
 
-    /**
-     * @inheritDoc
-     */
-    dispatch(eventName, options = {}) {
-        const event = super.dispatch(eventName, options);
-        console.groupCollapsed(`Trigger ${event.type}`);
-        console.log(event.detail);
-        console.groupEnd();
-        return event;
-    }
 }

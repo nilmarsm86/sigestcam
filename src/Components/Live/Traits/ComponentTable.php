@@ -23,7 +23,7 @@ trait ComponentTable
     public ?int $page = 1;
 
     #[LiveProp(writable: true)]
-    public ?array $data = null;
+    public mixed $data = null;
 
     #[LiveProp(writable: true)]
     public ?int $fake = null;
@@ -75,6 +75,7 @@ trait ComponentTable
     #[LiveAction]
     public function changeFilter(): void
     {
+        $this->page = 1;
         $this->reload();
         $this->emit($this->getChangeTableEventName());
     }

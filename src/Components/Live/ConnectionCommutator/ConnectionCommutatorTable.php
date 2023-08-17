@@ -2,6 +2,7 @@
 
 namespace App\Components\Live\ConnectionCommutator;
 
+use App\Components\Live\ConnectionDetailEditInline;
 use App\Components\Live\Traits\ComponentTable;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
@@ -26,7 +27,7 @@ class ConnectionCommutatorTable
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-    public function __construct(private CommutatorRepository $commutatorRepository)
+    public function __construct(private readonly CommutatorRepository $commutatorRepository)
     {
     }
 
@@ -67,7 +68,7 @@ class ConnectionCommutatorTable
         return static::DETAIL.'_'.$this->connection->name;
     }
 
-    #[LiveListener(ConnectionCommutatorDetailEditInline::SAVE.'_Direct')]
+    #[LiveListener(ConnectionDetailEditInline::SAVE_COMMUTATOR.'_Direct')]
     public function onConnectionCommutatorDetailEditInlineSaveDirect(): void
     {
         $this->reload();

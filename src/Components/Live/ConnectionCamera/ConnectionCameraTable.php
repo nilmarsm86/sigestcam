@@ -2,6 +2,7 @@
 
 namespace App\Components\Live\ConnectionCamera;
 
+use App\Components\Live\ConnectionDetailEditInline;
 use App\Components\Live\Traits\ComponentTable;
 use App\Entity\Camera;
 use App\Entity\Commutator;
@@ -68,9 +69,9 @@ class ConnectionCameraTable
     {
         //cambiar la forma en la que se buscan los datos
         if($this->port->hasConnectedCamera()){
-            $data = $this->cameraRepository->findCameras($this->filter, $this->amount, $this->page);
+            $data = $this->cameraRepository->findActiveCamerasWithPort($this->filter, $this->amount, $this->page);
         }else{
-            $data = $this->cameraRepository->findCamerasByCommutator($this->port->getCommutator(), $this->filter, $this->amount, $this->page);
+            $data = $this->cameraRepository->findInactiveCamerasWithoutPort($this->filter, $this->amount, $this->page);
         }
         $this->reloadData($data);
     }
@@ -103,6 +104,12 @@ class ConnectionCameraTable
     private function getShowDetailEventName(): string
     {
         return static::DETAIL.'_'.$this->connection->name;
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_CAMERA.'_Direct')]
+    public function onConnectionCameraDetailEditInlineSaveDirect(): void
+    {
+        $this->reload();
     }
 
 }

@@ -4,6 +4,9 @@ namespace App\Repository;
 
 use App\Entity\Camera;
 use App\Entity\Commutator;
+use App\Entity\Enums\ConnectionType;
+use App\Entity\Enums\State;
+use App\Entity\Traits\StateTrait;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\QueryBuilder;
@@ -45,21 +48,21 @@ class CameraRepository extends ServiceEntityRepository
         }
     }
 
-    private function addFiter(QueryBuilder $builder, string $filter)
+    private function addFilter(QueryBuilder $builder, string $filter)
     {
         if($filter){
-            $builder->andWhere('c.physicalAddress LIKE :filter')
-                ->orWhere('c.brand LIKE :filter')
-                ->orWhere('c.contic LIKE :filter')
-                ->orWhere('c.electronicSerial LIKE :filter')
-                ->orWhere('c.inventory LIKE :filter')
-                ->orWhere('c.ip LIKE :filter')
-                ->orWhere('c.model LIKE :filter')
-                ->orWhere('c.physicalSerial LIKE :filter')
-                ->orWhere('c.user LIKE :filter')
-                ->setParameters([
-                    ':filter' => '%'.$filter.'%',
-                ]);
+            $predicate = "c.physicalAddress LIKE :filter ";
+            $predicate .= "OR c.brand LIKE :filter ";
+            $predicate .= "OR c.contic LIKE :filter ";
+            $predicate .= "OR c.electronicSerial LIKE :filter ";
+            $predicate .= "OR c.inventory LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR c.model LIKE :filter ";
+            $predicate .= "OR c.physicalSerial LIKE :filter ";
+            $predicate .= "OR c.user LIKE :filter";
+
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
         }
     }
 
@@ -72,7 +75,73 @@ class CameraRepository extends ServiceEntityRepository
     public function findCameras(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
         $builder = $this->createQueryBuilder('c');
-        $this->addFiter($builder, $filter);
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    /**
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
+     */
+    public function findActiveCameras(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')
+        ->where('c.state = :state')
+        ->setParameter(':state', State::Active);
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    /**
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
+     */
+    public function findActiveCamerasWithPort(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')
+            ->where('c.state = :state')
+            ->setParameter(':state', State::Active)
+            ->andWhere('c.port IS NOT NULL');
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    /**
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
+     */
+    public function findInactiveCameras(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')
+            ->where('c.state = :state')
+            ->setParameter(':state', State::Inactive);
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    /**
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
+     */
+    public function findInactiveCamerasWithoutPort(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')
+            ->where('c.state = :state')
+            ->setParameter(':state', State::Inactive)
+            ->andWhere('c.port IS NULL');
+        $this->addFilter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
     }
@@ -87,8 +156,28 @@ class CameraRepository extends ServiceEntityRepository
         $builder = $this->createQueryBuilder('c');
         $builder->leftJoin('c.port', 'p');
         $builder->andWhere($builder->expr()->in('p.id', $portsId));
-        $this->addFiter($builder, $filter);
+        $this->addFilter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findByDirectConnection(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'p', 'comm', 'm', 'pro']);
+        $builder->innerJoin('c.port', 'p')
+            ->where('p.connectionType = :connectionType')
+            ->setParameter(':connectionType', ConnectionType::Direct)
+            ->innerJoin('p.commutator', 'comm')
+            ->innerJoin('c.municipality', 'm')
+            ->leftJoin('m.province', 'pro');
+
+        if($filter){
+            $predicate = "c.ip LIKE :filter ";
+            $predicate .= "OR comm.ip LIKE :filter";
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
+        }
+        $query = $builder->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
     }
 

@@ -18,7 +18,8 @@ class RegistrationFormType extends AbstractType
             ->add('name', null, [
                 'attr' => [
                     'class' => 'form-control form-control-user no-border-left',
-                    'placeholder' => 'Nombres'
+                    'placeholder' => 'Nombres',
+                    'autofocus' => true
                 ]
             ])
             ->add('lastname', null, [
@@ -62,6 +63,7 @@ class RegistrationFormType extends AbstractType
             'data_class' => RegistrationForm::class,
             'attr' => [
                 'class' => 'user register',
+//                'novalidate' => true
             ]
         ]);
     }

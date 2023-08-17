@@ -53,20 +53,21 @@ class CommutatorRepository extends ServiceEntityRepository
     public function findCommutator(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
         //$builder = $this->createQueryBuilder('c')->addSelect('m');
-        $builder = $this->createQueryBuilder('c');
+        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
+            ->innerJoin('c.municipality', 'm')
+            ->leftJoin('m.province', 'p');
         if($filter){
-            $builder->andWhere('c.physicalAddress LIKE :filter')
-                ->orWhere('c.brand LIKE :filter')
-                ->orWhere('c.contic LIKE :filter')
-                ->orWhere('c.gateway LIKE :filter')
-                ->orWhere('c.inventory LIKE :filter')
-                ->orWhere('c.ip LIKE :filter')
-                ->orWhere('c.model LIKE :filter')
-                ->orWhere('c.physicalSerial LIKE :filter')
-                //->innerJoin('c.municipality1 m')
-                ->setParameters([
-                    ':filter' => '%'.$filter.'%',
-                ]);
+            $predicate = "c.physicalAddress LIKE :filter ";
+            $predicate .= "OR c.brand LIKE :filter ";
+            $predicate .= "OR c.contic LIKE :filter ";
+            $predicate .= "OR c.gateway LIKE :filter ";
+            $predicate .= "OR c.inventory LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR c.model LIKE :filter ";
+            $predicate .= "OR c.physicalSerial LIKE :filter ";
+
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
         }
 
         //$query = $builder->/*select(['c.ip', 'm.name'])->*/join('c.municipality', 'm')->orderBy('c.id', 'ASC')->getQuery();

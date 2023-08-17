@@ -8,6 +8,7 @@ use App\Entity\Enums\ConnectionType;
 use App\Entity\Port;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -22,6 +23,8 @@ class ConnectionCameraDetail
     use ComponentActiveInactive;
 
     const DEACTIVATE = self::class.'_deactivate';
+    const DISCONNECT = self::class.'_disconnect';
+    const ACTIVATE = self::class.'_activate';
 
     #[LiveProp]
     public ?array $camera = null;
@@ -52,6 +55,15 @@ class ConnectionCameraDetail
         return static::DEACTIVATE.'_'.$this->connection->name;
     }
 
+    /**
+     * Get deactivate event name
+     * @return string
+     */
+    private function getActivateEventName(): string
+    {
+        return static::ACTIVATE.'_'.$this->connection->name;
+    }
+
     #[LiveListener(ConnectionCameraTable::DETAIL.'_Direct')]
     public function onConnectionCameraTableDetailDirect(#[LiveArg] Camera $entity): void
     {
@@ -80,6 +92,13 @@ class ConnectionCameraDetail
         $cam['province'] = (string) $camera->getMunicipality()->getProvince();
         $cam['municipality'] = (string) $camera->getMunicipality();
         $cam['state'] = $camera->isActive();
+        $cam['disconnected'] = $camera->isDisconnected();
+        $cam['user'] = $camera->getUser();
+        $cam['password'] = $camera->getPassword();
+        $cam['modem'] = (string) $camera->getModem();
+        $cam['electronicSerial'] = (string) $camera->getElectronicSerial();
+        $cam['commutator'] = (string) $camera->getPort()?->getCommutator();
+        $cam['port'] = $camera->getPort()?->getNumber();
 
         return $cam;
     }
@@ -92,6 +111,50 @@ class ConnectionCameraDetail
     public function onConnectionCameraTableChangeDirect(): void
     {
         $this->camera = null;
+    }
+
+    #[LiveAction]
+    public function connect(#[LiveArg] Camera $camera): void
+    {
+        $camera->connect($this->port);
+
+        $this->entityManager->persist($camera);
+        $this->entityManager->flush();
+    }
+
+    #[LiveAction]
+    public function disconnect(#[LiveArg] Camera $camera): void
+    {
+        $port = $camera->getPort();
+        $camera->disconnect();
+        $this->entityManager->persist($camera);
+        $this->entityManager->flush();
+        $this->active = false;
+
+        $this->emit(static::DISCONNECT.'_'.$this->connection->name, [
+            'port' => $port->getId(),
+        ]);
+    }
+
+    #[LiveAction]
+    public function preactivate(#[LiveArg] int $entityId, #[LiveArg] string $elementId): void
+    {
+        $entity = $this->entityManager->find($this->entity, $entityId);
+        if(is_null($entity->getPort())){
+            $this->dispatchBrowserEvent($this->getActivateEventName(), [
+                'elementId' => $elementId
+            ]);
+        }else{
+            $entity->activate();
+
+            $this->entityManager->persist($entity);
+            $this->entityManager->flush();
+            $this->active = true;
+
+            $this->emit($this->getActivateEventName(), [
+                'entity' => $entity->getId(),
+            ]);
+        }
     }
 
 }

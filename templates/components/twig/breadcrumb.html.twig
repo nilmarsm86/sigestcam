@@ -1,0 +1,16 @@
+<div class="col-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            {% for option in options %}
+                <li
+                        class="breadcrumb-item {% if option.label is same as current %}active{% endif %}"
+                        {% if option.label is same as current %}aria-current="page"{% endif %}
+                >
+                    <a {% if option.label is not same as current %}href="{{ option.href }}"{% endif %}>
+                        {{ option.label }}
+                    </a>
+                </li>
+            {% endfor %}
+        </ol>
+    </nav>
+</div>

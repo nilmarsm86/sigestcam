@@ -26,7 +26,7 @@ class Camera extends Equipment
     private ?string $user = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'La camara debe de tener una contraseña.')]
+    #[Assert\NotBlank(message: 'La cámara debe de tener una contraseña.')]
     #[Assert\NotNull(message: 'La contraseña de la camara no puede ser nula.')]
     private ?string $password = null;
 
@@ -157,8 +157,9 @@ class Camera extends Equipment
     public function disconnect(): static
     {
         parent::disconnect();
-
-        $this->modem->removeCamera($this);
+        if(!is_null($this->modem)){
+            $this->modem->removeCamera($this);
+        }
         //$this->deactivate();
 
         return $this;

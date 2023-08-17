@@ -4,12 +4,7 @@
             <tr>
                 <th>Ip</th>
                 <th>Puerta de enlace</th>
-                <th>Número de inventario</th>
-                <th>Dirección física</th>
-                <th>Marca</th>
-                <th>Modelo</th>
-                <th>Contic</th>
-                <th>Serie</th>
+                <th>Dirección multicast</th>
                 <th></th>
             </tr>
         {% endblock %}
@@ -19,12 +14,7 @@
                 <tr>
                     <td>{{ commutator.ip }}</td>
                     <td>{{ commutator.gateway }}</td>
-                    <td>{{ commutator.inventory }}</td>
-                    <td>{{ commutator.physicalAddress }}</td>
-                    <td>{{ commutator.brand }}</td>
-                    <td>{{ commutator.model }}</td>
-                    <td>{{ commutator.contic }}</td>
-                    <td>{{ commutator.physicalSerial }}</td>
+                    <td>{{ commutator.multicast }}</td>
                     <td>
                         <button
                                 type="button"

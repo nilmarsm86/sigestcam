@@ -1,0 +1,21 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Commutator{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Datos del switch</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Switch', href: path('commutator_index')},
+                {label: 'Detalle'},
+            ],
+            current: 'Detalle'
+        }) }}
+    </div>
+
+    {{ include('commutator/_detail.html.twig') }}
+{% endblock %}

@@ -2,9 +2,11 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\ConnectionType;
 use App\Entity\Traits\StateTrait as StateTrait;
 use App\Repository\EquipmentRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Exception;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineAssert;
 
@@ -205,9 +207,9 @@ class Equipment
     }
 
     /**
-     * @throws \Exception
+     * @throws Exception
      */
-    public function setPort(?port $port): static
+    public function setPort(?Port $port): static
     {
         if(!is_null($port)){
             $port->setEquipment($this);
@@ -227,7 +229,7 @@ class Equipment
         }
 
         if(!is_null($this->getIp())){
-            $data .= '['.$this->getIp().']';
+            $data .= ' ['.$this->getIp().']';
         }
 
         return $data;
@@ -239,11 +241,22 @@ class Equipment
         return $namespace[count($namespace) - 1];
     }
 
+    /**
+     * @throws Exception
+     */
     public function disconnect(): static
     {
         $this->port->setEquipment(null);
+        $this->port->setConnectionType(ConnectionType::Null);
         $this->port = null;
         $this->deactivate();
+
+        return $this;
+    }
+
+    public function connect(Port $port): static
+    {
+        $this->setPort($port);
 
         return $this;
     }
@@ -251,6 +264,11 @@ class Equipment
     public function getShortName(): string
     {
         return substr($this->getClass(), 0 , 3);
+    }
+
+    public function isDisconnected()
+    {
+        return is_null($this->port);
     }
 
 }

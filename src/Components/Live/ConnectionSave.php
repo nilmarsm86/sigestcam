@@ -59,24 +59,25 @@ class ConnectionSave extends AbstractController
         if(!$this->camera->isActive()){
             $this->camera->activate();
         }
+        $this->entityManager->persist($this->camera);
 
         $port = $this->camera->getPort();
         $port->setConnectionType($this->connection);
         if(!$port->isActive()){
             $port->activate();
         }
+        $this->entityManager->persist($port);
 
         $commutator = $port->getCommutator();
         if(!$commutator->isActive()){
             $commutator->activate();
         }
+        $this->entityManager->persist($commutator);
 
         $this->entityManager->flush();
 
         $this->addFlash('success', 'Se a registrado una nueva conexión directa en el sistema.');
-        return $this->redirectToRoute('app_login');
-
-
+        return $this->redirectToRoute('connection_direct_list', ['filter' => $this->camera->getIp()]);
     }
 
     /**

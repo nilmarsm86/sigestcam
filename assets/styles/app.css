@@ -24,6 +24,7 @@ form.commutator ul{
     list-style: none;
 }
 
+form.register .form-check ul,
 form.profile ul,
 form.commutator ul{
     padding-left: 0;

@@ -1,20 +1,48 @@
-{% extends 'base.html.twig' %}
+{% extends 'content.html.twig' %}
 
-{% block title %}Hello CommutatorController!{% endblock %}
+{% block title %}Commutator index{% endblock %}
 
-{% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Gestionar switch</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Switch', href: path('commutator_index')},
+                {label: 'Lista'},
+            ],
+            current: 'Lista'
+        }) }}
+    </div>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+    <div class="row"
+         data-controller="content-loader visibility page"
+         data-action="
+            page:onShowFormContent->visibility#show
+            page:onShowFormContent->content-loader#refreshContent
+            submit-form-async:success->page#sendFormSuccess
+            page:onSendFormSuccess->visibility#hide
+            page:onSendFormSuccess->content-loader#refreshContent
+        "
+    >
+        <div class="col-12" data-page-target="listContainer">
+            {{ include('commutator/_list.html.twig') }}
+        </div>
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code><a href="{{ 'C:/php/symfony/sigestcam/src/Controller/CommutatorController.php'|file_link(0) }}">src/Controller/CommutatorController.php</a></code></li>
-        <li>Your template at <code><a href="{{ 'C:/php/symfony/sigestcam/templates/commutator/index.html.twig'|file_link(0) }}">templates/commutator/index.html.twig</a></code></li>
-    </ul>
-</div>
+        <div class="w-100"></div>
+
+        <div class="col-12"
+                style="display: none;position: relative"
+                data-visibility-target="target"
+                data-page-target="formContainer"
+                data-controller="submit-form-async"
+                data-action="submit->submit-form-async#submit"
+        >
+            <backdrop-component class="card-backdrop d-block"></backdrop-component>
+        </div>
+    </div>
+
+
 {% endblock %}

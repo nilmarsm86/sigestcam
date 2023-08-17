@@ -42,7 +42,7 @@ class Commutator extends Equipment implements HarborInterface
     private ?string $gateway = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\NotBlank(message: 'La direccion multicast no debe estar vacía.')]
+    //#[Assert\NotBlank(message: 'La direccion multicast no debe estar vacía.')]
     private ?string $multicast = null;
 
     /**
@@ -59,7 +59,6 @@ class Commutator extends Equipment implements HarborInterface
         $this->portsAmount = $portsAmount;
         $this->enumState = State::Active;
         $this->maximumPortsAmount = $portsAmount;
-        $this->pepe = $connectionType;
         if(!is_null($portsAmount)){
             $this->createPorts($this->portsAmount, $connectionType);
         }

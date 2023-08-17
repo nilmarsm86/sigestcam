@@ -19,14 +19,14 @@ trait EnumsTrait
     /**
      * Get all values for select
      * @return array
-
+     */
     public static function forSelect(): array
     {
         return array_combine(
             array_column(self::cases(), 'name'),//option label
             array_column(self::cases(), 'value')//option value
         );
-    }*/
+    }
 
     /**
      * Function fot EnumType

@@ -3,21 +3,21 @@
 {% block title %}Conexiones{% endblock %}
 
 {% block content %}
-
     <div class="row">
         <div class="col-8">
-            <h3 class="text-dark mb-4">Conexión directa</h3>
+            <h3 class="text-dark mb-4">Nueva conexión directa</h3>
         </div>
-        <div class="col-4">
-            <nav aria-label="breadcrumb">
-                <ol class="breadcrumb">
-                    <li class="breadcrumb-item"><a href="#">Inicio</a></li>
-                    <li class="breadcrumb-item"><a href="#">Conexiones</a></li>
-                    <li class="breadcrumb-item active" aria-current="page">Conexión directa</li>
-                </ol>
-            </nav>
-        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Conexiones', href: path('connection_index')},
+                {label: 'Conexion directa', href: '#'},
+                {label: 'Nueva'},
+            ],
+            current: 'Nueva'
+        }) }}
     </div>
+
     {{ component('ConnectionCommutator', {
         connection: constant('App\\Entity\\Enums\\ConnectionType::Direct')
     }) }}

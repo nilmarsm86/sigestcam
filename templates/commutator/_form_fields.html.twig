@@ -1,0 +1,30 @@
+{{ form_row(form.ip) }}
+{{ form_row(form.gateway) }}
+{{ form_row(form.multicast) }}
+{% if form.portsAmount is defined %}
+    {{ form_row(form.portsAmount) }}
+    <datalist id="ports_amount">
+        {% for i in 1..36 %}
+            <option value="{{ i }}"></option>
+        {% endfor %}
+    </datalist>
+{% endif %}
+{{ form_row(form.physicalAddress) }}
+{{ form_row(form.physicalSerial) }}
+{{ form_row(form.brand) }}
+{{ form_row(form.model) }}
+{{ form_row(form.inventory) }}
+{{ form_row(form.contic) }}
+{% if isSuccessful is not defined %}
+    <div data-controller="address content-loader"
+         data-action="address:onSelectProvince->content-loader#refreshContent"
+         data-address-url-value="{{ path('commutator_municipality', {'id': 0}) }}"
+    >
+{% endif %}
+
+    {{ form_row(form.address.province) }}
+    {{ form_row(form.address.municipality) }}
+
+{% if isSuccessful is not defined %}
+    </div>
+{% endif %}

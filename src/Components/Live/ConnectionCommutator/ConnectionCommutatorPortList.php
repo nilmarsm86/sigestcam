@@ -2,11 +2,13 @@
 
 namespace App\Components\Live\ConnectionCommutator;
 
+use App\Components\Live\ConnectionCamera\ConnectionCameraDetail;
 use App\Components\Live\ConnectionCamera\ConnectionCameraNew;
 use App\Components\Live\Traits\ComponentActiveInactive;
 use App\Entity\Camera;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Enums\PortType;
 use App\Entity\Port;
 use App\Repository\PortRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -36,10 +38,19 @@ class ConnectionCommutatorPortList
     public ?int $selected = null;
 
     #[LiveProp]
-    public ?int $editing = null;
+    public ?int $editingSpeed = null;
+
+    #[LiveProp]
+    public ?int $editingType = null;
+
+    #[LiveProp]
+    public ?array $forSelect = null;
 
     #[LiveProp(writable: true )]
     public ?string $speed = null;
+
+    #[LiveProp(writable: true )]
+    public ?string $type = null;
 
     #[LiveProp]
     public ?array $commutator = null;
@@ -74,17 +85,31 @@ class ConnectionCommutatorPortList
     public function select(#[LiveArg] ?int $portId): void
     {
         $this->selected = $portId;
-        $this->ports[$portId]['isSelectable'] = false;
+        foreach($this->ports as $port){
+            if($port['id'] === $portId){
+                $port['isSelectable'] = false;
+            }else{
+                $port['isSelectable'] = true;
+            }
+        }
+
         $this->emit(static::SELECTED.'_'.$this->connection->name, [
             'port' => $portId,
         ]);
     }
 
     #[LiveAction]
-    public function activateEditing(#[LiveArg] ?int $portId, #[LiveArg] ?int $speed): void
+    public function activateEditingSpeed(#[LiveArg] ?int $portId, #[LiveArg] ?int $speed): void
     {
-        $this->editing = $portId;
+        $this->editingSpeed = $portId;
         $this->speed = $speed;
+    }
+
+    #[LiveAction]
+    public function activateEditingType(#[LiveArg] ?int $portId, #[LiveArg] ?int $type): void
+    {
+        $this->editingType = $portId;
+        $this->type = $type;
     }
 
     /**
@@ -94,6 +119,7 @@ class ConnectionCommutatorPortList
      */
     private function portsInfo(Commutator $commutator): array
     {
+        $this->forSelect = PortType::forSelect();
         $ports = [];
         foreach($commutator->getPorts() as $port){
             $ports[$port->getId()] = $this->portData($port);
@@ -116,6 +142,8 @@ class ConnectionCommutatorPortList
         $data['speed'] = $port->getSpeed();
         $data['id'] = $port->getId();
         $data['isSelectable'] = true;
+        $data['type_value'] = PortType::getValueFrom($port->getPortType());
+        $data['type_label'] = PortType::getLabelFrom($port->getPortType());
 
         if (is_null($port->getConnectionType())) {
             $data['connection'] = 'bg-gradient-danger';
@@ -138,9 +166,10 @@ class ConnectionCommutatorPortList
     #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
     public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
     {
-
         $this->ports = $this->portsInfo($entity);
         $this->selected = null;
+        $this->editingSpeed = null;
+        $this->editingType = null;
         //$this->select(null);//ya ConnectionCameraNew escucha ConnectionCameraTable::SHOW_DETAIL
     }
 
@@ -176,12 +205,13 @@ class ConnectionCommutatorPortList
         $this->ports[$portId]['state'] = false;
         $this->deactivate($portId);
         if($this->selected === $portId){
-            $this->select(null);
+            $this->select($portId);
+//            $this->selected = null;
         }
     }
 
     #[LiveAction]
-    public function save(PortRepository $portRepository, #[LiveArg] Port $port): void
+    public function saveSpeed(PortRepository $portRepository, #[LiveArg] Port $port): void
     {
         if(!$this->speed){
             $this->speed = 1;
@@ -189,7 +219,17 @@ class ConnectionCommutatorPortList
         $this->ports[$port->getId()]['speed'] = $this->speed;
         $port->configure($this->speed);
         $portRepository->save($port, true);
-        $this->editing = null;
+        $this->editingSpeed = null;
+    }
+
+    #[LiveAction]
+    public function saveType(PortRepository $portRepository, #[LiveArg] Port $port): void
+    {
+        $this->ports[$port->getId()]['type_value'] = $this->type;
+        $this->ports[$port->getId()]['type_label'] = PortType::getLabelFrom($this->type);
+        $port->configure($this->ports[$port->getId()]['speed'], PortType::from($this->type));
+        $portRepository->save($port, true);
+        $this->editingType = null;
     }
 
     #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Direct')]
@@ -197,6 +237,13 @@ class ConnectionCommutatorPortList
     {
         $this->ports[$camera->getPort()->getId()]['equipment'] = $camera->getShortName();
         $this->ports[$camera->getPort()->getId()]['isSelectable'] = false;
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DISCONNECT.'_Direct')]
+    public function onConnectionCameraDetailDisconnectDirect(#[LiveArg] Port $port): void
+    {
+        $this->ports[$port->getId()]['equipment'] = null;
+        $this->ports[$port->getId()]['connection'] = 'bg-gradient-danger';
     }
 
 }

@@ -5,6 +5,7 @@ namespace App\Controller;
 use App\DTO\Paginator;
 use App\Entity\Enums\ConnectionType;
 use App\Repository\CommutatorRepository;
+use App\Repository\PortRepository;
 use Doctrine\ORM\AbstractQuery;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,19 +13,21 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
 
-#[Route('/conection', name: 'conection')]
+#[Route('/connection', name: 'connection_')]
 class ConectionController extends AbstractController
 {
-    #[Route('/', name: '_index')]
-    public function index(): Response
+    #[Route('/', name: 'index')]
+    public function index(PortRepository $portRepository): Response
     {
-        return $this->render('conection/index.html.twig', [
-            'controller_name' => 'ConectionController',
+        $totalAmountConnections = $portRepository->findAmountConnections();
+
+        return $this->render('connection/index.html.twig', [
+            'total_amount_connections' => $totalAmountConnections
         ]);
     }
 
-    #[Route('/direct', name: '_direct')]
-    public function direct(
+    #[Route('/direct_new', name: 'direct_new')]
+    public function directNew(
         Request              $request,
         /*#[MapRequestPayload(
             serializationContext: [
@@ -43,7 +46,7 @@ class ConectionController extends AbstractController
 
         $data = $commutatorRepository->findCommutator($filter, $amountPerPage, $pageNumber);
 
-        return $this->render('conection/direct.html.twig', [
+        return $this->render('connection/direct_new.html.twig', [
             //'commutator' => $commutatorFormModel,
             'filter' => $filter,
             'paginator' => new Paginator($data, $amountPerPage, $pageNumber),
@@ -52,6 +55,14 @@ class ConectionController extends AbstractController
             'pageNumber' => $pageNumber,
             'fake' => $data->count(),
             'connection' => ConnectionType::Direct
+        ]);
+    }
+
+    #[Route('/direct_list', name: 'direct_list')]
+    public function directList(Request $request): Response
+    {
+        return $this->render('connection/direct_list.html.twig', [
+            'filter' => $request->query->get('filter', '')
         ]);
     }
 

@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Enums\PortType;
 use App\Entity\Enums\ReportType;
 use App\Entity\Enums\State as StateEnum;
 use App\Entity\Interfaces\HarborInterface;
@@ -63,11 +64,21 @@ class Port
     )]
     private ?ConnectionType $enumConnectionType = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $portType = null;
+
+    #[Assert\Choice(
+        choices: [PortType::Optic, PortType::Electric],
+        message: 'Seleccione un tipo de puerto válido.'
+    )]
+    private ?PortType $enumPortType = null;
+
     public function __construct(?int $number = null, ?ConnectionType $connectionType = null)
     {
         $this->number = $number;
         $this->speed = 1;
         $this->enumState = StateEnum::Active;
+        $this->enumPortType = PortType::Electric;
         if(!is_null($connectionType)){
             $this->enumConnectionType = $connectionType;
         }
@@ -220,9 +231,12 @@ class Port
         return $this->getEquipment() instanceof Commutator;
     }
 
-    public function configure(float $speed): static
+    public function configure(float $speed, ?PortType $type = null): static
     {
         $this->speed = $speed;
+        if(!is_null($type)){
+            $this->setPortType($type);
+        }
 
         return $this;
     }
@@ -302,12 +316,32 @@ class Port
         return $this->enumConnectionType;
     }
 
+    /**
+     * @throws Exception
+     */
     public function setConnectionType(ConnectionType $connectionType): static
     {
         if(!$this->isFromCommutator()){
             throw new Exception('Solo los puertos de switch pueden tener el tipo de conexión.');
         }
+        $this->connectionType = "0";
         $this->enumConnectionType = $connectionType;
+
+        return $this;
+    }
+
+    public function getPortType(): ?PortType
+    {
+        return $this->enumPortType;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function setPortType(PortType $portType): static
+    {
+        $this->portType = "";
+        $this->enumPortType = $portType;
 
         return $this;
     }
@@ -317,8 +351,13 @@ class Port
     public function onSave(): void
     {
         $this->state = $this->getState()->value;
+        $this->portType = $this->getPortType()->value;
         if(!is_null($this->enumConnectionType)){
-            $this->connectionType = $this->getConnectionType()->value;
+            if($this->enumConnectionType === ConnectionType::Null){
+                $this->connectionType = null;
+            }else{
+                $this->connectionType = $this->getConnectionType()->value;
+            }
         }
     }
 
@@ -329,6 +368,7 @@ class Port
     public function onLoad(): void
     {
         $this->setState(StateEnum::from($this->state));
+        $this->setPortType(PortType::from($this->portType));
         if(!is_null($this->connectionType)){
             $this->setConnectionType(ConnectionType::from($this->connectionType));
         }

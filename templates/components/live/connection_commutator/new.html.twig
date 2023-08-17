@@ -1,5 +1,5 @@
 <div {{ attributes }}>
-    {% if isSuccessful == false %}
+{#    {% if isSuccessful == false %}#}
         {% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}
 
         {{ form_start(form, {
@@ -8,25 +8,19 @@
                 'data-action-name': 'prevent|save',
             }
         }) }}
-        {{ form_row(form.ip) }}
-        {{ form_row(form.gateway) }}
-        {{ form_row(form.multicast) }}
-        {{ form_row(form.portsAmount) }}
-        {{ form_row(form.physicalAddress) }}
-        {{ form_row(form.physicalSerial) }}
-        {{ form_row(form.brand) }}
-        {{ form_row(form.model) }}
-        {{ form_row(form.inventory) }}
-        {{ form_row(form.contic) }}
-        {{ form_row(form.address.province) }}
-        {{ form_row(form.address.municipality) }}
 
-        <button type="submit" class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}">
-            <i class="fas fa-save"></i>
-            Salvar
-        </button>
+        {{ include('commutator/_form_fields.html.twig') }}
+
+        <div class="row mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                <button type="submit" class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}">
+                    <i class="fas fa-save"></i>
+                    Salvar
+                </button>
+            </div>
+        </div>
         {{ form_row(form._token) }}
         {{ form_end(form, {render_rest: false}) }}
-    {% endif %}
+{#    {% endif %}#}
 
 </div>

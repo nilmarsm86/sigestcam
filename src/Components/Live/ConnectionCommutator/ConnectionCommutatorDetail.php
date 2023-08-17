@@ -73,6 +73,7 @@ class ConnectionCommutatorDetail
         $switch['municipality'] = (string) $commutator->getMunicipality();
         $switch['ports'] = $this->portsInfo($commutator);
         $switch['state'] = $commutator->isActive();
+        $switch['multicast'] = $commutator->getMulticast();
 
         return $switch;
     }

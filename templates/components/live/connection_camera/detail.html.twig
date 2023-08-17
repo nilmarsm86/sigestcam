@@ -1,6 +1,6 @@
-<div class="col-12" {{ attributes }}>
+<div class="col-12" {{ attributes.defaults(stimulus_controller('connection-camera-detail')) }}>
     {% if camera is not null %}
-        <h4>Características de la cámara:{{ camera.id }}</h4>
+        <h4>Características de la cámara:</h4>
         <hr>
         <div class="card border-primary">
             <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
@@ -11,23 +11,40 @@
                         <input
                                 type="checkbox"
                                 class="btn-check btn-primary"
-                                id="btncheck2"
+                                id="camera_connect{{ camera.id }}"
+                                autocomplete="off"
+                                {% if camera.disconnected == false %}checked{% endif %}
+                                data-action="change->live#action"
+                                {% if camera.disconnected == false %}
+                                    data-action-name="disconnect(camera={{ camera.id }})"
+                                {% else %}
+                                    data-action-name="connect(camera={{ camera.id }})"
+                                {% endif %}
+                        >
+                        <label class="btn btn-primary" for="camera_connect{{ camera.id }}"><i class="fas fa-plug text-white"></i></label>
+                        <!-- BOTON DE DESCONETAR -->
+
+                        <!-- BOTON DE DESACTIVAR -->
+                        <input
+                                type="checkbox"
+                                class="btn-check btn-primary"
+                                id="camera{{ camera.id }}"
                                 autocomplete="off"
                                 {% if active %}checked{% endif %}
                                 data-action="change->live#action"
                                 {% if active %}
                                     data-action-name="deactivate(entityId={{ camera.id }})"
                                 {% else %}
-                                    data-action-name="activate(entityId={{ camera.id }})"
+                                    data-action-name="preactivate(entityId={{ camera.id }}, elementId=camera{{ camera.id }})"
                                 {% endif %}
                         >
-                        <label class="btn btn-primary" for="btncheck2"><i class="fas fa-plug text-white"></i></label>
-                        <!-- BOTON DE DESCONETAR -->
-
-                        <!-- BOTON DE DESACTIVAR -->
-                        <input type="checkbox" class="btn-check btn-primary" id="btncheck1" autocomplete="off">
-                        <label class="btn btn-primary" for="btncheck1"><i
-                                    class="fas fa-check-circle text-white"></i></label>
+                        <label class="btn btn-primary" for="camera{{ camera.id }}">
+                            {% if active %}
+                                <i class="fas fa-check-circle text-white"></i>
+                            {% else %}
+                                <i class="fas fa-circle text-white"></i>
+                            {% endif %}
+                        </label>
                         <!-- BOTON DE DESACTIVAR -->
                         <button type="button" class="btn btn-primary">
                             <i class="fas fa-edit text-white"></i>
@@ -40,256 +57,194 @@
             <div class="card-body">
                 <div class="row">
                     <div class="col">
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'IP:',
+                            data: camera.ip,
+                            id: camera.id,
+                            setter: 'setIp',
+                            connection: connection,
+                            constraints: [
+                                {'class': 'NotBlank', 'options': {message:'Establezca el IP del equipo.'}},
+                                {'class': 'Ip', 'options': {message:'Establezca un IP válido.'}}
+                            ],
+                            'data-live-id': 'camera-ip-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig'
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold"
-                                style="border-radius: 0;border-top-width: var(--bs-list-group-border-width)">
-                                IP
-                            </li>
-                            <li class="list-group-item w-50">
-                                1.1.1.2
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Usuario:',
+                            data: camera.user,
+                            id: camera.id,
+                            setter: 'setUser',
+                            connection: connection,
+                            constraints: [
+                                {'class': 'NotBlank', 'options': {message:'La camara debe de tener un usuario.'}},
+                            ],
+                            'data-live-id': 'camera-user-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            refreshTable: false
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Usuario
-                            </li>
-                            <li class="list-group-item w-50">
-                                user
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Contraseña:',
+                            data: camera.password,
+                            id: camera.id,
+                            setter: 'setPassword',
+                            connection: connection,
+                            constraints: [
+                                {'class': 'NotBlank', 'options': {message:'La cámara debe de tener una contraseña.'}},
+                            ],
+                            'data-live-id': 'camera-password-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            secure: true,
+                            refreshTable: false
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Password
-                            </li>
-                            <li class="list-group-item w-50">
-                                *****
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Número de serie electrónico:',
+                            data: camera.electronicSerial,
+                            id: camera.id,
+                            setter: 'setElectronicSerial',
+                            connection: connection,
+                            'data-live-id': 'camera-electric-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            refreshTable: false
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Modem
-                            </li>
-                            <li class="list-group-item w-50">
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Puerto:',
+                            data: camera.port,
+                            id: camera.id,
+                            connection: connection,
+                            'data-live-id': 'camera-port-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
 
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Modem:',
+                            data: camera.modem,
+                            id: camera.id,
+                            connection: connection,
+                            'data-live-id': 'camera-modem-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Numero de serie electronico
-                            </li>
-                            <li class="list-group-item w-50">
-                                123-abcd
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
-
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Switch
-                            </li>
-                            <li class="list-group-item w-50">
-                                1.1.1.1
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
-
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Puerto
-                            </li>
-                            <li class="list-group-item w-50">
-                                1
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0;border-bottom-width: 1px;">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Switch:',
+                            data: camera.commutator,
+                            id: camera.id,
+                            connection: connection,
+                            'data-live-id': 'camera-switch-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
                     </div>
 
                     <div class="col">
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Modelo:',
+                            data: camera.model,
+                            id: camera.id,
+                            setter: 'setModel',
+                            connection: connection,
+                            'data-live-id': 'camera-model-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig'
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold"
-                                style="border-radius: 0;border-top-width: var(--bs-list-group-border-width)">
-                                Modelo
-                            </li>
-                            <li class="list-group-item w-50">
-                                modelo camara
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Marca:',
+                            data: camera.brand,
+                            id: camera.id,
+                            setter: 'setBrand',
+                            connection: connection,
+                            'data-live-id': 'camera-brand-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig'
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Marca
-                            </li>
-                            <li class="list-group-item w-50">
-                                marca camara
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Número de serie:',
+                            data: camera.serial,
+                            id: camera.id,
+                            setter: 'setPhysicalSerial',
+                            connection: connection,
+                            'data-live-id': 'camera-serial-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig'
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Numero de serie
-                            </li>
-                            <li class="list-group-item w-50">
-                                abc-123
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Número de inventario:',
+                            data: camera.inventary,
+                            id: camera.id,
+                            setter: 'setInventory',
+                            connection: connection,
+                            'data-live-id': 'camera-inventory-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig'
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Inventario
-                            </li>
-                            <li class="list-group-item w-50">
-                                741
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Contic:',
+                            data: camera.contic,
+                            id: camera.id,
+                            setter: 'setContic',
+                            connection: connection,
+                            'data-live-id': 'camera-contic-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig'
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Contic
-                            </li>
-                            <li class="list-group-item w-50">
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Dirección física:',
+                            data: camera.physical_address,
+                            id: camera.id,
+                            setter: 'setPhysicalAddress',
+                            connection: connection,
+                            constraints: [
+                                {'class': 'NotBlank', 'options': {message:'La dirección física no debe estar vacía.'}}
+                            ],
+                            'data-live-id': 'camera-address-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            textarea: true
+                        }) }}
 
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Municipio:',
+                            data: camera.municipality,
+                            id: camera.id,
+                            connection: connection,
+                            'data-live-id': 'camera-municipality-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
 
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Provincia
-                            </li>
-                            <li class="list-group-item w-50">
-                                La Habana
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
-
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Municipio
-                            </li>
-                            <li class="list-group-item w-50">
-                                10 de Octubre
-                            </li>
-                            <li class="list-group-item w-10" style="border-radius: 0">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
-
-                        <ul class="list-group list-group-horizontal list-group-flush border-0">
-                            <li class="list-group-item w-50 fw-bold" style="border-radius: 0">
-                                Direccion fisica
-                            </li>
-                            <li class="list-group-item w-50">
-                                Calle Georgia
-                            </li>
-                            <li class="list-group-item w-10"
-                                style="border-top-right-radius: 0;border-bottom-right-radius: var(--bs-card-inner-border-radius);border-bottom-width: 1px;">
-                                <i class="fas fa-edit text-dark"
-                                   data-action="click->live#action"
-                                   data-action-name="prevent|activateEditing"
-                                   title="Click para editar!"
-                                ></i>
-                            </li>
-                        </ul>
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Provincia:',
+                            data: camera.province,
+                            id: camera.id,
+                            connection: connection,
+                            'data-live-id': 'camera-province-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
                     </div>
                 </div>
-
             </div>
+            <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
         </div>
     {% endif %}
 </div>

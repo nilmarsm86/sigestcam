@@ -1,0 +1,58 @@
+<table class="table">
+    <tbody>
+    <tr>
+        <th>Id</th>
+        <td>{{ commutator.id }}</td>
+    </tr>
+    <tr>
+        <th>Brand</th>
+        <td>{{ commutator.brand }}</td>
+    </tr>
+    <tr>
+        <th>Ip</th>
+        <td>{{ commutator.ip }}</td>
+    </tr>
+    <tr>
+        <th>PhysicalAddress</th>
+        <td>{{ commutator.physicalAddress }}</td>
+    </tr>
+    <tr>
+        <th>PhysicalSerial</th>
+        <td>{{ commutator.physicalSerial }}</td>
+    </tr>
+    <tr>
+        <th>Model</th>
+        <td>{{ commutator.model }}</td>
+    </tr>
+    <tr>
+        <th>Inventory</th>
+        <td>{{ commutator.inventory }}</td>
+    </tr>
+    <tr>
+        <th>Contic</th>
+        <td>{{ commutator.contic }}</td>
+    </tr>
+    <tr>
+        <th>State</th>
+        <td>{{ commutator.state.name }}</td>
+    </tr>
+    <tr>
+        <th>PortsAmount</th>
+        <td>{{ commutator.portsAmount }}</td>
+    </tr>
+    <tr>
+        <th>Gateway</th>
+        <td>{{ commutator.gateway }}</td>
+    </tr>
+    <tr>
+        <th>Multicast</th>
+        <td>{{ commutator.multicast }}</td>
+    </tr>
+    </tbody>
+</table>
+
+<a href="{{ path('commutator_index') }}">back to list</a>
+
+<a href="{{ path('app_crud_commutator_edit', {'id': commutator.id}) }}">edit</a>
+
+{#    {{ include('crud_commutator/_delete_form.html.twig') }}#}
