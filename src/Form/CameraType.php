@@ -3,6 +3,7 @@
 namespace App\Form;
 
 use App\Entity\Camera;
+use App\Form\Types\AddressType;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -42,8 +43,15 @@ class CameraType extends AbstractType
             ])
             ->add('password', null, [
                 'label' => 'Contraseña:',
-            ])
-        ;
+            ]);
+
+        if($options['crud']){
+            $builder->add('address', AddressType::class, [
+                'province' => $options['province'],
+                'municipality' => $options['municipality'],
+                'mapped' => false,
+            ]);
+        }
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -53,7 +61,14 @@ class CameraType extends AbstractType
             'attr' => [
                 'novalidate' => true,
                 'class' => 'camera'
-            ]
+            ],
+            'province' => 0,
+            'municipality' => 0,
+            'crud' => false
         ]);
+
+        $resolver->setAllowedTypes('province', 'int');
+        $resolver->setAllowedTypes('municipality', 'int');
+        $resolver->setAllowedTypes('crud', 'bool');
     }
 }

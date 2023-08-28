@@ -6,6 +6,7 @@ use App\Entity\Municipality;
 use App\Entity\Province;
 use App\Repository\MunicipalityRepository;
 use App\Repository\ProvinceRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -18,7 +19,8 @@ class AddressType extends AbstractType
 {
     public function __construct(
         private readonly ProvinceRepository $provinceRepository,
-        private readonly MunicipalityRepository $municipalityRepository
+        private readonly MunicipalityRepository $municipalityRepository,
+//        private readonly EntityManagerInterface $entityManager
     )
     {
 
@@ -91,5 +93,17 @@ class AddressType extends AbstractType
         $resolver->setAllowedTypes('province', 'int');
         $resolver->setAllowedTypes('municipality', 'int');
     }
+
+//    public function getRealEntity($proxy)
+//    {
+//        if ($proxy instanceof \Doctrine\Persistence\Proxy) {
+//            $proxy_class_name = get_class($proxy);
+//            $class_name = $this->entityManager->getClassMetadata($proxy_class_name)->rootEntityName;
+//            $this->entityManager->detach($proxy);
+//            return $this->entityManager->find($class_name, $proxy->getId());
+//        }
+//
+//        return $proxy;
+//    }
 
 }

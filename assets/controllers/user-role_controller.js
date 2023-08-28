@@ -8,18 +8,45 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static values = {
         user: Number,
-        role: Number,
         urlAddRole: String,
         urlRemoveRole: String,
+        urlState: String,
     }
 
-    async onChange(event){
+    async onChangeRole(event){
+        let checkAction = async () => {
+            return await this.doRequest(this.urlAddRoleValue, 'role', event.currentTarget.value);
+        };
+        let uncheckAction = async () => {
+            return await this.doRequest(this.urlRemoveRoleValue, 'role', event.currentTarget.value);
+        };
+        await this.onChange(event, 'role', checkAction, uncheckAction);
+    }
+
+    async onChangeState(event){
+        let checkAction = async () => {
+            return await this.doRequest(this.urlStateValue, 'action', 'activate');
+        };
+        let uncheckAction = async () => {
+            return await this.doRequest(this.urlStateValue, 'action', 'dectivate');
+        };
+        await this.onChange(event, 'state', checkAction, uncheckAction);
+    }
+
+    async onChange(event, type, checkAction, uncheckAction){
+        if(type === 'state'){
+            if(!event.target.checked && !confirm('Está seguro que desea desactivar el usuario?')){
+                event.target.checked = true;
+                return ;
+            }
+        }
+
         this.dispatch('startChange');
         let response = null;
         if(event.target.checked){
-            response = await this.doRequest(this.urlAddRoleValue);
+            response = await checkAction();
         }else{
-            response = await this.doRequest(this.urlRemoveRoleValue);
+            response = await uncheckAction();
             if(!response.ok){
                 event.target.checked = true;
             }
@@ -42,7 +69,7 @@ export default class extends Controller {
         toastBootstrap.show();
     }
 
-    async doRequest(path){
+    async doRequest(path, option2, value2){
         const url = new URL(path, document.location.origin);
         url.searchParams.set('fetch', '1');
         const request = new Request(url.toString(), {
@@ -51,7 +78,7 @@ export default class extends Controller {
 
         let data = new FormData();
         data.set('user', this.userValue);
-        data.set('role', this.roleValue);
+        data.set(option2, value2);
 
         return await fetch(request, {
             method: 'POST',
@@ -59,14 +86,4 @@ export default class extends Controller {
         });
     }
 
-    /**
-     * @inheritDoc
-     */
-    dispatch(eventName, options = {}) {
-        const event = super.dispatch(eventName, options);
-        console.groupCollapsed(`Trigger ${event.type}`);
-        console.log(event.detail);
-        console.groupEnd();
-        return event;
-    }
 }

@@ -1,10 +1,13 @@
-<div {{ attributes }}>
+<div {{ attributes }} style="position: relative">
     {% embed "embeds/async_table.html.twig" %}
         {% block table_head %}
             <tr>
-                <th>Ip</th>
+                <th>IP</th>
                 <th>Puerta de enlace</th>
                 <th>Dirección multicast</th>
+                <th>Estado</th>
+                <th>Provincia</th>
+                <th>Municipio</th>
                 <th></th>
             </tr>
         {% endblock %}
@@ -16,9 +19,18 @@
                     <td>{{ commutator.gateway }}</td>
                     <td>{{ commutator.multicast }}</td>
                     <td>
+                        {% if commutator.state == "1"  %}
+                            <span class="badge text-bg-success">Activo</span>
+                        {% else %}
+                            <span class="badge text-bg-danger">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ commutator.municipality.province.name }}</td>
+                    <td>{{ commutator.municipality.name }}</td>
+                    <td>
                         <button
                                 type="button"
-                                class="btn btn-primary"
+                                class="btn btn-primary btn-sm"
                                 aria-current="page"
                                 {% if entityId is not same as commutator.id %}
                                     data-action="live#action"
@@ -26,7 +38,6 @@
                                 {% endif %}
                         >
                             <i class="fas fa-eye"></i>
-                            Detalle
                         </button>
                     </td>
                 </tr>
@@ -39,5 +50,5 @@
             {% endfor %}
         {% endblock %}
     {% endembed %}
-{#    <backdrop-component class="card-backdrop d-block"></backdrop-component>#}
+    <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
 </div>

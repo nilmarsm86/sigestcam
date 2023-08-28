@@ -13,16 +13,7 @@
                     'data-action-name': 'prevent|save',
                 }
             }) }}
-            {{ form_row(form.ip) }}
-            {{ form_row(form.physicalAddress) }}
-            {{ form_row(form.physicalSerial) }}
-            {{ form_row(form.electronicSerial) }}
-            {{ form_row(form.brand) }}
-            {{ form_row(form.model) }}
-            {{ form_row(form.inventory) }}
-            {{ form_row(form.contic) }}
-            {{ form_row(form.user) }}
-            {{ form_row(form.password) }}
+            {{ include('camera/_form_fields.html.twig') }}
 
             <div class="row mb-3">
                 <div class="col-sm-10 offset-sm-2">

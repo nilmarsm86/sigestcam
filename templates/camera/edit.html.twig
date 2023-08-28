@@ -1,0 +1,23 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Editar Camera{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Editar cámara</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Cámara', href: path('camera_index')},
+                {label: 'Editar'},
+            ],
+            current: 'Editar'
+        }) }}
+    </div>
+
+    {{ include('camera/_form.html.twig', {'showButton': true, 'title': title}) }}
+
+{#    {{ include('camera/_delete_form.html.twig') }}#}
+{% endblock %}

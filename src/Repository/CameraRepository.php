@@ -6,6 +6,7 @@ use App\Entity\Camera;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Enums\State;
+use App\Entity\Port;
 use App\Entity\Traits\StateTrait;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -48,7 +49,7 @@ class CameraRepository extends ServiceEntityRepository
         }
     }
 
-    private function addFilter(QueryBuilder $builder, string $filter)
+    private function addFilter(QueryBuilder $builder, string $filter, bool $place = true): void
     {
         if($filter){
             $predicate = "c.physicalAddress LIKE :filter ";
@@ -59,7 +60,11 @@ class CameraRepository extends ServiceEntityRepository
             $predicate .= "OR c.ip LIKE :filter ";
             $predicate .= "OR c.model LIKE :filter ";
             $predicate .= "OR c.physicalSerial LIKE :filter ";
-            $predicate .= "OR c.user LIKE :filter";
+            $predicate .= "OR c.user LIKE :filter ";
+            if($place){
+                $predicate .= "OR m.name LIKE :filter ";
+                $predicate .= "OR p.name LIKE :filter ";
+            }
 
             $builder->andWhere($predicate)
                 ->setParameter(':filter','%'.$filter.'%');
@@ -74,7 +79,9 @@ class CameraRepository extends ServiceEntityRepository
      */
     public function findCameras(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c');
+        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
+            ->innerJoin('c.municipality', 'm')
+            ->leftJoin('m.province', 'p');
         $this->addFilter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
@@ -91,7 +98,20 @@ class CameraRepository extends ServiceEntityRepository
         $builder = $this->createQueryBuilder('c')
         ->where('c.state = :state')
         ->setParameter(':state', State::Active);
-        $this->addFilter($builder, $filter);
+        $this->addFilter($builder, $filter, false);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findCamerasWithPortByState(State $state, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
+            ->innerJoin('c.municipality', 'm')
+            ->leftJoin('m.province', 'p')
+            ->where('c.state = :state')
+            ->setParameter(':state', $state)
+            ->andWhere('c.port IS NOT NULL');
+        $this->addFilter($builder, $filter, false);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
     }
@@ -104,13 +124,34 @@ class CameraRepository extends ServiceEntityRepository
      */
     public function findActiveCamerasWithPort(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')
-            ->where('c.state = :state')
-            ->setParameter(':state', State::Active)
-            ->andWhere('c.port IS NOT NULL');
-        $this->addFilter($builder, $filter);
-        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
-        return $this->paginate($query, $page, $amountPerPage);
+//        $builder = $this->createQueryBuilder('c')
+//            ->where('c.state = :state')
+//            ->setParameter(':state', State::Active)
+//            ->andWhere('c.port IS NOT NULL');
+//        $this->addFilter($builder, $filter, false);
+//        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+//        return $this->paginate($query, $page, $amountPerPage);
+
+        return $this->findCamerasWithPortByState(State::Active, $filter, $amountPerPage, $page);
+    }
+
+    /**
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
+     */
+    public function findInactiveCamerasWithPort(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+//        $builder = $this->createQueryBuilder('c')
+//            ->where('c.state = :state')
+//            ->setParameter(':state', State::Active)
+//            ->andWhere('c.port IS NOT NULL');
+//        $this->addFilter($builder, $filter, false);
+//        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+//        return $this->paginate($query, $page, $amountPerPage);
+
+        return $this->findCamerasWithPortByState(State::Inactive, $filter, $amountPerPage, $page);
     }
 
     /**
@@ -124,7 +165,7 @@ class CameraRepository extends ServiceEntityRepository
         $builder = $this->createQueryBuilder('c')
             ->where('c.state = :state')
             ->setParameter(':state', State::Inactive);
-        $this->addFilter($builder, $filter);
+        $this->addFilter($builder, $filter, false);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
     }
@@ -137,7 +178,9 @@ class CameraRepository extends ServiceEntityRepository
      */
     public function findInactiveCamerasWithoutPort(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')
+        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
+            ->innerJoin('c.municipality', 'm')
+            ->leftJoin('m.province', 'p')
             ->where('c.state = :state')
             ->setParameter(':state', State::Inactive)
             ->andWhere('c.port IS NULL');
@@ -156,6 +199,23 @@ class CameraRepository extends ServiceEntityRepository
         $builder = $this->createQueryBuilder('c');
         $builder->leftJoin('c.port', 'p');
         $builder->andWhere($builder->expr()->in('p.id', $portsId));
+        $this->addFilter($builder, $filter, false);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findCameraByPort(Port $port, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+//        $portsId = [];
+//        foreach ($commutator->getPorts() as $port){
+//            $portsId[] = $port->getId();
+//        }
+
+        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
+            ->innerJoin('c.municipality', 'm')
+            ->leftJoin('m.province', 'p');
+        $builder->leftJoin('c.port', 'port');
+        $builder->andWhere($builder->expr()->in('port.id', $port->getId()));
         $this->addFilter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
@@ -173,7 +233,9 @@ class CameraRepository extends ServiceEntityRepository
 
         if($filter){
             $predicate = "c.ip LIKE :filter ";
-            $predicate .= "OR comm.ip LIKE :filter";
+            $predicate .= "OR comm.ip LIKE :filter ";
+            $predicate .= "OR m.name LIKE :filter ";
+            $predicate .= "OR pro.name LIKE :filter ";
             $builder->andWhere($predicate)
                 ->setParameter(':filter','%'.$filter.'%');
         }

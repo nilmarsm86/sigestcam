@@ -32,7 +32,7 @@
                             <i class="fas {% if active %}fa-check-circle text-white{% else %}fa-circle text-white-50{% endif %} "></i>
                         </label>
                         <!-- BOTON DE DESACTIVAR -->
-                        <a href="{{ path('app_crud_commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary">
+                        <a href="{{ path('commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary">
                             <i class="fas fa-edit text-white"></i>
                             Editar
                         </a>
@@ -78,7 +78,7 @@
                 id: commutator.id,
                 setter: 'setMulticast',
                 connection: connection,
-                'data-live-id': 'commutator-gateway-'~ commutator.id,
+                'data-live-id': 'commutator-multicast-'~ commutator.id,
                 entity: 'App\\Entity\\Commutator',
                 template: 'components/live/connection_commutator/edit_inline.html.twig'
             }) }}

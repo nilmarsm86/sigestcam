@@ -27,7 +27,9 @@
 
             {% block card_body %}
                 {% if port is not null %}
-                    {{ component('ConnectionCameraTable', {connection:connection, commutator: commutator, port: port}) }}
+                    <div data-loading="addClass(d-none)">
+                        {{ component('ConnectionCameraTable', {connection:connection, commutator: commutator, port: port}) }}
+                    </div>
     {#                {% if port.equipment is not null %}#}
                         <div class="row">
                             {{ component('ConnectionCameraDetail', {connection:connection, port: port}) }}

@@ -1,4 +1,4 @@
-<div {{ attributes }}>
+<div {{ attributes.defaults(stimulus_controller('page connection-list-table')) }} data-page-target="listContainer" style="position: relative">
     {% embed "embeds/async_table.html.twig" %}
         {% block table_head %}
             <tr>
@@ -15,34 +15,64 @@
             {% for camera in paginator.getData() %}
                 <tr>
                     <td>
-                        <span
+                        <a href="{{ path('commutator_state') }}" class="text-decoration-none"
+                           data-action="page#state:prevent"
+                           data-page-id-param="{{ camera.port.commutator.id }}"
+                           {% if camera.port.commutator.state %}
+                               data-page-state-param="0"
+                           {% else %}
+                               data-page-state-param="1"
+                           {% endif %}
+                        >
+                            <span
                                 class="badge {% if camera.port.commutator.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
-                        >
-                            {{ camera.port.commutator.ip }}
-                        </span>
-                        {% if camera.port.commutator.gateway %}({{ camera.port.commutator.gateway }}){% endif%}
-                        {% if camera.port.commutator.multicast %}[{{ camera.port.commutator.multicast }}]{% endif %}
+                            >
+                                {{ camera.port.commutator.ip }}
+                            </span>
+                            {% if camera.port.commutator.gateway %}({{ camera.port.commutator.gateway }}){% endif%}
+                            {% if camera.port.commutator.multicast %}[{{ camera.port.commutator.multicast }}]{% endif %}
+                        </a>
                     </td>
                     <td>
-                        <span
-                                class="badge {% if camera.port.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                        <a href="{{ path('port_state') }}"
+                           data-action="page#state:prevent"
+                           data-page-id-param="{{ camera.port.id }}"
+                                {% if camera.port.state %}
+                                    data-page-state-param="0"
+                                {% else %}
+                                    data-page-state-param="1"
+                                {% endif %}
                         >
-                            {{ camera.port.number }}
-                        </span>
+                            <span
+                                    class="badge {% if camera.port.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                            >
+                                {{ camera.port.number }}
+                            </span>
+                        </a>
                     </td>
                     <td>
-                        <span
-                                class="badge {% if camera.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                        <a href="{{ path('camera_state') }}"
+                           data-action="page#state:prevent"
+                           data-page-id-param="{{ camera.id }}"
+                                {% if camera.state %}
+                                    data-page-state-param="0"
+                                {% else %}
+                                    data-page-state-param="1"
+                                {% endif %}
                         >
-                            {{ camera.ip }}
-                        </span>
+                            <span
+                                    class="badge {% if camera.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                            >
+                                {{ camera.ip }}
+                            </span>
+                        </a>
                     </td>
                     <td>{{ camera.municipality.province.name }}</td>
                     <td>{{ camera.municipality.name }}</td>
                     <td>
                         <button
                                 type="button"
-                                class="btn btn-primary"
+                                class="btn btn-primary btn-sm"
                                 aria-current="page"
 {#                                {% if entityId is not same as commutator.id %}#}
 {#                                    data-action="live#action"#}
@@ -50,6 +80,14 @@
 {#                                {% endif %}#}
                         >
                             <i class="fas fa-eye"></i>
+                        </button>
+
+                        <button
+                                type="button"
+                                class="btn btn-primary btn-sm"
+                                aria-current="page"
+                        >
+                            <i class="fas fa-plug"></i>
                         </button>
                     </td>
                 </tr>
@@ -62,5 +100,5 @@
             {% endfor %}
         {% endblock %}
     {% endembed %}
-    {#    <backdrop-component class="card-backdrop d-block"></backdrop-component>#}
+    <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
 </div>

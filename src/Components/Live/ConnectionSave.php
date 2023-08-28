@@ -34,6 +34,9 @@ class ConnectionSave extends AbstractController
     #[LiveProp]
     public ?Camera $camera = null;
 
+    #[LiveProp]
+    public ?Port $port = null;
+
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
     }
@@ -59,16 +62,17 @@ class ConnectionSave extends AbstractController
         if(!$this->camera->isActive()){
             $this->camera->activate();
         }
+        $this->camera->setPort($this->port);
         $this->entityManager->persist($this->camera);
 
-        $port = $this->camera->getPort();
-        $port->setConnectionType($this->connection);
-        if(!$port->isActive()){
-            $port->activate();
+        //$port = $this->camera->getPort();
+        $this->port->setConnectionType($this->connection);
+        if(!$this->port->isActive()){
+            $this->port->activate();
         }
-        $this->entityManager->persist($port);
+        $this->entityManager->persist($this->port);
 
-        $commutator = $port->getCommutator();
+        $commutator = $this->port->getCommutator();
         if(!$commutator->isActive()){
             $commutator->activate();
         }
@@ -104,6 +108,7 @@ class ConnectionSave extends AbstractController
     public function onConnectionCommutatorPortListSelectedDirect(#[LiveArg] ?Port $port): void
     {
         $this->camera = null;
+        $this->port = $port;
     }
 
 }

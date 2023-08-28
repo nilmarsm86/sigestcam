@@ -18,7 +18,7 @@
 {% if isSuccessful is not defined %}
     <div data-controller="address content-loader"
          data-action="address:onSelectProvince->content-loader#refreshContent"
-         data-address-url-value="{{ path('commutator_municipality', {'id': 0}) }}"
+         data-address-url-value="{{ path('province_municipality', {'id': 0}) }}"
     >
 {% endif %}
 

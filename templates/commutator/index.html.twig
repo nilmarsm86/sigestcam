@@ -1,6 +1,6 @@
 {% extends 'content.html.twig' %}
 
-{% block title %}Commutator index{% endblock %}
+{% block title %}Gestionar switch{% endblock %}
 
 {% block content %}
     <div class="row">
@@ -17,32 +17,8 @@
         }) }}
     </div>
 
-    <div class="row"
-         data-controller="content-loader visibility page"
-         data-action="
-            page:onShowFormContent->visibility#show
-            page:onShowFormContent->content-loader#refreshContent
-            submit-form-async:success->page#sendFormSuccess
-            page:onSendFormSuccess->visibility#hide
-            page:onSendFormSuccess->content-loader#refreshContent
-        "
-    >
-        <div class="col-12" data-page-target="listContainer">
-            {{ include('commutator/_list.html.twig') }}
-        </div>
-
-        <div class="w-100"></div>
-
-        <div class="col-12"
-                style="display: none;position: relative"
-                data-visibility-target="target"
-                data-page-target="formContainer"
-                data-controller="submit-form-async"
-                data-action="submit->submit-form-async#submit"
-        >
-            <backdrop-component class="card-backdrop d-block"></backdrop-component>
-        </div>
-    </div>
-
-
+    {{ include('partials/_index_container.html.twig', {
+        list: 'commutator/_list.html.twig',
+        rest_data_action: 'page:onChangeState->content-loader#refreshContent'
+    }) }}
 {% endblock %}

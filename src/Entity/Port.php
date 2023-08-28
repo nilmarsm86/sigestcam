@@ -387,4 +387,14 @@ class Port
         return $this;
     }
 
+    public function getTypeValue():string
+    {
+        return PortType::getValueFrom($this->getPortType());
+    }
+
+    public function getTypeLabel():string
+    {
+        return PortType::getLabelFrom($this->getPortType());
+    }
+
 }

@@ -21,7 +21,9 @@
                                     data-action-name="connect(camera={{ camera.id }})"
                                 {% endif %}
                         >
-                        <label class="btn btn-primary" for="camera_connect{{ camera.id }}"><i class="fas fa-plug text-white"></i></label>
+                        <label class="btn btn-primary" for="camera_connect{{ camera.id }}">
+                            <i class="fas fa-plug text-white"></i>
+                        </label>
                         <!-- BOTON DE DESCONETAR -->
 
                         <!-- BOTON DE DESACTIVAR -->
@@ -46,10 +48,10 @@
                             {% endif %}
                         </label>
                         <!-- BOTON DE DESACTIVAR -->
-                        <button type="button" class="btn btn-primary">
+                        <a type="button" class="btn btn-primary" href="{{ path('camera_edit', {'id': camera.id}) }}">
                             <i class="fas fa-edit text-white"></i>
                             Editar
-                        </button>
+                        </a>
                     </div>
                 </div>
             </div>

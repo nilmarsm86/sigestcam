@@ -9,7 +9,7 @@
         <div>
             <a class="btn btn-primary btn-sm active"
                data-action="page#showFormContent"
-               href="{{ path('app_crud_commutator_new') }}"
+               href="{{ path('commutator_new') }}"
             >
                 <i class="fas fa-plus"></i>
                 Nuevo
@@ -25,11 +25,11 @@
 
             {% block table_head %}
                 <tr>
-                    <th>Ip</th>
+                    <th>IP</th>
                     <th>Puerta de enlace</th>
                     <th>Multicast</th>
-                    <th>State</th>
-                    <th>PortsAmount</th>
+                    <th>Estado</th>
+{#                    <th>PortsAmount</th>#}
                     <th>Provincia</th>
                     <th>Municipio</th>
 {#                    <th>Brand</th>#}
@@ -38,7 +38,6 @@
 {#                    <th>Model</th>#}
 {#                    <th>Inventory</th>#}
 {#                    <th>Contic</th>#}
-
                     <th></th>
                 </tr>
             {% endblock %}
@@ -50,30 +49,66 @@
                         <td>{{ commutator.gateway }}</td>
                         <td>{{ commutator.multicast }}</td>
                         <td>
-                            {% if commutator.state.value == 1 %}
-                                <span class="badge text-bg-success">Activo</span>
+                            {% if commutator.isActive() %}
+                                <a href="{{ path('commutator_state') }}"
+                                   data-action="click->page#state:prevent"
+                                   data-page-id-param="{{ commutator.id }}"
+                                   data-page-state-param="0"
+                                >
+                                    <span class="badge text-bg-success">Activo</span>
+                                </a>
                             {% else %}
+                            <a href="{{ path('commutator_state') }}"
+                               data-action="click->page#state:prevent"
+                               data-page-id-param="{{ commutator.id }}"
+                               data-page-state-param="1"
+                            >
                                 <span class="badge text-bg-danger">Inactivo</span>
+                            </a>
                             {% endif %}
-
                         </td>
-                        <td>{{ commutator.portsAmount }}</td>
-                        <td>{{ commutator.municipality.name }}</td>
-                        <td>{{ commutator.municipality.province.name }}</td>
+{#                        <td>{{ commutator.portsAmount }}</td>#}
+                        <td>
+                            <a href="{{ path(app.request.attributes.get('_route'), {'filter': commutator.municipality.province.name}) }}"
+                               class="text-decoration-none"
+                            >
+                                {{ commutator.municipality.province.name }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path(app.request.attributes.get('_route'), {'filter': commutator.municipality.name}) }}"
+                               class="text-decoration-none"
+                            >
+                                {{ commutator.municipality.name }}
+                            </a>
+                        </td>
 {#                        <td>{{ commutator.brand }}</td>    #}
 {#                        <td>{{ commutator.physicalSerial }}</td>#}
 {#                        <td>{{ commutator.model }}</td>#}
 {#                        <td>{{ commutator.inventory }}</td>#}
 {#                        <td>{{ commutator.contic }}</td>                        #}
                         <td>
-                            <a class="btn btn-sm btn-primary" href="{{ path('app_crud_commutator_show', {'id': commutator.id}) }}" data-action="page#showFormContent">
+                            <a class="btn btn-sm btn-primary"
+                               href="{{ path('commutator_show', {'id': commutator.id}) }}"
+                               data-action="page#showFormContent"
+                            >
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary" href="{{ path('app_crud_commutator_edit', {'id': commutator.id}) }}" data-action="page#showFormContent">
+                            <a class="btn btn-sm btn-primary"
+                               href="{{ path('commutator_edit', {'id': commutator.id}) }}"
+                               data-action="page#showFormContent"
+                            >
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary" href="{{ path('app_crud_commutator_edit', {'id': commutator.id}) }}">
+                            <a class="btn btn-sm btn-primary position-relative"
+                               href="{{ path('commutator_port', {'id': commutator.id}) }}"
+                               data-action="page#showFormContent"
+                            >
                                 <i class="fas fa-server"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ commutator.portsAmount }}
+                                    <span class="visually-hidden">cantidad de puertos</span>
+                              </span>
                             </a>
                         </td>
                     </tr>

@@ -1,6 +1,7 @@
 {% extends 'base.html.twig' %}
 
 {% from 'macros/toast.html.twig' import toasts %}
+{% from 'macros/flashes.html.twig' import flashes, flash %}
 
 {% block body %}
     <body id="page-top">
@@ -35,6 +36,9 @@
                                 </button>
                             </div>
                         </form>
+                        <div id="flash-container" data-turbo-cache="false">
+                            {{ flashes() }}
+                        </div>
                         {# Formulario de buscar por ip #}
                         <ul class="navbar-nav flex-nowrap ms-auto">
                             <li class="nav-item dropdown d-sm-none no-arrow"><a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#"><i class="fas fa-search"></i></a>

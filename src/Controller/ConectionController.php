@@ -20,9 +20,19 @@ class ConectionController extends AbstractController
     public function index(PortRepository $portRepository): Response
     {
         $totalAmountConnections = $portRepository->findAmountConnections();
+        $directConnections = $portRepository->findAmountDirectConnections();
+        $simpleConnections = $portRepository->findAmountSimpleConnections();
+        $slaveSwitchConnections = $portRepository->findAmountSlaveSwitchConnections();
+        $slaveModemConnections = $portRepository->findAmountSlaveModemConnections();
+        $fullConnections = $portRepository->findAmountFullConnections();
 
         return $this->render('connection/index.html.twig', [
-            'total_amount_connections' => $totalAmountConnections
+            'total_amount_connections' => $totalAmountConnections,
+            'direct_connections' => $directConnections,
+            'simple_connections' => $simpleConnections,
+            'slave_switch_connections' => $slaveSwitchConnections,
+            'slave_modem_connections' => $slaveModemConnections,
+            'full_connections' => $fullConnections,
         ]);
     }
 
@@ -40,21 +50,21 @@ class ConectionController extends AbstractController
         CommutatorRepository $commutatorRepository
     ): Response
     {
-        $filter = $request->query->get('filter', '');
-        $amountPerPage = $request->query->getInt('amount', 10);
-        $pageNumber = $request->query->getInt('page', 1);
-
-        $data = $commutatorRepository->findCommutator($filter, $amountPerPage, $pageNumber);
+//        $filter = $request->query->get('filter', '');
+//        $amountPerPage = $request->query->getInt('amount', 10);
+//        $pageNumber = $request->query->getInt('page', 1);
+//
+//        $data = $commutatorRepository->findCommutator($filter, $amountPerPage, $pageNumber);
 
         return $this->render('connection/direct_new.html.twig', [
             //'commutator' => $commutatorFormModel,
-            'filter' => $filter,
-            'paginator' => new Paginator($data, $amountPerPage, $pageNumber),
-            'data' => $data->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY),
-            'amountPerPage' => $amountPerPage,
-            'pageNumber' => $pageNumber,
-            'fake' => $data->count(),
-            'connection' => ConnectionType::Direct
+//            'filter' => $filter,
+//            'paginator' => new Paginator($data, $amountPerPage, $pageNumber),
+//            'data' => $data->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY),
+//            'amountPerPage' => $amountPerPage,
+//            'pageNumber' => $pageNumber,
+//            'fake' => $data->count(),
+//            'connection' => ConnectionType::Direct
         ]);
     }
 

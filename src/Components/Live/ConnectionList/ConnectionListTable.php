@@ -2,6 +2,7 @@
 
 namespace App\Components\Live\ConnectionList;
 
+use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentTable;
 use App\DTO\Paginator;
 use App\Entity\Commutator;
@@ -12,6 +13,7 @@ use App\Repository\CommutatorRepository;
 use App\Repository\PortRepository;
 use Doctrine\ORM\AbstractQuery;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -55,7 +57,6 @@ class ConnectionListTable
         };
 
         $this->reloadData($data);
-        dump($this->data);
     }
 
     /**
@@ -74,6 +75,13 @@ class ConnectionListTable
     private function getShowDetailEventName(): string
     {
         return static::DETAIL.'_'.$this->connection->name;
+    }
+
+    #[LiveAction]
+    public function status(): void
+    {
+        $this->reload();
+        $this->emit($this->getChangeTableEventName());
     }
 
 }

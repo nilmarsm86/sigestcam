@@ -2,13 +2,12 @@
 
 namespace App\Controller;
 
-use App\DTO\Paginator;
 use App\Entity\Commutator;
+use App\Entity\Enums\PortType;
 use App\Entity\Municipality;
-use App\Entity\Province;
-use App\Form\Commutator1Type;
 use App\Form\CommutatorType;
 use App\Repository\CommutatorRepository;
+use App\Service\CrudActionService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -19,28 +18,18 @@ use Symfony\Component\Routing\Annotation\Route;
 class CommutatorController extends AbstractController
 {
     #[Route('/', name: 'commutator_index', methods: ['GET'])]
-    public function index(Request $request, CommutatorRepository $commutatorRepository): Response
+    public function index(Request $request, CommutatorRepository $commutatorRepository, CrudActionService $crudActionService): Response
     {
-        $filter = $request->query->get('filter', '');
-        $amountPerPage = $request->query->get('amount', 10);
-        $pageNumber = $request->query->get('page', 1);
-
-        $data = $commutatorRepository->findCommutator($filter, $amountPerPage, $pageNumber);
-
-        $template = ($request->isXmlHttpRequest()) ? '_list.html.twig' : 'index.html.twig';
-
-        return $this->render("commutator/$template", [
-            'filter' => $filter,
-            'paginator' => new Paginator($data, $amountPerPage, $pageNumber)
-        ]);
+        $template = $crudActionService->indexAction($request, $commutatorRepository, 'findCommutator', 'commutator');
+        return new Response($template);
     }
 
-    #[Route('/new', name: 'app_crud_commutator_new', methods: ['GET', 'POST'])]
+    #[Route('/new', name: 'commutator_new', methods: ['GET', 'POST'])]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $commutator = new Commutator();
         $form = $this->createForm(CommutatorType::class, $commutator, [
-            'action' => $this->generateUrl('app_crud_commutator_new')
+            'action' => $this->generateUrl('commutator_new')
         ]);
         $form->handleRequest($request);
 
@@ -48,15 +37,20 @@ class CommutatorController extends AbstractController
             $municipalityId = $request->request->all()['commutator']['address']['municipality'];
             $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
             $commutator->setMunicipality($municipality);
-            //dump($commutator);
+            $commutator->deactivate();
             $entityManager->persist($commutator);
             $entityManager->flush();
 
             //si el formulario se mando correctamente por ajax
             if($request->isXmlHttpRequest()){
-                return new Response(null, 204);
+                return $this->render("partials/_form_success.html.twig", [
+                    'id' => 'new_commutator_'.$commutator->getId(),
+                    'type' => 'text-bg-success',
+                    'message' => 'Se ha agregado un switch.'
+                ]);
             }
 
+            $this->addFlash('success', 'Se ha agregado un switch.');
             return $this->redirectToRoute('commutator_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -69,33 +63,48 @@ class CommutatorController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_crud_commutator_show', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function show(Request $request, Commutator $commutator): Response
+    #[Route('/{id}', name: 'commutator_show', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function show(Request $request, Commutator $commutator, CrudActionService $crudActionService): Response
     {
-        $template = ($request->isXmlHttpRequest()) ? '_detail.html.twig' : 'show.html.twig';
-
-        return $this->render("commutator/$template", [
-            'commutator' => $commutator,
-        ]);
+        $template = $crudActionService->showAction($request, $commutator, 'commutator', 'commutator', 'Detalles del switch');
+        return new Response($template);
     }
 
-    #[Route('/{id}/edit', name: 'app_crud_commutator_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'commutator_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Commutator $commutator, EntityManagerInterface $entityManager): Response
     {
+        $postData = $request->request->all();
+
+        $provinceId = isset($postData['commutator'])
+            ? $request->request->all()['commutator']['address']['province']
+            : $commutator->getMunicipality()->getProvince()->getId();
+
+        $municipalityId = isset($postData['commutator'])
+            ? $request->request->all()['commutator']['address']['municipality']
+            : $commutator->getMunicipality()->getId();
+
         $form = $this->createForm(CommutatorType::class, $commutator, [
-            'action' => $this->generateUrl('app_crud_commutator_edit', ['id' => $commutator->getId()]),
-            'province' => $commutator->getMunicipality()->getProvince()->getId(),
-            'municipality' => $commutator->getMunicipality()->getId()
+            'action' => $this->generateUrl('commutator_edit', ['id' => $commutator->getId()]),
+            'province' => (int) $provinceId,
+            'municipality' => (int) $municipalityId
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
+            $commutator->setMunicipality($municipality);
             $entityManager->flush();
 
             //si el formulario se mando correctamente por ajax
             if($request->isXmlHttpRequest()){
-                return new Response(null, 204);
+                return $this->render("partials/_form_success.html.twig", [
+                    'id' => 'edit_commutator_'.$commutator->getId(),
+                    'type' => 'text-bg-success',
+                    'message' => 'Se ha modificado el switch'
+                ]);
             }
+
+            $this->addFlash('success', 'Se ha modificado el switch');
 
             return $this->redirectToRoute('commutator_index', [], Response::HTTP_SEE_OTHER);
         }
@@ -120,14 +129,24 @@ class CommutatorController extends AbstractController
 //        return $this->redirectToRoute('commutator_index', [], Response::HTTP_SEE_OTHER);
 //    }
 
-    #[Route('/municipality/{id}', name: 'commutator_municipality', requirements: ['id' => '\d+'], methods: ['GET'])]
-    public function municipality(Province $province): Response
+    #[Route('/state', name: 'commutator_state', methods: ['POST'])]
+    public function state(Request $request, CommutatorRepository $commutatorRepository, CrudActionService $crudActionService): Response
     {
-        $response = [];
-        foreach ($province->getMunicipalities() as $municipality){
-            $response[] = '<option value="'.$municipality->getId().'">'.$municipality->getName().'</option>';
-        }
-
-        return new Response(join('', $response));
+        $template = $crudActionService->stateAction($request, $commutatorRepository, 'Se ha desactivado el switch', 'Se ha activado el switch');
+        return new Response($template);
     }
+
+    #[Route('/port/{id}', name: 'commutator_port', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function port(Request $request, Commutator $commutator): Response
+    {
+        $template = ($request->isXmlHttpRequest()) ? '_port_detail.html.twig' : 'port.html.twig';
+
+        return $this->render("commutator/$template", [
+            'commutator' => $commutator,
+            'title' => 'Puertos del switch',
+            'forSelect' => PortType::forSelect(),
+        ]);
+    }
+
+
 }

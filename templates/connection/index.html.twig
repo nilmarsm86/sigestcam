@@ -27,6 +27,7 @@
                 {label: 'Listado', href: path('connection_direct_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Cámara'],
+            amount: direct_connections
         }) }}
 
         {{ component('ConnectionCard', {
@@ -38,6 +39,7 @@
                 {label: 'Listado', href: '', icon: 'fa-list'}
             ],
             components: ['Switch', 'Modem', 'Cámara'],
+            amount: simple_connections
         }) }}
 
         {{ component('ConnectionCard', {
@@ -49,6 +51,7 @@
                 {label: 'Listado', href: '', icon: 'fa-list'}
             ],
             components: ['Switch', 'Switch esclavo', 'Cámara'],
+            amount: slave_switch_connections
         }) }}
 
         {{ component('ConnectionCard', {
@@ -60,6 +63,7 @@
                 {label: 'Listado', href: '', icon: 'fa-list'}
             ],
             components: ['Switch', 'Modem', 'Modem esclavo', 'Cámara'],
+            amount: slave_modem_connections
         }) }}
 
         {{ component('ConnectionCard', {
@@ -71,6 +75,7 @@
                 {label: 'Listado', href: '', icon: 'fa-list'}
             ],
             components: ['Switch', 'Msam', 'Modem', 'Cámara'],
+            amount: full_connections
         }) }}
 
         <div class="col-md-6 col-xl-9 mb-4">
@@ -79,26 +84,46 @@
                     <h6 class="text-primary fw-bold m-0">Comparaciones</h6>
                 </div>
                 <div class="card-body">
-                    <h4 class="small fw-bold">Server migration<span class="float-end">20%</span></h4>
+                    <h4 class="small fw-bold">Conexión directa<span class="float-end">{{ direct_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
                     <div class="progress mb-4">
-                        <div class="progress-bar bg-primary" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100" style="width: 20%;"><span class="visually-hidden">20%</span></div>
+                        {% set direct_percent = direct_connections * 100 / total_amount_connections %}
+                        <div class="progress-bar bg-primary" aria-valuenow="{{ direct_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ direct_percent }}%;">
+                            <span class="visually-hidden">{{ direct_percent }}%</span>
+                        </div>
                     </div>
-                    <h4 class="small fw-bold">Sales tracking<span class="float-end">40%</span></h4>
+
+                    <h4 class="small fw-bold">Conexión simple<span class="float-end">{{ simple_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
                     <div class="progress mb-4">
-                        <div class="progress-bar bg-success" aria-valuenow="40" aria-valuemin="0" aria-valuemax="100" style="width: 40%;"><span class="visually-hidden">40%</span></div>
+                        {% set simple_percent = simple_connections * 100 / total_amount_connections %}
+                        <div class="progress-bar bg-success" aria-valuenow="{{ simple_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ simple_percent }}%;">
+                            <span class="visually-hidden">{{ simple_percent }}%</span>
+                        </div>
                     </div>
-                    <h4 class="small fw-bold">Customer Database<span class="float-end">60%</span></h4>
+
+                    <h4 class="small fw-bold">Conexión switch esclavo<span class="float-end">{{ slave_switch_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
                     <div class="progress mb-4">
-                        <div class="progress-bar bg-info" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: 60%;"><span class="visually-hidden">60%</span></div>
+                        {% set slave_switch_percent = slave_switch_connections * 100 / total_amount_connections %}
+                        <div class="progress-bar bg-info" aria-valuenow="{{ slave_switch_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ slave_switch_percent }}%;">
+                            <span class="visually-hidden">{{ slave_switch_percent }}%</span>
+                        </div>
                     </div>
-                    <h4 class="small fw-bold">Payout Details<span class="float-end">80%</span></h4>
+
+                    <h4 class="small fw-bold">Conexión modem esclavo<span class="float-end">{{ slave_modem_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
                     <div class="progress mb-4">
-                        <div class="progress-bar bg-warning" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" style="width: 80%;"><span class="visually-hidden">80%</span></div>
+                        {% set slave_modem_percent = slave_modem_connections * 100 / total_amount_connections %}
+                        <div class="progress-bar bg-warning" aria-valuenow="{{ slave_modem_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ slave_modem_percent }}%;">
+                            <span class="visually-hidden">{{ slave_modem_percent }}%</span>
+                        </div>
                     </div>
-                    <h4 class="small fw-bold">Account setup<span class="float-end">Complete!</span></h4>
+
+                    <h4 class="small fw-bold">Conexión completa<span class="float-end">{{ full_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
                     <div class="progress mb-4">
-                        <div class="progress-bar bg-danger" aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width: 100%;"><span class="visually-hidden">100%</span></div>
+                        {% set full_percent = full_connections * 100 / total_amount_connections %}
+                        <div class="progress-bar bg-danger" aria-valuenow="{{ full_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ full_percent }}%;">
+                            <span class="visually-hidden">{{ full_percent }}%</span>
+                        </div>
                     </div>
+
                 </div>
             </div>
         </div>

@@ -48,7 +48,7 @@
                                 {{ port.speed }}
                             </span>
                         {% endif %}
-                        <span>{{ constant('App\\Entity\\Port::SPEED_TYPE')}} - {{ port.equipment }}</span>
+                        <span>{{ constant('App\\Entity\\Port::SPEED_TYPE')}} -</span> <span class="{{ port.equipment_state }}">{{ port.equipment }}</span>
                     </div>
                     <h5 class="card-title">Puerto: <span class="fw-bold">{{ port.number }}</span></h5>
                     {% if editingType == port.id %}

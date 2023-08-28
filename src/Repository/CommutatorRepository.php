@@ -52,28 +52,21 @@ class CommutatorRepository extends ServiceEntityRepository
      */
     public function findCommutator(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        //$builder = $this->createQueryBuilder('c')->addSelect('m');
         $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
             ->innerJoin('c.municipality', 'm')
             ->leftJoin('m.province', 'p');
         if($filter){
-            $predicate = "c.physicalAddress LIKE :filter ";
-            $predicate .= "OR c.brand LIKE :filter ";
-            $predicate .= "OR c.contic LIKE :filter ";
+            $predicate = "c.multicast LIKE :filter ";
             $predicate .= "OR c.gateway LIKE :filter ";
-            $predicate .= "OR c.inventory LIKE :filter ";
             $predicate .= "OR c.ip LIKE :filter ";
-            $predicate .= "OR c.model LIKE :filter ";
-            $predicate .= "OR c.physicalSerial LIKE :filter ";
+            $predicate .= "OR m.name LIKE :filter ";
+            $predicate .= "OR p.name LIKE :filter ";
 
             $builder->andWhere($predicate)
                 ->setParameter(':filter','%'.$filter.'%');
         }
 
-        //$query = $builder->/*select(['c.ip', 'm.name'])->*/join('c.municipality', 'm')->orderBy('c.id', 'ASC')->getQuery();
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
-        //innerJoin('c.municipality', 'm')->orderBy('c.id', 'ASC')->getQuery();
-        //dd($query->getDQL());
         return $this->paginate($query, $page, $amountPerPage);
     }
 

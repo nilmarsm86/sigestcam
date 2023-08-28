@@ -69,7 +69,12 @@ class ConnectionCameraTable
     {
         //cambiar la forma en la que se buscan los datos
         if($this->port->hasConnectedCamera()){
-            $data = $this->cameraRepository->findActiveCamerasWithPort($this->filter, $this->amount, $this->page);
+//            if($this->port->isActive()){
+//                $data = $this->cameraRepository->findActiveCamerasWithPort($this->filter, $this->amount, $this->page);
+//            }else{
+//                $data = $this->cameraRepository->findInactiveCamerasWithPort($this->filter, $this->amount, $this->page);
+//            }
+            $data = $this->cameraRepository->findCameraByPort($this->port, $this->filter, $this->amount, $this->page);
         }else{
             $data = $this->cameraRepository->findInactiveCamerasWithoutPort($this->filter, $this->amount, $this->page);
         }

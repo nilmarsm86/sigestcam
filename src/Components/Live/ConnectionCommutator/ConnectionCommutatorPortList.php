@@ -139,11 +139,12 @@ class ConnectionCommutatorPortList
         $data['number'] = $port->getNumber();
         $data['state'] = (bool) $port->isActive();
         $data['equipment'] = $port?->getEquipment()?->getShortName();
+        $data['equipment_state'] = ($port?->getEquipment()?->isActive()) ? '' : 'text-bg-danger';
         $data['speed'] = $port->getSpeed();
         $data['id'] = $port->getId();
         $data['isSelectable'] = true;
-        $data['type_value'] = PortType::getValueFrom($port->getPortType());
-        $data['type_label'] = PortType::getLabelFrom($port->getPortType());
+        $data['type_value'] = /*PortType::getValueFrom($port->getPortType())*/$port->getTypeValue();
+        $data['type_label'] = /*PortType::getLabelFrom($port->getPortType())*/$port->getTypeLabel();
 
         if (is_null($port->getConnectionType())) {
             $data['connection'] = 'bg-gradient-danger';

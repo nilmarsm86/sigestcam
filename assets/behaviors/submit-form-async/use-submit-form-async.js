@@ -31,9 +31,7 @@ export const useSubmitFormAsync = (controller, options) => {
         addChildsNodes(response, target){
             const nodes = new DOMParser().parseFromString(response, 'text/html').body.childNodes;
             this.removeAllChilds(target);
-            nodes.forEach((node) => {
-                target.appendChild(node);
-            });
+            target.append(...nodes);
         },
 
         /**
