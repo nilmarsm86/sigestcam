@@ -1,4 +1,5 @@
 import { Controller } from '@hotwired/stimulus';
+import {useProcessResponse} from "../behaviors/use-process-response.js";
 
 /*
  * This is an example Stimulus controller!
@@ -12,6 +13,10 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
     static targets = ['formContainer', 'listContainer'];
 
+    connect() {
+        useProcessResponse(this);
+    }
+
     /**
      * When form send success
      * @param event
@@ -21,7 +26,7 @@ export default class extends Controller {
         form.reset();
 
         const response = event.detail.response;
-        await this.processResponse(response);
+        await this.processResponseToast(response);
 
         super.dispatch('onSendFormSuccess',{detail:{container:this.listContainerTarget, url: document.location}});
     }
@@ -36,15 +41,15 @@ export default class extends Controller {
         super.dispatch('onShowFormContent',{detail:{container:this.formContainerTarget, url: event.currentTarget.href}});
     }
 
-    async processResponse(response){
-        const responseText = await response.text();
-        const nodes = new DOMParser().parseFromString(responseText, 'text/html').body.childNodes;
-        let id = nodes[0].id;
-        document.querySelector('.toast-container').appendChild(nodes[0]);
-
-        const toastBootstrap = bootstrap.Toast.getOrCreateInstance(document.querySelector(`#${id}`));
-        toastBootstrap.show();
-    }
+    // async processResponse(response){
+    //     const responseText = await response.text();
+    //     const nodes = new DOMParser().parseFromString(responseText, 'text/html').body.childNodes;
+    //     let id = nodes[0].id;
+    //     document.querySelector('.toast-container').appendChild(nodes[0]);
+    //
+    //     const toastBootstrap = bootstrap.Toast.getOrCreateInstance(document.querySelector(`#${id}`));
+    //     toastBootstrap.show();
+    // }
 
     async state(event){
         //event.preventDefault();
@@ -61,7 +66,7 @@ export default class extends Controller {
             method: 'POST',
             body: new URLSearchParams(data),
         });
-        await this.processResponse(response);
+        await this.processResponseToast(response);
 
         super.dispatch('onChangeState',{detail:{container:this.listContainerTarget, url: document.location}});
     }

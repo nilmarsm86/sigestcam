@@ -21,7 +21,7 @@
                                     data-action-name="connect(camera={{ camera.id }})"
                                 {% endif %}
                         >
-                        <label class="btn btn-primary" for="camera_connect{{ camera.id }}">
+                        <label class="btn btn-primary" for="camera_connect{{ camera.id }}" title="Conectar / Desconectar">
                             <i class="fas fa-plug text-white"></i>
                         </label>
                         <!-- BOTON DE DESCONETAR -->
@@ -40,7 +40,7 @@
                                     data-action-name="preactivate(entityId={{ camera.id }}, elementId=camera{{ camera.id }})"
                                 {% endif %}
                         >
-                        <label class="btn btn-primary" for="camera{{ camera.id }}">
+                        <label class="btn btn-primary" for="camera{{ camera.id }}" title="Activa / Inactiva">
                             {% if active %}
                                 <i class="fas fa-check-circle text-white"></i>
                             {% else %}
@@ -48,9 +48,8 @@
                             {% endif %}
                         </label>
                         <!-- BOTON DE DESACTIVAR -->
-                        <a type="button" class="btn btn-primary" href="{{ path('camera_edit', {'id': camera.id}) }}">
+                        <a type="button" class="btn btn-primary" href="{{ path('camera_edit', {'id': camera.id}) }}" title="Editar cámara">
                             <i class="fas fa-edit text-white"></i>
-                            Editar
                         </a>
                     </div>
                 </div>

@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StructuredCable{% endblock %}
+
+{% block body %}
+    <h1>StructuredCable</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ structured_cable.id }}</td>
+            </tr>
+            <tr>
+                <th>PhysicalAddress</th>
+                <td>{{ structured_cable.physicalAddress }}</td>
+            </tr>
+            <tr>
+                <th>Point</th>
+                <td>{{ structured_cable.point }}</td>
+            </tr>
+            <tr>
+                <th>Path</th>
+                <td>{{ structured_cable.path }}</td>
+            </tr>
+            <tr>
+                <th>FeederCable</th>
+                <td>{{ structured_cable.feederCable }}</td>
+            </tr>
+            <tr>
+                <th>Pair</th>
+                <td>{{ structured_cable.pair }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+{#    <a href="{{ path('app_structured_cable_index') }}">back to list</a>#}
+
+{#    <a href="{{ path('app_structured_cable_edit', {'id': structured_cable.id}) }}">edit</a>#}
+
+    {{ include('structured_cable/_delete_form.html.twig') }}
+{% endblock %}

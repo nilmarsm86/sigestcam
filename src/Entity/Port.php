@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Enums\PortType;
-use App\Entity\Enums\ReportType;
 use App\Entity\Enums\State as StateEnum;
 use App\Entity\Interfaces\HarborInterface;
 use App\Entity\Traits\StateTrait as StateTrait;

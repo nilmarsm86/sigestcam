@@ -10,23 +10,47 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Ip;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 class CommutatorType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $ipConstrains = [];
+        $gatewayConstrains = [];
+        $physicalAddress = [];
+        if($options['crud'] === false){
+            $ipConstrains = [
+                new NotBlank(message: 'Establezca el IP del equipo.'),
+                new Ip(message:'Establezca un IP válido.')
+            ];
+
+            $gatewayConstrains = [
+                new NotBlank(message: 'El IP gateway no debe estar vacío.'),
+                new Ip(message:'Establezca un IP gateway válido.')
+            ];
+
+            $physicalAddress = [
+                new NotBlank(message: 'La dirección física no debe estar vacía.'),
+            ];
+        }
+
         $builder
             ->add('ip', null, [
                 'label' => 'IP:',
+                'constraints' => $ipConstrains
             ])
             ->add('gateway', null, [
                 'label' => 'Puerta de enlace:',
+                'constraints' => $gatewayConstrains
             ])
             ->add('multicast', null, [
                 'label' => 'Dirección multicast:',
             ])
             ->add('physicalAddress', TextareaType::class, [
                 'label' => 'Dirección física:',
+                'constraints' => $physicalAddress
             ])
             ->add('physicalSerial', null, [
                 'label' => 'Número de serie:',
@@ -47,6 +71,7 @@ class CommutatorType extends AbstractType
                 'province' => $options['province'],
                 'municipality' => $options['municipality'],
                 'mapped' => false,
+                'crud' => $options['crud']
             ])
             ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
                 $commutator = $event->getData();
@@ -76,10 +101,12 @@ class CommutatorType extends AbstractType
             ],
             'province' => 0,
             'municipality' => 0,
+            'crud' => false
         ]);
 
         $resolver->setAllowedTypes('province', 'int');
         $resolver->setAllowedTypes('municipality', 'int');
+        $resolver->setAllowedTypes('crud', 'bool');
     }
 
 }

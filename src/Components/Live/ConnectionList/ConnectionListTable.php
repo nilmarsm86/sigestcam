@@ -5,6 +5,7 @@ namespace App\Components\Live\ConnectionList;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentTable;
 use App\DTO\Paginator;
+use App\Entity\Camera;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Port;
@@ -80,6 +81,16 @@ class ConnectionListTable
     #[LiveAction]
     public function status(): void
     {
+        $this->reload();
+        $this->emit($this->getChangeTableEventName());
+    }
+
+    #[LiveAction]
+    public function disconnect(#[LiveArg] Camera $camera): void
+    {
+        $camera->disconnect();
+        $this->cameraRepository->save($camera, true);
+
         $this->reload();
         $this->emit($this->getChangeTableEventName());
     }

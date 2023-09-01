@@ -1,0 +1,300 @@
+<div class="row" {{ attributes }}>
+    {% if entityId is not null %}
+        <div class="col-4">
+            <h4>Características del switch:</h4>
+            <hr>
+            <div class="card text-bg-info border-primary">
+                <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
+                    <p class="text-white m-0 fw-bold">Switch:</p>
+                </div>
+
+                {% set commutator = data[entityId]['port']['commutator'] %}
+
+                {# no es necesario usar updateFromParent, en el data, pues se pasa el data-live-id y esto lleva a que el componente se construya completo #}
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'IP:',
+                    data: commutator.ip,
+                    connection: connection,
+                    'data-live-id': 'commutator-ip-'~ commutator.ip,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Puerta de enlace:',
+                    data: commutator.gateway,
+                    connection: connection,
+                    'data-live-id': 'commutator-gateway-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Dirección multicast:',
+                    data: commutator.multicast,
+                    connection: connection,
+                    'data-live-id': 'commutator-multicast-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Inventario:',
+                    data: commutator.inventory,
+                    connection: connection,
+                    'data-live-id': 'commutator-inventory-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Marca:',
+                    data: commutator.brand,
+                    connection: connection,
+                    'data-live-id': 'commutator-brand-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Modelo:',
+                    data: commutator.model,
+                    connection: connection,
+                    'data-live-id': 'commutator-model-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Contic:',
+                    data: commutator.contic,
+                    connection: connection,
+                    'data-live-id': 'commutator-contic-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Serie:',
+                    data: commutator.physicalSerial,
+                    connection: connection,
+                    'data-live-id': 'commutator-serial-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Dirección física:',
+                    data: commutator.physicalAddress,
+                    connection: connection,
+                    'data-live-id': 'commutator-physical_address-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    editable: false,
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Municipio:',
+                    data: data[entityId].municipality.name,
+                    editable: false,
+                    connection: connection,
+                    'data-live-id': 'commutator-municipality-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                }) }}
+
+                {{ component('ConnectionDetailEditInline', {
+                    label: 'Provincia:',
+                    data: data[entityId].municipality.province.name,
+                    editable: false,
+                    connection: connection,
+                    'data-live-id': 'commutator-province-'~ commutator.id,
+                    entity: 'App\\Entity\\Commutator',
+                    template: 'components/live/connection_commutator/edit_inline.html.twig',
+                    last: true,
+                }) }}
+            </div>
+        </div>
+
+        <div class="col-8">
+            <h4>Características de la cámara:</h4>
+            <hr>
+            <div class="card border-primary">
+                <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
+                    <p class="text-white m-0 fw-bold">Cámara:</p>
+                </div>
+
+                <div class="card-body">
+                    <div class="row">
+                        {% set camera = data[entityId] %}
+                        <div class="col">
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'IP:',
+                                data: camera.ip,
+                                connection: connection,
+                                'data-live-id': 'camera-ip-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Usuario:',
+                                data: camera.user,
+                                connection: connection,
+                                'data-live-id': 'camera-user-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Contraseña:',
+                                data: camera.password,
+                                connection: connection,
+                                'data-live-id': 'camera-password-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                secure: true,
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Número de serie electrónico:',
+                                data: camera.electronicSerial,
+                                connection: connection,
+                                'data-live-id': 'camera-electric-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Puerto:',
+                                data: camera.port.number,
+                                connection: connection,
+                                'data-live-id': 'camera-port-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {% if camera.modem is defined %}
+                                {{ component('ConnectionDetailEditInline', {
+                                    label: 'Modem:',
+                                    data: camera.modem,
+                                    connection: connection,
+                                    'data-live-id': 'camera-modem-'~ camera.id,
+                                    entity: 'App\\Entity\\Camera',
+                                    template: 'components/live/connection_camera/edit_inline.html.twig',
+                                    editable: false,
+                                }) }}
+                            {% endif %}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Switch:',
+                                data: camera.port.commutator.ip,
+                                connection: connection,
+                                'data-live-id': 'camera-switch-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+                        </div>
+
+                        <div class="col">
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Modelo:',
+                                data: camera.model,
+                                connection: connection,
+                                'data-live-id': 'camera-model-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Marca:',
+                                data: camera.brand,
+                                connection: connection,
+                                'data-live-id': 'camera-brand-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Número de serie:',
+                                data: camera.physicalSerial,
+                                connection: connection,
+                                'data-live-id': 'camera-serial-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Número de inventario:',
+                                data: camera.inventory,
+                                connection: connection,
+                                'data-live-id': 'camera-inventory-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Contic:',
+                                data: camera.contic,
+                                connection: connection,
+                                'data-live-id': 'camera-contic-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Dirección física:',
+                                data: camera.physicalAddress,
+                                connection: connection,
+                                'data-live-id': 'camera-address-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Municipio:',
+                                data: camera.municipality.name,
+                                connection: connection,
+                                'data-live-id': 'camera-municipality-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+
+                            {{ component('ConnectionDetailEditInline', {
+                                label: 'Provincia:',
+                                data: camera.municipality.province.name,
+                                connection: connection,
+                                'data-live-id': 'camera-province-'~ camera.id,
+                                entity: 'App\\Entity\\Camera',
+                                template: 'components/live/connection_camera/edit_inline.html.twig',
+                                editable: false,
+                            }) }}
+                        </div>
+                    </div>
+                </div>
+                <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
+            </div>
+        </div>
+    {% endif %}
+</div>

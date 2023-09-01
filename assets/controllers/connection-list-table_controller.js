@@ -19,7 +19,17 @@ export default class extends Controller {
 
     state(event) {
         event.preventDefault();
-        console.log('evento');
+
         this.component.action('status');
+    }
+
+    disconnect(event){
+        event.preventDefault();
+
+        if(!confirm("Está seguro que desea eliminar la conexión?")){
+            return ;
+        }
+        console.log('A eliminar');
+        this.component.action('disconnect', {'camera': event.params.camera});
     }
 }

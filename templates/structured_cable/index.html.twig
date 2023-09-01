@@ -1,0 +1,43 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}StructuredCable index{% endblock %}
+
+{% block body %}
+    <h1>StructuredCable index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>PhysicalAddress</th>
+                <th>Point</th>
+                <th>Path</th>
+                <th>FeederCable</th>
+                <th>Pair</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for structured_cable in structured_cables %}
+            <tr>
+                <td>{{ structured_cable.id }}</td>
+                <td>{{ structured_cable.physicalAddress }}</td>
+                <td>{{ structured_cable.point }}</td>
+                <td>{{ structured_cable.path }}</td>
+                <td>{{ structured_cable.feederCable }}</td>
+                <td>{{ structured_cable.pair }}</td>
+                <td>
+{#                    <a href="{{ path('app_structured_cable_show', {'id': structured_cable.id}) }}">show</a>#}
+{#                    <a href="{{ path('app_structured_cable_edit', {'id': structured_cable.id}) }}">edit</a>#}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('structured_cable_new') }}">Create new</a>
+{% endblock %}

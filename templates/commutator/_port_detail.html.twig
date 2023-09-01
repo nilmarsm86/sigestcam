@@ -1,5 +1,8 @@
+
 {% embed "embeds/card.html.twig" %}
     {% block card_css_class %}mb-4{% endblock %}
+
+    {% block card_extra %}{% endblock %}
 
     {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
 
@@ -10,7 +13,13 @@
     {% block card_body %}
         <div class="row" style="position: relative">
             {% for port in commutator.ports %}
-                <div class="col-3 mb-4">
+                <div class="col-3 mb-4" {{ stimulus_controller('port', {
+                    stateHref: path('port_state'),
+                    speedHref: path('port_speed'),
+                    listHref: path('commutator_port', {'id':commutator.id}),
+                    typeHref: path('port_type'),
+                }) }}
+                     data-action="port:onChangeState->content-loader#refreshContent">
                     <div class="card text-white bg-gradient-secondary">
                         <div class="card-body" style="padding: 0.5rem">
                             <div class="row align-items-center no-gutters">
@@ -22,12 +31,13 @@
                                                 class="form-check-input"
                                                 type="checkbox"
                                                 role="switch"
-                                                {% if port.state %}checked{% endif %}
-                                                data-action="change->live#action"
-                                                {% if port.state %}
-                                                    data-action-name="deactivatePort(portId={{ port.id }})"
+                                                {% if port.isActive() %}checked{% endif %}
+                                                data-action="change->port#state:prevent"
+                                                data-port-id-param="{{ port.id }}"
+                                                {% if port.isActive() %}
+                                                    data-port-state-param="0"
                                                 {% else %}
-                                                    data-action-name="activatePort(portId={{ port.id }})"
+                                                    data-port-state-param="1"
                                                 {% endif %}
                                         >
                                     </div>
@@ -37,23 +47,21 @@
                                     <div class="text-uppercase text-white fw-bold text-xs mb-1">
                                         <input
                                                 type="text"
-                                                data-model="norender|speed"
                                                 value="{{ port.speed }}"
                                                 class="w-25"
-                                                data-action="blur->live#action"
-                                                data-action-name="saveSpeed(port={{ port.id }})"
+                                                data-action="blur->port#speed"
+                                                data-port-id-param="{{ port.id }}"
                                         >
                                         <span>{{ constant('App\\Entity\\Port::SPEED_TYPE') }} -</span>
                                         <br>
                                         <span class="{% if port.commutator.isActive() == false %}text-bg-danger{% endif %}">
-                            {{ port.equipment }}
-                        </span>
+                                            {{ port.equipment }}
+                                        </span>
                                     </div>
                                     <h5 class="card-title">Puerto: <span class="fw-bold">{{ port.number }}</span></h5>
                                     <select style="font-size: 11.5px"
-                                            data-model="norender|type"
-                                            data-action="change->live#action blur->live#action"
-                                            data-action-name="saveType(port={{ port.id }})"
+                                            data-action="change->port#type"
+                                            data-port-id-param="{{ port.id }}"
                                     >
                                         {% for label, value in forSelect %}
                                             {% if value is not same as "" %}

@@ -1,0 +1,11 @@
+<form
+        method="post"
+        action="{{ path('structured_cable_delete', {'id': structured_cable.id, 'camera': camera.id}) }}"
+        onsubmit="return confirm('Está seguro que desea eliminar este cable estructurado?');"
+>
+    <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ structured_cable.id) }}">
+    <button class="btn btn-primary btn-sm active">
+        <i class="fas fa-trash"></i>
+        Eliminar cable estructurado
+    </button>
+</form>

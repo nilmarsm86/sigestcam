@@ -1,0 +1,23 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Nuevo Cable estructurado{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Crear nuevo cable estructurado</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Cable estructurado', href: ''},
+                {label: 'Nuevo'},
+            ],
+            current: 'Nuevo'
+        }) }}
+    </div>
+
+    {{ include('structured_cable/_form.html.twig', {'showButton': true, 'title': 'Crear cable estructurado'}) }}
+
+{#    <a href="{{ path('structured_cable_index') }}">back to list</a>#}
+{% endblock %}

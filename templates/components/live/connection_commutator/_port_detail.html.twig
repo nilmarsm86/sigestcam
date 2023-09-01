@@ -39,7 +39,7 @@
                                     data-action-name="saveSpeed(port={{ port.id }})"
                             >
                         {% else %}
-                            <span
+                            <span title="Click para editar"
                                     class="w-25 d-inline-block"
                                     data-action="click->live#action"
                                     data-action-name="activateEditingSpeed(portId={{ port.id }}, speed={{ port.speed }})"
@@ -66,7 +66,7 @@
                             {% endfor %}
                         </select>
                     {% else %}
-                        <h6 class="card-subtitle mb-2"
+                        <h6 class="card-subtitle mb-2" title="Click para editar"
                             data-action="click->live#action"
                             data-action-name="activateEditingType(portId={{ port.id }}, type={{ port.type_value }})"
                         >

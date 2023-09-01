@@ -37,11 +37,11 @@
                         <a href="{{ path('port_state') }}"
                            data-action="page#state:prevent"
                            data-page-id-param="{{ camera.port.id }}"
-                                {% if camera.port.state %}
-                                    data-page-state-param="0"
-                                {% else %}
-                                    data-page-state-param="1"
-                                {% endif %}
+                            {% if camera.port.state %}
+                                data-page-state-param="0"
+                            {% else %}
+                                data-page-state-param="1"
+                            {% endif %}
                         >
                             <span
                                     class="badge {% if camera.port.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
@@ -70,22 +70,24 @@
                     <td>{{ camera.municipality.province.name }}</td>
                     <td>{{ camera.municipality.name }}</td>
                     <td>
-                        <button
+                        <button title="Detalle de conexión"
                                 type="button"
                                 class="btn btn-primary btn-sm"
                                 aria-current="page"
 {#                                {% if entityId is not same as commutator.id %}#}
-{#                                    data-action="live#action"#}
-{#                                    data-action-name="prevent|detail(entityId={{ commutator.id }})"#}
+                                    data-action="live#action"
+                                    data-action-name="prevent|detail(entityId={{ camera.id }})"
 {#                                {% endif %}#}
                         >
                             <i class="fas fa-eye"></i>
                         </button>
 
-                        <button
+                        <button title="Eliminar conexión"
                                 type="button"
                                 class="btn btn-primary btn-sm"
                                 aria-current="page"
+                                data-action="connection-list-table#disconnect"
+                                data-connection-list-table-camera-param="{{ camera.id }}"
                         >
                             <i class="fas fa-plug"></i>
                         </button>
@@ -100,5 +102,9 @@
             {% endfor %}
         {% endblock %}
     {% endembed %}
+
+    <div class="row">
+        {{ component('ConnectionListDetail', {connection: connection, data: data}) }}
+    </div>
     <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
 </div>

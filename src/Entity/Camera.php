@@ -108,7 +108,7 @@ class Camera extends Equipment
     /**
      * @throws Exception
      */
-    public function setStructuredCable(StructuredCable $structuredCable): static
+    public function setStructuredCable(?StructuredCable $structuredCable): static
     {
         if(!$this->canHaveStructureCable()){
             throw new Exception('Solo pueden tener cable estructurado aquellas cámaras conectadas a un modem conectado a un Msam.');

@@ -4,7 +4,6 @@ namespace App\Entity;
 
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Enums\State;
-use App\Entity\Enums\State as StateEnum;
 use App\Entity\Interfaces\HarborInterface;
 use App\Entity\Port as PortEntity;
 use App\Repository\CommutatorRepository;
@@ -35,10 +34,10 @@ class Commutator extends Equipment implements HarborInterface
     #[Assert\Positive]
     private ?int $portsAmount;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'El IP gateway no debe estar vacío.')]
-    #[Assert\NotNull(message: 'El IP gateway no debe ser nulo.')]
-    #[Assert\Ip(message:'Establezca un IP gateway válido.')]
+    #[ORM\Column(length: 255, nullable: true)]
+//    #[Assert\NotBlank(message: 'El IP gateway no debe estar vacío.')]
+//    #[Assert\NotNull(message: 'El IP gateway no debe ser nulo.')]
+//    #[Assert\Ip(message:'Establezca un IP gateway válido.')]
     private ?string $gateway = null;
 
     #[ORM\Column(length: 255, nullable: true)]
@@ -102,7 +101,9 @@ class Commutator extends Equipment implements HarborInterface
     public function deactivate(): static
     {
         $this->deactivatePorts();
-        return parent::deactivate();
+        parent::deactivate();
+        $this->gateway = null;
+        return $this;
     }
 
     #[ORM\PrePersist]

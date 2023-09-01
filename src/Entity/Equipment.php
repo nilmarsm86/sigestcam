@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Enums\State as StateEnum;
 use App\Entity\Traits\StateTrait as StateTrait;
 use App\Repository\EquipmentRepository;
 use Doctrine\ORM\Mapping as ORM;
@@ -38,20 +39,20 @@ class Equipment
     protected ?string $brand = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Assert\When(
-        expression: 'this.getClass() == "Camera" || this.getClass() == "Msam" || this.getClass() == "Server" || this.getClass() == "Commutator"',
-        constraints: [
-            new Assert\NotBlank(message: 'Establezca el IP del equipo.'),
-            new Assert\NotNull(message: 'El IP del equipo no puede ser nulo.')
-        ],
-    )]
-    #[Assert\Ip(message:'Establezca un IP válido.')]
+//    #[Assert\When(
+//        expression: 'this.getClass() == "Camera" || this.getClass() == "Msam" || this.getClass() == "Server" || this.getClass() == "Commutator"',
+//        constraints: [
+//            new Assert\NotBlank(message: 'Establezca el IP del equipo.'),
+//            new Assert\NotNull(message: 'El IP del equipo no puede ser nulo.')
+//        ],
+//    )]
+//    #[Assert\Ip(message:'Establezca un IP válido.')]
     protected ?string $ip = null;
 
-    #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'La dirección física no debe estar vacía.')]
-    #[Assert\NotNull(message: 'La dirección física no debe ser nula.')]
-    protected string $physicalAddress;
+    #[ORM\Column(length: 255, nullable: true)]
+//    #[Assert\NotBlank(message: 'La dirección física no debe estar vacía.')]
+//    #[Assert\NotNull(message: 'La dirección física no debe ser nula.')]
+    protected ?string $physicalAddress = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     /*#[Assert\Regex(
@@ -129,12 +130,12 @@ class Equipment
         return $this;
     }
 
-    public function getPhysicalAddress(): string
+    public function getPhysicalAddress(): ?string
     {
         return $this->physicalAddress;
     }
 
-    public function setPhysicalAddress(string $physicalAddress): static
+    public function setPhysicalAddress(?string $physicalAddress): static
     {
         $this->physicalAddress = $physicalAddress;
 
@@ -269,6 +270,19 @@ class Equipment
     public function isDisconnected()
     {
         return is_null($this->port);
+    }
+
+    /**
+     * Deactivate
+     * @return $this
+     */
+    public function deactivate(): static
+    {
+        $this->state = null;
+        $this->setState(StateEnum::Inactive);
+        $this->ip = null;
+
+        return $this;
     }
 
 }

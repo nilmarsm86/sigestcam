@@ -67,6 +67,10 @@ class ConnectionCameraTable
 
     private function reload(): void
     {
+        if(is_null($this->filter)){
+            $this->filter = '';
+        }
+
         //cambiar la forma en la que se buscan los datos
         if($this->port->hasConnectedCamera()){
 //            if($this->port->isActive()){
@@ -112,7 +116,19 @@ class ConnectionCameraTable
     }
 
     #[LiveListener(ConnectionDetailEditInline::SAVE_CAMERA.'_Direct')]
-    public function onConnectionCameraDetailEditInlineSaveDirect(): void
+    public function onConnectionDetailEditInlineSaveCameraDirect(): void
+    {
+        $this->reload();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::ACTIVATE.'_Direct')]
+    public function onConnectionCameraDetailActivateDirect(): void
+    {
+        $this->reload();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DEACTIVATE.'_Direct')]
+    public function onConnectionCameraDetailDeactivateDirect(): void
     {
         $this->reload();
     }

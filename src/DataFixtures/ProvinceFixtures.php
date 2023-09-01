@@ -11,11 +11,12 @@ class ProvinceFixtures extends Fixture
 {
     public function load(ObjectManager $manager): void
     {
-        $provinces = ['Pinar del Río', 'La Habana', 'Artemisa', 'Mayabeque', 'Matanzas', 'Cienfuegos'];
+        $provinces = ['Sin provincia', 'Pinar del Río', 'La Habana', 'Artemisa', 'Mayabeque', 'Matanzas', 'Cienfuegos'];
         foreach ($provinces  as $provinceName){
             $province = $manager->getRepository(Province::class)->findOneBy(['name' => $provinceName]);
             if(is_null($province)){
                 $result = match ($provinceName) {
+                    'Sin provincia' => $this->addProvinceMunicipality($manager, $provinceName, ['Sin municipio']),
                     'Pinar del Río' => $this->addProvinceMunicipality($manager, $provinceName, ['Candelaria']),
                     'La Habana' => $this->addProvinceMunicipality($manager, $provinceName, ['Arroyo Naranjo', '10 de Octubre']),
                     'Artemisa' => $this->addProvinceMunicipality($manager, $provinceName, ['Artemisa']),

@@ -29,14 +29,19 @@ class CommutatorController extends AbstractController
     {
         $commutator = new Commutator();
         $form = $this->createForm(CommutatorType::class, $commutator, [
-            'action' => $this->generateUrl('commutator_new')
+            'action' => $this->generateUrl('commutator_new'),
+            'crud' => true
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $municipalityId = $request->request->all()['commutator']['address']['municipality'];
-            $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
-            $commutator->setMunicipality($municipality);
+            $dataAddress = $request->request->all()['commutator']['address'];
+            $municipalityId = $dataAddress['municipality'] ?? null;
+            if(!is_null($municipalityId)){
+                $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
+                $commutator->setMunicipality($municipality);
+            }
+
             $commutator->deactivate();
             $entityManager->persist($commutator);
             $entityManager->flush();
@@ -86,7 +91,8 @@ class CommutatorController extends AbstractController
         $form = $this->createForm(CommutatorType::class, $commutator, [
             'action' => $this->generateUrl('commutator_edit', ['id' => $commutator->getId()]),
             'province' => (int) $provinceId,
-            'municipality' => (int) $municipalityId
+            'municipality' => (int) $municipalityId,
+            'crud' => true
         ]);
         $form->handleRequest($request);
 

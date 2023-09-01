@@ -28,13 +28,12 @@
                                     data-action-name="activate(entityId={{ commutator.id }})"
                                 {% endif %}
                         >
-                        <label class="btn btn-primary" for="switch{{ commutator.id }}">
+                        <label class="btn btn-primary" for="switch{{ commutator.id }}" title="Estado">
                             <i class="fas {% if active %}fa-check-circle text-white{% else %}fa-circle text-white-50{% endif %} "></i>
                         </label>
                         <!-- BOTON DE DESACTIVAR -->
-                        <a href="{{ path('commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary">
+                        <a href="{{ path('commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary" title="Editar switch">
                             <i class="fas fa-edit text-white"></i>
-                            Editar
                         </a>
                     </div>
 

@@ -6,7 +6,6 @@ use App\Entity\Municipality;
 use App\Entity\Province;
 use App\Repository\MunicipalityRepository;
 use App\Repository\ProvinceRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -20,7 +19,6 @@ class AddressType extends AbstractType
     public function __construct(
         private readonly ProvinceRepository $provinceRepository,
         private readonly MunicipalityRepository $municipalityRepository,
-//        private readonly EntityManagerInterface $entityManager
     )
     {
 
@@ -30,20 +28,6 @@ class AddressType extends AbstractType
     {
         $province = $this->provinceRepository->find($options['province']);
         $municipality = $this->municipalityRepository->find($options['municipality']);
-
-        $provinceConstraints = [];
-        if(!$options['province']){
-            $provinceConstraints = [
-                new NotBlank(message: 'Seleccione una provincia.')
-            ];
-        }
-
-        $municipalityConstraints = [];
-        if(!$options['municipality']){
-            $municipalityConstraints = [
-                new NotBlank(message: 'Seleccione un municipio.')
-            ];
-        }
 
         $builder
             ->add('province', EntityType::class, [
@@ -59,8 +43,9 @@ class AddressType extends AbstractType
                     'class' => 'fw-bold'
                 ],
                 'mapped' => false,
-                'constraints' => $provinceConstraints,
-                'data' => $province
+                'constraints' => $this->getProvinceConstraints($options),
+                'data' => $province,
+                'query_builder' => $this->getQueryBuilder($options),
             ])
             ->add('municipality', EntityType::class, [
                 'class' => Municipality::class,
@@ -77,7 +62,7 @@ class AddressType extends AbstractType
                 'label_attr' => [
                     'class' => 'fw-bold'
                 ],
-                'constraints' => $municipalityConstraints,
+                'constraints' => $this->getMunicipalityConstraints($options),
                 'data' => $municipality
             ])
         ;
@@ -88,10 +73,49 @@ class AddressType extends AbstractType
         $resolver->setDefaults([
             'province' => 0,
             'municipality' => 0,
+            'crud' => false
         ]);
 
         $resolver->setAllowedTypes('province', 'int');
         $resolver->setAllowedTypes('municipality', 'int');
+        $resolver->setAllowedTypes('crud', 'bool');
+    }
+
+    private function getMunicipalityConstraints(array $options): array
+    {
+        $municipalityConstraints = [];
+        if(!$options['municipality'] && $options['crud']){
+            $municipalityConstraints = [
+                new NotBlank(message: 'Seleccione un municipio.')
+            ];
+        }
+
+        return $municipalityConstraints;
+    }
+
+    private function getProvinceConstraints(array $options): array
+    {
+        $provinceConstraints = [];
+        if(!$options['province'] && $options['crud']){
+            $provinceConstraints = [
+                new NotBlank(message: 'Seleccione una provincia.')
+            ];
+        }
+
+        return $provinceConstraints;
+    }
+
+    private function getQueryBuilder(array $options)
+    {
+        if($options['crud']){
+            return function (EntityRepository $er) use ($options): QueryBuilder|array {
+                return $er->createQueryBuilder('p');
+            };
+        }else{
+            return function (EntityRepository $er) use ($options): QueryBuilder|array {
+                return $er->createQueryBuilder('p')->where("p.name <> 'Sin provincia'");
+            };
+        }
     }
 
 //    public function getRealEntity($proxy)
