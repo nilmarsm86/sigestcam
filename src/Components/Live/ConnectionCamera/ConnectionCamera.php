@@ -3,8 +3,10 @@ namespace App\Components\Live\ConnectionCamera;
 
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
+use App\Components\Live\ConnectionModem\ConnectionModemTable;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Modem;
 use App\Entity\Port;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -20,8 +22,8 @@ class ConnectionCamera
     #[LiveProp]
     public ?Port $port = null;
 
-    //#[LiveProp]
-    //public ?Modem $modem = null;
+    #[LiveProp]
+    public ?Modem $modem = null;
 
     #[LiveProp]
     public ?Commutator $commutator = null;
@@ -35,6 +37,7 @@ class ConnectionCamera
         $this->commutator = null;
         $this->port = $port;
         $this->commutator = $port?->getCommutator();
+        $this->modem = null;
     }
 
     #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
@@ -42,6 +45,7 @@ class ConnectionCamera
     {
         $this->commutator = $entity;
         $this->port = null;
+        $this->modem = null;
     }
 
     /**
@@ -53,6 +57,23 @@ class ConnectionCamera
     {
         $this->commutator = null;
         $this->port = null;
+        $this->modem = null;
+    }
+
+    #[LiveListener(ConnectionModemTable::DETAIL.'_Simple')]
+    public function onConnectionModemTableDetailSimple(#[LiveArg] Modem $entity): void
+    {
+        $this->commutator = $entity->getPort()->getCommutator();
+        $this->port = $entity->getPort();
+        $this->modem = $entity;
+    }
+
+    #[LiveListener(ConnectionModemTable::CHANGE.'_Simple')]
+    public function onConnectionModemTableChangeSimple(): void
+    {
+        $this->commutator = null;
+        $this->port = null;
+        $this->modem = null;
     }
 
 }

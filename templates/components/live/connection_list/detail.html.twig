@@ -1,14 +1,21 @@
 <div class="row" {{ attributes }}>
     {% if entityId is not null %}
+        {% set commutator = data[entityId]['port']['commutator'] %}
         <div class="col-4">
             <h4>Características del switch:</h4>
             <hr>
             <div class="card text-bg-info border-primary">
                 <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
                     <p class="text-white m-0 fw-bold">Switch:</p>
-                </div>
+                    <div class="row">
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                            <a href="{{ path('commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary" title="Editar switch">
+                                <i class="fas fa-edit text-white"></i>
+                            </a>
+                        </div>
 
-                {% set commutator = data[entityId]['port']['commutator'] %}
+                    </div>
+                </div>
 
                 {# no es necesario usar updateFromParent, en el data, pues se pasa el data-live-id y esto lleva a que el componente se construya completo #}
                 {{ component('ConnectionDetailEditInline', {
@@ -124,17 +131,26 @@
             </div>
         </div>
 
+        {% set camera = data[entityId] %}
         <div class="col-8">
             <h4>Características de la cámara:</h4>
             <hr>
             <div class="card border-primary">
                 <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
                     <p class="text-white m-0 fw-bold">Cámara:</p>
+                    <div class="row">
+                        <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                            <a href="{{ path('camera_edit', {'id': camera.id}) }}" class="btn btn-primary" title="Editar cámara">
+                                <i class="fas fa-edit text-white"></i>
+                            </a>
+                        </div>
+
+                    </div>
                 </div>
 
                 <div class="card-body">
                     <div class="row">
-                        {% set camera = data[entityId] %}
+
                         <div class="col">
                             {{ component('ConnectionDetailEditInline', {
                                 label: 'IP:',

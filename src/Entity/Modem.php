@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Entity\Enums\State;
 use App\Entity\Enums\State as StateEnum;
 use App\Entity\Traits\ConnectedTrait;
 use App\Repository\ModemRepository;
@@ -20,13 +21,11 @@ class Modem extends Equipment
 
     #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
     #[Assert\Valid]
-    private ?self $slaveModem = null;
+    private ?self $masterModem = null;
 
     #[ORM\OneToMany(mappedBy: 'modem', targetEntity: Camera::class)]
     #[Assert\Count(
-        min: 1,
         max: 4,
-        minMessage: 'Debe establecer al menos 1 camara para este modem.',
         maxMessage: 'El modem no puede tener más de 4 cámaras conectadas.'
     )]
     private Collection $cameras;
@@ -36,23 +35,24 @@ class Modem extends Equipment
         parent::__construct();
         $this->ip = null;
         $this->cameras = new ArrayCollection();
+        $this->enumState = State::Active;
     }
 
-    public function getSlaveModem(): ?self
+    public function getMasterModem(): ?self
     {
-        return $this->slaveModem;
+        return $this->masterModem;
     }
 
-    public function setSlaveModem(?self $slaveModem): static
+    public function setMasterModem(?self $masterModem): static
     {
-        $this->slaveModem = $slaveModem;
+        $this->masterModem = $masterModem;
 
         return $this;
     }
 
     public function hasSlaveModem(): Bool
     {
-        return !is_null($this->getSlaveModem());
+        return !is_null($this->getMasterModem());
     }
 
     /**
@@ -108,7 +108,7 @@ class Modem extends Equipment
      */
     public function deactivate(): static
     {
-        $this->slaveModem?->deactivate();
+        $this->masterModem?->deactivate();
         $this->deactivateCameras();
 
         return parent::deactivate();
@@ -125,6 +125,47 @@ class Modem extends Equipment
         }
 
         return $this;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function setStructuredCable(?StructuredCable $structuredCable): static
+    {
+        if(!$this->canHaveStructureCable()){
+            throw new Exception('Solo pueden tener cable estructurado aquellos modems conectados a un Msam.');
+        }
+
+        $this->structuredCable = $structuredCable;
+
+        return $this;
+    }
+
+    public function canHaveStructureCable(): bool
+    {
+        if(!$this->modemInCardPort()){
+            return false;
+        }
+
+        return true;
+    }
+
+    public function modemInCardPort(): bool
+    {
+        if(!$this->hasPort()){
+            return false;
+        }
+
+        if(!$this->isInCardPort()){
+            return false;
+        }
+
+        return true;
+    }
+
+    public function canAddCamera(): bool
+    {
+        return $this->cameras->count() < self::MAXIMUM_CAMERA_NUMBER;
     }
 
 }

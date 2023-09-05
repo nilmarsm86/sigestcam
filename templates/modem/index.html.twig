@@ -1,0 +1,24 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Gestionar Modem{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Gestionar modems</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Cámaras', href: path('modem_index')},
+                {label: 'Lista'},
+            ],
+            current: 'Lista'
+        }) }}
+    </div>
+
+    {{ include('partials/_index_container.html.twig', {
+        list: 'modem/_list.html.twig',
+        rest_data_action: 'page:onChangeState->content-loader#refreshContent'
+    }) }}
+{% endblock %}

@@ -29,10 +29,15 @@ class ConectionController extends AbstractController
         return $this->render('connection/index.html.twig', [
             'total_amount_connections' => $totalAmountConnections,
             'direct_connections' => $directConnections,
+            'direct_percent' => ($totalAmountConnections > 0) ? $directConnections * 100 / $totalAmountConnections : 0,
             'simple_connections' => $simpleConnections,
+            'simple_percent' => ($totalAmountConnections > 0) ? $simpleConnections * 100 / $totalAmountConnections : 0,
             'slave_switch_connections' => $slaveSwitchConnections,
+            'slave_switch_percent' => ($totalAmountConnections > 0) ? $slaveSwitchConnections * 100 / $totalAmountConnections : 0,
             'slave_modem_connections' => $slaveModemConnections,
+            'slave_modem_percent' => ($totalAmountConnections > 0) ? $slaveModemConnections * 100 / $totalAmountConnections : 0,
             'full_connections' => $fullConnections,
+            'full_percent' => ($totalAmountConnections > 0) ? $fullConnections * 100 / $totalAmountConnections : 0,
         ]);
     }
 
@@ -74,6 +79,12 @@ class ConectionController extends AbstractController
         return $this->render('connection/direct_list.html.twig', [
             'filter' => $request->query->get('filter', '')
         ]);
+    }
+
+    #[Route('/simple_new', name: 'simple_new')]
+    public function simpleNew(): Response
+    {
+        return $this->render('connection/simple_new.html.twig');
     }
 
 }

@@ -1,0 +1,50 @@
+{% embed "embeds/card.html.twig" %}
+    {% block card_css_class %}mb-4{% endblock %}
+
+    {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+    {% block card_title %}{{ title }}{% endblock %}
+
+    {% block card_header_options %}
+        <div>
+            {% if showButton is defined and showButton == true%}
+                <a class="btn btn-primary btn-sm active" href="{{ path('camera_index') }}">
+                    <i class="fas fa-arrow-left"></i>
+                    Listado
+                </a>
+            {% endif %}
+
+            {% if camera is defined %}
+                {{ include('structured_cable/_delete_form.html.twig', {'camera': camera}) }}
+            {% endif %}
+        </div>
+    {% endblock %}
+
+    {% block card_body %}
+        {% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}
+
+        {{ form_start(form) }}
+            {{ form_widget(form) }}
+        <div class="row mb-3">
+            <div class="col-sm-10 offset-sm-2">
+                <button class="btn btn-success">
+                    <i class="fas fa-save"></i>
+                    Guardar
+                </button>
+            </div>
+        </div>
+        {{ form_end(form) }}
+    {% endblock %}
+
+    {% block card_footer %}
+        {% if showButton is defined and showButton == true%}
+            <div class="card-footer text-body-secondary">
+                <a href="{{ path('camera_index') }}" class="btn btn-primary">
+                    <i class="fas fa-arrow-left"></i>
+                    Listado
+                </a>
+            </div>
+        {% endif %}
+    {% endblock %}
+{% endembed %}
+

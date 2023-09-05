@@ -1,57 +1,38 @@
 <div {{ attributes }}>
     {% if commutator and port %}
-        {% embed "embeds/card.html.twig" %}
-            {% block card_css_class %}mb-4{% endblock %}
 
-            {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Direct') %}
+            {{ include('components/live/connection_camera/_card_table.html.twig') }}
 
-            {% block card_title %}Cámara{% endblock %}
+            {% if port is not null and port.equipment is null %}
+                {{ component('ModalForm', {
+                    title: 'Agregar Cámara',
+                    src: 'ConnectionCameraNew',
+                    vars: {
+                        connection:connection,
+                        port: port
+                    },
+                    type: 'component',
+                    id: 'add-camera'
+                }) }}
+            {% endif %}
+        {% endif %}
 
-            {% block card_header_options %}
-                <div>
-                    <button class="btn btn-primary btn-sm
-                            {% if port is null %}
-                                disabled
-                            {% else %}
-                                {% if port.equipment is not null %}disabled{% endif %}
-                            {% endif %}"
-                            aria-current="page"
-                            data-bs-toggle="modal"
-                            data-bs-target="#add-camera"
-                    >
-                        <i class="fas fa-plus"></i>
-                        Nueva
-                    </button>
-                </div>
-            {% endblock %}
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') and modem is not null %}
+            {{ include('components/live/connection_camera/_card_table.html.twig') }}
 
-            {% block card_body %}
-                {% if port is not null %}
-                    <div data-loading="addClass(d-none)">
-                        {{ component('ConnectionCameraTable', {connection:connection, commutator: commutator, port: port}) }}
-                    </div>
-    {#                {% if port.equipment is not null %}#}
-                        <div class="row">
-                            {{ component('ConnectionCameraDetail', {connection:connection, port: port}) }}
-                        </div>
-    {#                {% endif %}#}
-                {% endif %}
-            {% endblock %}
-        {% endembed %}
-
-        {% if port is not null and port.equipment is null %}
-            <!-- Modal -->
-            {{ component('ModalForm', {
-                title: 'Agregar Cámara',
-                src: 'ConnectionCameraNew',
-                vars: {
-                    connection:connection,
-                    port: port
-                },
-                type: 'component',
-                id: 'add-camera'
-            }) }}
-            <!-- Modal -->
+            {% if modem is not null and modem.canAddCamera() %}
+                {{ component('ModalForm', {
+                    title: 'Agregar Cámara',
+                    src: 'ConnectionCameraNew',
+                    vars: {
+                        connection:connection,
+                        modem: modem
+                    },
+                    type: 'component',
+                    id: 'add-camera'
+                }) }}
+            {% endif %}
         {% endif %}
     {% endif %}
 </div>

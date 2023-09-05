@@ -16,27 +16,27 @@ class StructuredCable
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Establezca la dirección física para el cable estructurado.')]
-    #[Assert\NotNull(message: 'La dirección física no puede ser nula.')]
+//    #[Assert\NotNull(message: 'La dirección física no puede ser nula.')]
     private ?string $physicalAddress = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Establezca punto para el cable estructurado.')]
-    #[Assert\NotNull(message: 'El punto no puede ser nulo.')]
+//    #[Assert\NotNull(message: 'El punto no puede ser nulo.')]
     private ?string $point = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Establezca la ruta para el cable estructurado.')]
-    #[Assert\NotNull(message: 'La ruta no puede ser nula.')]
+//    #[Assert\NotNull(message: 'La ruta no puede ser nula.')]
     private ?string $path = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Establezca el cable alimentador para el cable estructurado.')]
-    #[Assert\NotNull(message: 'El cable alimentador no puede ser nulo.')]
+//    #[Assert\NotNull(message: 'El cable alimentador no puede ser nulo.')]
     private ?string $feederCable = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'Establezca el par para el cable estructurado.')]
-    #[Assert\NotNull(message: 'El par no puede ser nulo.')]
+//    #[Assert\NotNull(message: 'El par no puede ser nulo.')]
     private ?string $pair = null;
 
     public function getId(): ?int

@@ -30,7 +30,7 @@ class Commutator extends Equipment implements HarborInterface
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la cantidad de puertos.')]
-    #[Assert\NotNull(message: 'La cantidad de puertos no debe ser nula.')]
+//    #[Assert\NotNull(message: 'La cantidad de puertos no debe ser nula.')]
     #[Assert\Positive]
     private ?int $portsAmount;
 
@@ -43,6 +43,10 @@ class Commutator extends Equipment implements HarborInterface
     #[ORM\Column(length: 255, nullable: true)]
     //#[Assert\NotBlank(message: 'La direccion multicast no debe estar vacía.')]
     private ?string $multicast = null;
+
+    #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    #[Assert\Valid]
+    private ?self $masterCommutator = null;
 
     /**
      * @param string|null $ip
@@ -122,6 +126,18 @@ class Commutator extends Equipment implements HarborInterface
     public function setMulticast(string $multicast): static
     {
         $this->multicast = $multicast;
+        return $this;
+    }
+
+    public function getMasterCommutator(): ?self
+    {
+        return $this->masterCommutator;
+    }
+
+    public function setMasterCommutator(?self $masterCommutator): static
+    {
+        $this->masterCommutator = $masterCommutator;
+
         return $this;
     }
 

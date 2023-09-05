@@ -164,8 +164,7 @@ class ConnectionCommutatorPortList
         return $data;
     }
 
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
-    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
+    private function onConnectionCommutatorTableDetail(Commutator $entity): void
     {
         $this->ports = $this->portsInfo($entity);
         $this->selected = null;
@@ -174,23 +173,111 @@ class ConnectionCommutatorPortList
         //$this->select(null);//ya ConnectionCameraNew escucha ConnectionCameraTable::SHOW_DETAIL
     }
 
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
+    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Simple')]
+    public function onConnectionCommutatorTableDetailSimple(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_SlaveSwitch')]
+    public function onConnectionCommutatorTableDetailSlaveSwitch(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_SlaveModem')]
+    public function onConnectionCommutatorTableDetailSlaveModem(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Full')]
+    public function onConnectionCommutatorTableDetailFull(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
     /**
      * Update table from filter, amount or page
      * @return void
      */
-    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
-    public function onConnectionCommutatorTableChangeDirect(): void
+    public function onConnectionCommutatorTableChange(): void
     {
         $this->ports = null;
     }
 
-    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_Direct')]
-    public function onConnectionCommutatorDetailDeactivateDirect(#[LiveArg] Commutator $entity): void
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
+    public function onConnectionCommutatorTableChangeDirect(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Simple')]
+    public function onConnectionCommutatorTableChangeSimple(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_SlaveSwitch')]
+    public function onConnectionCommutatorTableChangeSlaveSwitch(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_SlaveModem')]
+    public function onConnectionCommutatorTableChangeSlaveModem(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Full')]
+    public function onConnectionCommutatorTableChangeFull(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    private function onConnectionCommutatorDetailDeactivate(Commutator $entity): void
     {
         $this->select(null);
         foreach($this->ports as $key=>$value){
             $this->deactivatePort($key);
         }
+    }
+
+    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_Direct')]
+    public function onConnectionCommutatorDetailDeactivateDirect(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorDetailDeactivate($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_Simple')]
+    public function onConnectionCommutatorDetailDeactivateSimple(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorDetailDeactivate($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_SlaveSwitch')]
+    public function onConnectionCommutatorDetailDeactivateSlaveSwitch(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorDetailDeactivate($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_SlaveModem')]
+    public function onConnectionCommutatorDetailDeactivateSlaveModem(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorDetailDeactivate($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_Full')]
+    public function onConnectionCommutatorDetailDeactivateFull(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorDetailDeactivate($entity);
     }
 
     #[LiveAction]

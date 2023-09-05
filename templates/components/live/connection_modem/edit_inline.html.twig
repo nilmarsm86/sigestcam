@@ -1,0 +1,65 @@
+<ul
+        class="list-group list-group-horizontal list-group-flush border-0"
+        {% if secure %}
+            {{ attributes.defaults(stimulus_controller('connection-detail-edit-inline')) }}
+        {% else %}
+            {{ attributes }}
+        {% endif %}
+        style="position: relative"
+>
+    <li class="list-group-item w-50 fw-bold" style="border-radius: 0;border-top-width: var(--bs-list-group-border-width)">
+        {{ label }}
+    </li>
+    <li class="list-group-item w-50">
+        {% if isEditing %}
+            {% if textarea %}
+                <textarea
+                    data-model="norender|data"
+                    class="form-control form-control-sm {% if errors %}border-danger{% endif %}"
+                ></textarea>
+            {% else %}
+                <input
+                    type="{% if secure %}password{% else %}text{% endif %}"
+                    data-model="norender|data"
+                    class="form-control form-control-sm {% if errors %}border-danger{% endif %}"
+                >
+            {% endif %}
+
+            {% if errors %}
+                {% for error in errors %}
+                    <p class="invalid-feedback m-0" style="display: block">{{ error }}</p>
+                {% endfor %}
+            {% endif %}
+        {% else %}
+            {% if secure %}
+                {{ ('%'~data~'%')| replace({('%'~data~'%'): '******'}) }}
+                <i class="fas fa-eye text-dark align-top secure_password"
+                   data-action="click->live#action"
+                   data-action-name="showSecure()"
+                   title="Mostrar contraseña"
+                ></i>
+            {% else %}
+                {{ data }}
+            {% endif %}
+
+        {% endif %}
+    </li>
+    <li class="list-group-item w-10" style="border-radius: 0">
+        {% if editable %}
+            {% if isEditing %}
+                <i class="fas fa-save text-dark align-bottom"
+                   data-action="click->live#action"
+                   data-action-name="prevent|save(entity={{ id }})"
+                   title="Click para salvar!"
+                ></i>
+            {% else %}
+                <i class="fas fa-edit text-dark"
+                   data-action="click->live#action"
+                   data-action-name="prevent|activateEditing"
+                   title="Click para editar!"
+                ></i>
+            {% endif %}
+        {% endif  %}
+    </li>
+{#    <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>#}
+</ul>

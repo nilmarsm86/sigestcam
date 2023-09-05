@@ -27,13 +27,13 @@ class Port
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca el número del puerto.')]
-    #[Assert\NotNull(message: 'El número del puerto no puede ser nulo.')]
+//    #[Assert\NotNull(message: 'El número del puerto no puede ser nulo.')]
     #[Assert\PositiveOrZero]
     private ?int $number = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la velocidad del puerto.')]
-    #[Assert\NotNull(message: 'La velocidad del puerto no puede ser nula.')]
+//    #[Assert\NotNull(message: 'La velocidad del puerto no puede ser nula.')]
     #[Assert\PositiveOrZero]
     private float $speed;
 

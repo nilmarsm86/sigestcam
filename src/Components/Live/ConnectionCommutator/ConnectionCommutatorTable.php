@@ -43,11 +43,40 @@ class ConnectionCommutatorTable
      * @param Commutator $commutator
      * @return void
      */
-    #[LiveListener(ConnectionCommutatorNew::FORM_SUCCESS.'_Direct')]
-    public function onConnectionCommutatorNewFormSuccessDirect(#[LiveArg] Commutator $commutator): void
+    private function onConnectionCommutatorNewFormSuccess(Commutator $commutator): void
     {
         $this->filter = $commutator->getIp();
         $this->changeFilter();
+    }
+
+    #[LiveListener(ConnectionCommutatorNew::FORM_SUCCESS.'_Direct')]
+    public function onConnectionCommutatorNewFormSuccessDirect(#[LiveArg] Commutator $commutator): void
+    {
+        $this->onConnectionCommutatorNewFormSuccess($commutator);
+    }
+
+    #[LiveListener(ConnectionCommutatorNew::FORM_SUCCESS.'_Simple')]
+    public function onConnectionCommutatorNewFormSuccessSimple(#[LiveArg] Commutator $commutator): void
+    {
+        $this->onConnectionCommutatorNewFormSuccess($commutator);
+    }
+
+    #[LiveListener(ConnectionCommutatorNew::FORM_SUCCESS.'_SlaveSwitch')]
+    public function onConnectionCommutatorNewFormSuccessSlaveSwitch(#[LiveArg] Commutator $commutator): void
+    {
+        $this->onConnectionCommutatorNewFormSuccess($commutator);
+    }
+
+    #[LiveListener(ConnectionCommutatorNew::FORM_SUCCESS.'_SlaveModem')]
+    public function onConnectionCommutatorNewFormSuccessSlaveModem(#[LiveArg] Commutator $commutator): void
+    {
+        $this->onConnectionCommutatorNewFormSuccess($commutator);
+    }
+
+    #[LiveListener(ConnectionCommutatorNew::FORM_SUCCESS.'_Full')]
+    public function onConnectionCommutatorNewFormSuccessFull(#[LiveArg] Commutator $commutator): void
+    {
+        $this->onConnectionCommutatorNewFormSuccess($commutator);
     }
 
     /**
@@ -68,9 +97,39 @@ class ConnectionCommutatorTable
         return static::DETAIL.'_'.$this->connection->name;
     }
 
-    #[LiveListener(ConnectionDetailEditInline::SAVE_COMMUTATOR.'_Direct')]
-    public function onConnectionCommutatorDetailEditInlineSaveDirect(): void
+    public function onConnectionCommutatorDetailEditInlineSave(): void
     {
         $this->reload();
     }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_COMMUTATOR.'_Direct')]
+    public function onConnectionCommutatorDetailEditInlineSaveDirect(): void
+    {
+        $this->onConnectionCommutatorDetailEditInlineSave();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_COMMUTATOR.'_Simple')]
+    public function onConnectionCommutatorDetailEditInlineSaveSimple(): void
+    {
+        $this->onConnectionCommutatorDetailEditInlineSave();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_COMMUTATOR.'_SlaveSwitch')]
+    public function onConnectionCommutatorDetailEditInlineSlaveSwitch(): void
+    {
+        $this->onConnectionCommutatorDetailEditInlineSave();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_COMMUTATOR.'_SlaveModem')]
+    public function onConnectionCommutatorDetailEditInlineSlaveModem(): void
+    {
+        $this->onConnectionCommutatorDetailEditInlineSave();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_COMMUTATOR.'_Full')]
+    public function onConnectionCommutatorDetailEditInlineFull(): void
+    {
+        $this->onConnectionCommutatorDetailEditInlineSave();
+    }
+
 }

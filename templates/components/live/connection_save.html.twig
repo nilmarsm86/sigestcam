@@ -5,8 +5,21 @@
     <div class="col-4">
         <button
                 type="button"
-                class="btn btn-primary btn-lg {% if camera is null %}disabled{% endif %}"
-                {% if camera is null %}disabled{% endif %}
+                class="btn btn-primary btn-lg
+                {% if camera is null %}
+                    disabled
+                {% else %}
+                    {% if port.getConnectionType() is not null %}
+                        disabled
+                    {% endif %}
+                {% endif %}"
+                {% if camera is null %}
+                    disabled
+                {% else %}
+                    {% if port.getConnectionType() is not null %}
+                        disabled
+                    {% endif %}
+                {% endif %}
                 data-action="live#action"
                 data-action-name="prevent|save()"
         >Crear conexion

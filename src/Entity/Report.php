@@ -23,18 +23,18 @@ class Report
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El reporte debe de tener un número.')]
-    #[Assert\NotNull(message: 'El número del reporte no puede ser nulo.')]
+//    #[Assert\NotNull(message: 'El número del reporte no puede ser nulo.')]
     #[Assert\Positive]
     private string $number;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El reporte debe de tener una especialidad.')]
-    #[Assert\NotNull(message: 'La especialidad del reporte no puede ser nulo.')]
+//    #[Assert\NotNull(message: 'La especialidad del reporte no puede ser nulo.')]
     private string $specialty = 'video_vigilancia';
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'El reporte debe de tener una fecha.')]
-    #[Assert\NotNull(message: 'La fecha del reporte no puede ser nula.')]
+//    #[Assert\NotNull(message: 'La fecha del reporte no puede ser nula.')]
     #[Assert\DateTime]
     private ?DateTimeImmutable $entryDate;
 
@@ -79,7 +79,7 @@ class Report
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El reporte debe de tener una unidad.')]
-    #[Assert\NotNull(message: 'la unidad del reporte no puede ser nula.')]
+//    #[Assert\NotNull(message: 'la unidad del reporte no puede ser nula.')]
     private string $unit = 'Unidad 1';
 
     #[ORM\ManyToOne]

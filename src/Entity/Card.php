@@ -46,9 +46,9 @@ class Card implements HarborInterface
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'El slot no debe estar vacío.')]
-    #[Assert\NotNull(message: 'El slot no debe ser nulo.')]
+//    #[Assert\NotNull(message: 'El slot no debe ser nulo.')]
     #[Assert\Positive]
-    private int $slot;
+    private ?int $slot = null;
 
     /**
      * @throws Exception
@@ -94,7 +94,7 @@ class Card implements HarborInterface
         return $this->slot;
     }
 
-    public function setSlot(int $slot): static
+    public function setSlot(?int $slot): static
     {
         $this->slot = $slot;
 

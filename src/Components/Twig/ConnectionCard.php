@@ -45,6 +45,10 @@ final class ConnectionCard
      */
     public function getPercent(): int
     {
+        if($this->totalAmount === 0){
+            return 0;
+        }
+
         $amountConnections = match ($this->connection) {
             ConnectionType::Direct => (!is_null($this->amount)) ? $this->amount : $this->portRepository->findAmountDirectConnections(),
             ConnectionType::Simple => (!is_null($this->amount)) ? $this->amount : $this->portRepository->findAmountSimpleConnections(),

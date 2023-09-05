@@ -22,7 +22,7 @@ class CommutatorType extends AbstractType
         $physicalAddress = [];
         if($options['crud'] === false){
             $ipConstrains = [
-                new NotBlank(message: 'Establezca el IP del equipo.'),
+                new NotBlank(message: 'Establezca el IP del switch.'),
                 new Ip(message:'Establezca un IP válido.')
             ];
 

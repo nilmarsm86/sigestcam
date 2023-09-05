@@ -1,0 +1,21 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Modem{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Datos del modem</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Cámara', href: path('modem_index')},
+                {label: 'Detalle'},
+            ],
+            current: 'Detalle'
+        }) }}
+    </div>
+
+    {{ include('commutator/_detail.html.twig', {'showButton': true, 'title': title}) }}
+{% endblock %}

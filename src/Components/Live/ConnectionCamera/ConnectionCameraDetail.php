@@ -64,8 +64,7 @@ class ConnectionCameraDetail
         return static::ACTIVATE.'_'.$this->connection->name;
     }
 
-    #[LiveListener(ConnectionCameraTable::DETAIL.'_Direct')]
-    public function onConnectionCameraTableDetailDirect(#[LiveArg] Camera $entity): void
+    private function onConnectionCameraTableDetail(Camera $entity): void
     {
         if(isset($this->camera['id'])){
             if($this->camera['id'] !== $entity->getId()){
@@ -76,6 +75,36 @@ class ConnectionCameraDetail
             $this->camera = $this->details($entity);
             $this->active = $this->camera['state'];
         }
+    }
+
+    #[LiveListener(ConnectionCameraTable::DETAIL.'_Direct')]
+    public function onConnectionCameraTableDetailDirect(#[LiveArg] Camera $entity): void
+    {
+        $this->onConnectionCameraTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCameraTable::DETAIL.'_Simple')]
+    public function onConnectionCameraTableDetailSimple(#[LiveArg] Camera $entity): void
+    {
+        $this->onConnectionCameraTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCameraTable::DETAIL.'_SlaveSwitch')]
+    public function onConnectionCameraTableDetailSlaveSwitch(#[LiveArg] Camera $entity): void
+    {
+        $this->onConnectionCameraTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCameraTable::DETAIL.'_SlaveModem')]
+    public function onConnectionCameraTableDetailSlaveModem(#[LiveArg] Camera $entity): void
+    {
+        $this->onConnectionCameraTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCameraTable::DETAIL.'_Full')]
+    public function onConnectionCameraTableDetailFull(#[LiveArg] Camera $entity): void
+    {
+        $this->onConnectionCameraTableDetail($entity);
     }
 
     private function details(Camera $camera): array
@@ -107,10 +136,39 @@ class ConnectionCameraDetail
      * Update table from filter, amount or page
      * @return void
      */
+    public function onConnectionCameraTableChange(): void
+    {
+        $this->camera = null;
+    }
+
     #[LiveListener(ConnectionCameraTable::CHANGE.'_Direct')]
     public function onConnectionCameraTableChangeDirect(): void
     {
-        $this->camera = null;
+        $this->onConnectionCameraTableChange();
+    }
+
+    #[LiveListener(ConnectionCameraTable::CHANGE.'_Simple')]
+    public function onConnectionCameraTableChangeSimple(): void
+    {
+        $this->onConnectionCameraTableChange();
+    }
+
+    #[LiveListener(ConnectionCameraTable::CHANGE.'_SlaveSwitch')]
+    public function onConnectionCameraTableChangeSlaveSwitch(): void
+    {
+        $this->onConnectionCameraTableChange();
+    }
+
+    #[LiveListener(ConnectionCameraTable::CHANGE.'_SlaveModem')]
+    public function onConnectionCameraTableChangeSlaveModem(): void
+    {
+        $this->onConnectionCameraTableChange();
+    }
+
+    #[LiveListener(ConnectionCameraTable::CHANGE.'_Full')]
+    public function onConnectionCameraTableChangeFull(): void
+    {
+        $this->onConnectionCameraTableChange();
     }
 
     #[LiveAction]

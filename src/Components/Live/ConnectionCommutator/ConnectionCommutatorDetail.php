@@ -43,8 +43,7 @@ class ConnectionCommutatorDetail
         return static::DEACTIVATE.'_'.$this->connection->name;
     }
 
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
-    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
+    private function onConnectionCommutatorTableDetail(#[LiveArg] Commutator $entity): void
     {
         if(isset($this->commutator['id'])){
             if($this->commutator['id'] !== $entity->getId()){
@@ -55,6 +54,36 @@ class ConnectionCommutatorDetail
             $this->commutator = $this->details($entity);
             $this->active = $this->commutator['state'];
         }
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
+    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Simple')]
+    public function onConnectionCommutatorTableDetailSimple(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_SlaveSwitch')]
+    public function onConnectionCommutatorTableDetailSlaveSwitch(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_SlaveModem')]
+    public function onConnectionCommutatorTableDetailSlaveModem(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Full')]
+    public function onConnectionCommutatorTableDetailFull(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
     }
 
     private function details(Commutator $commutator): array
@@ -124,10 +153,39 @@ class ConnectionCommutatorDetail
      * Update table from filter, amount or page
      * @return void
      */
+    public function onConnectionCommutatorTableChange(): void
+    {
+        $this->commutator = null;
+    }
+
     #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
     public function onConnectionCommutatorTableChangeDirect(): void
     {
-        $this->commutator = null;
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Simple')]
+    public function onConnectionCommutatorTableChangeSimple(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_SlaveSwitch')]
+    public function onConnectionCommutatorTableChangeSlaveSwitch(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_SlaveModem')]
+    public function onConnectionCommutatorTableChangeSlaveModem(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Full')]
+    public function onConnectionCommutatorTableChangeFull(): void
+    {
+        $this->onConnectionCommutatorTableChange();
     }
 
 }

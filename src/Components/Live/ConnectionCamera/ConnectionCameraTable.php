@@ -44,10 +44,11 @@ class ConnectionCameraTable
     }
 
     //cuando se monta por primera vez el componete
-    public function mount(ConnectionType $connection, Port $port): void
+    public function mount(ConnectionType $connection, Port $port, ?Modem $modem = null): void
     {
         $this->connection = $connection;
         $this->port = $port;
+        $this->modem = $modem;
         $this->filterAndReload();
     }
 
@@ -72,16 +73,27 @@ class ConnectionCameraTable
         }
 
         //cambiar la forma en la que se buscan los datos
-        if($this->port->hasConnectedCamera()){
+        if($this->connection->name === ConnectionType::Direct->name){
+            if($this->port->hasConnectedCamera()){
 //            if($this->port->isActive()){
 //                $data = $this->cameraRepository->findActiveCamerasWithPort($this->filter, $this->amount, $this->page);
 //            }else{
 //                $data = $this->cameraRepository->findInactiveCamerasWithPort($this->filter, $this->amount, $this->page);
 //            }
-            $data = $this->cameraRepository->findCameraByPort($this->port, $this->filter, $this->amount, $this->page);
-        }else{
-            $data = $this->cameraRepository->findInactiveCamerasWithoutPort($this->filter, $this->amount, $this->page);
+                $data = $this->cameraRepository->findCameraByPort($this->port, $this->filter, $this->amount, $this->page);
+            }else{
+                $data = $this->cameraRepository->findInactiveCamerasWithoutPort($this->filter, $this->amount, $this->page);
+            }
         }
+
+        if($this->connection->name === ConnectionType::Simple->name){
+            if(!is_null($this->modem)){
+                $data = $this->cameraRepository->findCameraByModem($this->modem, $this->filter, $this->amount, $this->page);
+            }else{
+                $data = $this->cameraRepository->findInactiveCamerasWithoutPortAndModem($this->filter, $this->amount, $this->page);
+            }
+        }
+
         $this->reloadData($data);
     }
 
@@ -90,11 +102,40 @@ class ConnectionCameraTable
      * @param Camera $camera
      * @return void
      */
-    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Direct')]
-    public function onConnectionCameraNewFormSuccessDirect(#[LiveArg] Camera $camera): void
+    private function onConnectionCameraNewFormSuccess(Camera $camera): void
     {
         $this->filter = $camera->getIp();
         $this->changeFilter();
+    }
+
+    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Direct')]
+    public function onConnectionCameraNewFormSuccessDirect(#[LiveArg] Camera $camera): void
+    {
+        $this->onConnectionCameraNewFormSuccess($camera);
+    }
+
+    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Simple')]
+    public function onConnectionCameraNewFormSuccessSimple(#[LiveArg] Camera $camera): void
+    {
+        $this->onConnectionCameraNewFormSuccess($camera);
+    }
+
+    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_SlaveSwitch')]
+    public function onConnectionCameraNewFormSuccessSlaveSwitch(#[LiveArg] Camera $camera): void
+    {
+        $this->onConnectionCameraNewFormSuccess($camera);
+    }
+
+    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_SlaveModem')]
+    public function onConnectionCameraNewFormSuccessSlaveModem(#[LiveArg] Camera $camera): void
+    {
+        $this->onConnectionCameraNewFormSuccess($camera);
+    }
+
+    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Full')]
+    public function onConnectionCameraNewFormSuccessFull(#[LiveArg] Camera $camera): void
+    {
+        $this->onConnectionCameraNewFormSuccess($camera);
     }
 
     /**
@@ -115,8 +156,42 @@ class ConnectionCameraTable
         return static::DETAIL.'_'.$this->connection->name;
     }
 
+    public function onConnectionDetailEditInlineSaveCamera(): void
+    {
+        $this->reload();
+    }
+
     #[LiveListener(ConnectionDetailEditInline::SAVE_CAMERA.'_Direct')]
     public function onConnectionDetailEditInlineSaveCameraDirect(): void
+    {
+        $this->onConnectionDetailEditInlineSaveCamera();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_CAMERA.'_Simple')]
+    public function onConnectionDetailEditInlineSaveCameraSimple(): void
+    {
+        $this->onConnectionDetailEditInlineSaveCamera();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_CAMERA.'_SlaveSwitch')]
+    public function onConnectionDetailEditInlineSaveCameraSlaveSwitch(): void
+    {
+        $this->onConnectionDetailEditInlineSaveCamera();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_CAMERA.'_SlaveModem')]
+    public function onConnectionDetailEditInlineSaveCameraSlaveModem(): void
+    {
+        $this->onConnectionDetailEditInlineSaveCamera();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_CAMERA.'_Full')]
+    public function onConnectionDetailEditInlineSaveCameraFull(): void
+    {
+        $this->onConnectionDetailEditInlineSaveCamera();
+    }
+
+    public function onConnectionCameraDetailActivate(): void
     {
         $this->reload();
     }
@@ -124,13 +199,66 @@ class ConnectionCameraTable
     #[LiveListener(ConnectionCameraDetail::ACTIVATE.'_Direct')]
     public function onConnectionCameraDetailActivateDirect(): void
     {
+        $this->onConnectionCameraDetailActivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::ACTIVATE.'_Simple')]
+    public function onConnectionCameraDetailActivateSimple(): void
+    {
+        $this->onConnectionCameraDetailActivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::ACTIVATE.'_SlaveSwitch')]
+    public function onConnectionCameraDetailActivateSlaveSwitch(): void
+    {
+        $this->onConnectionCameraDetailActivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::ACTIVATE.'_SlaveModem')]
+    public function onConnectionCameraDetailActivateSlaveModem(): void
+    {
+        $this->onConnectionCameraDetailActivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::ACTIVATE.'_Full')]
+    public function onConnectionCameraDetailActivateFull(): void
+    {
+        $this->onConnectionCameraDetailActivate();
+    }
+
+    public function onConnectionCameraDetailDeactivate(): void
+    {
         $this->reload();
     }
 
     #[LiveListener(ConnectionCameraDetail::DEACTIVATE.'_Direct')]
     public function onConnectionCameraDetailDeactivateDirect(): void
     {
-        $this->reload();
+        $this->onConnectionCameraDetailDeactivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DEACTIVATE.'_Simple')]
+    public function onConnectionCameraDetailDeactivateSimple(): void
+    {
+        $this->onConnectionCameraDetailDeactivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DEACTIVATE.'_SlaveSwitch')]
+    public function onConnectionCameraDetailDeactivateSlaveSwitch(): void
+    {
+        $this->onConnectionCameraDetailDeactivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DEACTIVATE.'_SlaveModem')]
+    public function onConnectionCameraDetailDeactivateSlaveModem(): void
+    {
+        $this->onConnectionCameraDetailDeactivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DEACTIVATE.'_Full')]
+    public function onConnectionCameraDetailDeactivateFull(): void
+    {
+        $this->onConnectionCameraDetailDeactivate();
     }
 
 }

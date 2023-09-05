@@ -1,0 +1,40 @@
+{% embed "embeds/card.html.twig" %}
+    {% block card_css_class %}mb-4{% endblock %}
+
+    {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+    {% block card_title %}Cámara{% endblock %}
+
+    {% block card_header_options %}
+        <div>
+            <button class="btn btn-primary btn-sm
+                    {% if port is null %}
+                        disabled
+                    {% else %}
+                        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Direct') %}
+                            {% if port.equipment is not null %}disabled{% endif %}
+                        {% endif %}
+                    {% endif %}"
+                    aria-current="page"
+                    data-bs-toggle="modal"
+                    data-bs-target="#add-camera"
+            >
+                <i class="fas fa-plus"></i>
+                Nueva
+            </button>
+        </div>
+    {% endblock %}
+
+    {% block card_body %}
+        {% if port is not null %}
+            <div data-loading="addClass(d-none)">
+                {{ component('ConnectionCameraTable', {connection:connection, commutator: commutator, port: port, modem: modem}) }}
+            </div>
+{#          {% if port.equipment is not null %}#}
+            <div class="row">
+                {{ component('ConnectionCameraDetail', {connection:connection, port: port}) }}
+            </div>
+{#          {% endif %}#}
+        {% endif %}
+    {% endblock %}
+{% endembed %}

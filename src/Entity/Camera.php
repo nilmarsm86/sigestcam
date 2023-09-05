@@ -20,14 +20,14 @@ class Camera extends Equipment
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'La camara debe de tener un usuario.')]
-    #[Assert\NotNull(message: 'El usuario de la camara no puede ser nulo.')]
+//    #[Assert\NotNull(message: 'El usuario de la camara no puede ser nulo.')]
     #[Assert\NoSuspiciousCharacters]
     #[Username]
     private ?string $user = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'La cámara debe de tener una contraseña.')]
-    #[Assert\NotNull(message: 'La contraseña de la camara no puede ser nula.')]
+//    #[Assert\NotNull(message: 'La contraseña de la camara no puede ser nula.')]
     private ?string $password = null;
 
     #[ORM\ManyToOne(inversedBy: 'cameras')]

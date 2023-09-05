@@ -35,7 +35,7 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::Simple'),
             options:  [
-                {label: 'Nueva', href:'', icon: 'fa-plus'},
+                {label: 'Nueva', href:path('connection_simple_new'), icon: 'fa-plus'},
                 {label: 'Listado', href: '', icon: 'fa-list'}
             ],
             components: ['Switch', 'Modem', 'Cámara'],
@@ -80,45 +80,40 @@
 
         <div class="col-md-6 col-xl-9 mb-4">
             <div class="card shadow mb-4">
-                <div class="card-header py-3">
-                    <h6 class="text-primary fw-bold m-0">Comparaciones</h6>
-                </div>
+{#                <div class="card-header py-3">#}
+{#                    <h6 class="text-primary fw-bold m-0">Comparaciones</h6>#}
+{#                </div>#}
                 <div class="card-body">
                     <h4 class="small fw-bold">Conexión directa<span class="float-end">{{ direct_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
-                    <div class="progress mb-4">
-                        {% set direct_percent = direct_connections * 100 / total_amount_connections %}
+                    <div class="progress mb-4" style="height: 1px">
                         <div class="progress-bar bg-primary" aria-valuenow="{{ direct_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ direct_percent }}%;">
                             <span class="visually-hidden">{{ direct_percent }}%</span>
                         </div>
                     </div>
 
                     <h4 class="small fw-bold">Conexión simple<span class="float-end">{{ simple_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
-                    <div class="progress mb-4">
-                        {% set simple_percent = simple_connections * 100 / total_amount_connections %}
+                    <div class="progress mb-4" style="height: 1px">
                         <div class="progress-bar bg-success" aria-valuenow="{{ simple_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ simple_percent }}%;">
                             <span class="visually-hidden">{{ simple_percent }}%</span>
                         </div>
                     </div>
 
                     <h4 class="small fw-bold">Conexión switch esclavo<span class="float-end">{{ slave_switch_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
-                    <div class="progress mb-4">
-                        {% set slave_switch_percent = slave_switch_connections * 100 / total_amount_connections %}
+                    <div class="progress mb-4" style="height: 1px">
                         <div class="progress-bar bg-info" aria-valuenow="{{ slave_switch_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ slave_switch_percent }}%;">
                             <span class="visually-hidden">{{ slave_switch_percent }}%</span>
                         </div>
                     </div>
 
                     <h4 class="small fw-bold">Conexión modem esclavo<span class="float-end">{{ slave_modem_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
-                    <div class="progress mb-4">
-                        {% set slave_modem_percent = slave_modem_connections * 100 / total_amount_connections %}
+                    <div class="progress mb-4" style="height: 1px">
                         <div class="progress-bar bg-warning" aria-valuenow="{{ slave_modem_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ slave_modem_percent }}%;">
                             <span class="visually-hidden">{{ slave_modem_percent }}%</span>
                         </div>
                     </div>
 
                     <h4 class="small fw-bold">Conexión completa<span class="float-end">{{ full_connections ~ ' / ' ~ total_amount_connections }}</span></h4>
-                    <div class="progress mb-4">
-                        {% set full_percent = full_connections * 100 / total_amount_connections %}
+                    <div class="progress mb-4" style="height: 1px">
                         <div class="progress-bar bg-danger" aria-valuenow="{{ full_percent }}" aria-valuemin="0" aria-valuemax="100" style="width: {{ full_percent }}%;">
                             <span class="visually-hidden">{{ full_percent }}%</span>
                         </div>

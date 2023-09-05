@@ -72,10 +72,10 @@ class ConnectionCameraNew extends AbstractController
                 $camera->setMunicipality($this->port->getCommutator()->getMunicipality());
             }
 
-//            if(!is_null($this->modem)){
-//                $camera->setModem($this->modem);
-//                $camera->setMunicipality($this->modem->getCommutator()->getMunicipality());
-//            }
+            if(!is_null($this->modem)){
+                $camera->setModem($this->modem);
+                $camera->setMunicipality($this->modem->getPort()->getCommutator()->getMunicipality());
+            }
 
             $cameraRepository->save($camera, true);
 

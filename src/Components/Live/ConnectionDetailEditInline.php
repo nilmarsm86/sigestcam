@@ -6,6 +6,7 @@ use App\Components\Live\Traits\ComponentDetailEditInline;
 use App\Entity\Camera;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Modem;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -21,6 +22,7 @@ class ConnectionDetailEditInline
 
     const SAVE_COMMUTATOR = Commutator::class.'_save';
     const SAVE_CAMERA = Camera::class.'_save';
+    const SAVE_MODEM = Modem::class.'_save';
     const SHOW_SECURE = self::class.'_show_secure';
 
     #[LiveProp]
