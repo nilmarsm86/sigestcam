@@ -30,11 +30,11 @@
                     <div data-loading="addClass(d-none)">
                         {{ component('ConnectionModemTable', {connection:connection, commutator: commutator, port: port}) }}
                     </div>
-                    {% if port.equipment is not null %}
+{#                    {% if port.equipment is not null %}#}
                         <div class="row">
                             {{ component('ConnectionModemDetail', {connection:connection, port: port}) }}
                         </div>
-                    {% endif %}
+{#                    {% endif %}#}
                 {% endif %}
             {% endblock %}
         {% endembed %}

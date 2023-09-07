@@ -75,9 +75,9 @@ class ConnectionCamera
     #[LiveListener(ConnectionModemTable::DETAIL.'_Simple')]
     public function onConnectionModemTableDetailSimple(#[LiveArg] Modem $entity): void
     {
-        $this->commutator = $entity->getPort()?->getCommutator();
-        $this->port = $entity->getPort();
         $this->modem = $entity;
+        $this->port = $entity->getPort() ?: $this->port;
+        $this->commutator = $this->port->getCommutator();
     }
 
     #[LiveListener(ConnectionModemTable::CHANGE.'_Simple')]

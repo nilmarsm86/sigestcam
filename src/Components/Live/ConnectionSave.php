@@ -196,6 +196,21 @@ class ConnectionSave extends AbstractController
         return 'connection_simple_list';
     }
 
+    private function saveSlaveSwitch(): string
+    {
+        return 'connection_slave_switch_list';
+    }
+
+    private function saveSlaveModem(): string
+    {
+        return 'connection_slave_modem_list';
+    }
+
+    private function saveFull(): string
+    {
+        return 'connection_full_list';
+    }
+
     /**
      * @throws Exception
      */
@@ -266,9 +281,9 @@ class ConnectionSave extends AbstractController
         $redirect = match ($this->connection) {
             ConnectionType::Direct => $this->saveDirect(),
             ConnectionType::Simple => $this->saveSimple(),
-            ConnectionType::SlaveSwitch => '',
-            ConnectionType::SlaveModem => '',
-            ConnectionType::Full => '',
+            ConnectionType::SlaveSwitch => $this->saveSlaveSwitch(),
+            ConnectionType::SlaveModem => $this->saveSlaveModem(),
+            ConnectionType::Full => $this->saveFull(),
         };
 
         $this->entityManager->flush();

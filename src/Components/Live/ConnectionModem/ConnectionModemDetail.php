@@ -25,6 +25,7 @@ class ConnectionModemDetail
 
     const DEACTIVATE = self::class.'_deactivate';
     const DISCONNECT = self::class.'_disconnect';
+    const CONNECT = self::class.'_connect';
     const ACTIVATE = self::class.'_activate';
 
     #[LiveProp]
@@ -63,6 +64,24 @@ class ConnectionModemDetail
     private function getActivateEventName(): string
     {
         return static::ACTIVATE.'_'.$this->connection->name;
+    }
+
+    /**
+     * Get connect event name
+     * @return string
+     */
+    private function getConnectEventName(): string
+    {
+        return static::CONNECT.'_'.$this->connection->name;
+    }
+
+    /**
+     * Get disconnect event name
+     * @return string
+     */
+    private function getDisconnectEventName(): string
+    {
+        return static::DISCONNECT.'_'.$this->connection->name;
     }
 
     #[LiveListener(ConnectionModemTable::DETAIL.'_Simple')]
@@ -130,7 +149,7 @@ class ConnectionModemDetail
         $this->entityManager->flush();
         $this->active = false;
 
-        $this->emit(static::DISCONNECT.'_'.$this->connection->name, [
+        $this->emit($this->getDisconnectEventName(), [
             'port' => $port->getId(),
         ]);
     }
