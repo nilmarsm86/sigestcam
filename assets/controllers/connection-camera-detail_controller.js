@@ -20,5 +20,12 @@ export default class extends Controller {
         });
     }
 
+    notAssociateCamera(event){
+        event.preventDefault();
+
+        event.currentTarget.checked = false;
+        alert('Ya el modem tiene conectado 4 camaras, no se puede asociar esta cámara.');
+    }
+
 
 }

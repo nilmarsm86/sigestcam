@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\MunicipalityTrait;
 use App\Entity\Modem;
 use App\Entity\Municipality;
 use App\Form\ModemType;
@@ -17,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/modem')]
 class ModemController extends AbstractController
 {
+    use MunicipalityTrait;
+
     #[Route('/', name: 'modem_index', methods: ['GET'])]
     public function index(Request $request, ModemRepository $modemRepository, CrudActionService $crudActionService): Response
     {
@@ -35,8 +38,10 @@ class ModemController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $municipalityId = $request->request->all()['camera']['address']['municipality'];
-            $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
+            $dataAddress = $request->request->all()['modem']['address'];
+            $municipalityId = $dataAddress['municipality'] ?? null;
+            $municipality = $this->findMunicipalityForEquipment($entityManager, $municipalityId);
+
             $modem->setMunicipality($municipality);
             $modem->deactivate();
             $entityManager->persist($modem);
@@ -80,9 +85,11 @@ class ModemController extends AbstractController
             ? $request->request->all()['modem']['address']['province']
             : $modem->getMunicipality()->getProvince()->getId();
 
-        $municipalityId = isset($postData['modem'])
-            ? $request->request->all()['modem']['address']['municipality']
-            : $modem->getMunicipality()->getId();
+//        $municipalityId = isset($postData['modem'])
+//            ? $request->request->all()['modem']['address']['municipality']
+//            : $modem->getMunicipality()->getId();
+
+        $municipalityId = $this->findMunicipalityForExistEquipment($modem, $request, 'modem');
 
         $form = $this->createForm(ModemType::class, $modem, [
             'action' => $this->generateUrl('modem_edit', ['id' => $modem->getId()]),
@@ -93,7 +100,7 @@ class ModemController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
+            $municipality = $this->findMunicipalityForEquipment($entityManager, $municipalityId);
             $modem->setMunicipality($municipality);
             $entityManager->flush();
 

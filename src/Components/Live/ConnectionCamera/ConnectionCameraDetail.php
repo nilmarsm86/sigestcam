@@ -23,8 +23,9 @@ class ConnectionCameraDetail
     use ComponentActiveInactive;
 
     const DEACTIVATE = self::class.'_deactivate';
-    const DISCONNECT = self::class.'_disconnect';
     const ACTIVATE = self::class.'_activate';
+    const DISCONNECT = self::class.'_disconnect';
+    const CONNECT = self::class.'_connect';
 
     #[LiveProp]
     public ?array $camera = null;
@@ -62,6 +63,24 @@ class ConnectionCameraDetail
     private function getActivateEventName(): string
     {
         return static::ACTIVATE.'_'.$this->connection->name;
+    }
+
+    /**
+     * Get disconnect event name
+     * @return string
+     */
+    private function getDisconnectEventName(): string
+    {
+        return static::DISCONNECT.'_'.$this->connection->name;
+    }
+
+    /**
+     * Get connect event name
+     * @return string
+     */
+    private function getConnectEventName(): string
+    {
+        return static::CONNECT.'_'.$this->connection->name;
     }
 
     private function onConnectionCameraTableDetail(Camera $entity): void
@@ -174,24 +193,46 @@ class ConnectionCameraDetail
     #[LiveAction]
     public function connect(#[LiveArg] Camera $camera): void
     {
-        $camera->connect($this->port);
+        if($this->port->hasConnectedModem()){
+            $camera->connect($this->port->getEquipment());
+        }else{
+            $camera->connect($this->port);
+        }
 
         $this->entityManager->persist($camera);
         $this->entityManager->flush();
+
+        if($this->port->hasConnectedModem()){
+            $this->camera = null;
+            $this->emit($this->getConnectEventName(), [
+                'modem' => $this->port->getEquipment()->getId(),
+            ]);
+        }
     }
 
     #[LiveAction]
     public function disconnect(#[LiveArg] Camera $camera): void
     {
-        $port = $camera->getPort();
         $camera->disconnect();
         $this->entityManager->persist($camera);
         $this->entityManager->flush();
         $this->active = false;
 
-        $this->emit(static::DISCONNECT.'_'.$this->connection->name, [
-            'port' => $port->getId(),
-        ]);
+        $port = $camera->getPort();
+        if(is_null($port)){
+            $port = $this->port;
+        }
+
+        if($port->hasConnectedModem()){
+            $this->camera = null;
+            $this->emit($this->getDisconnectEventName(), [
+                'modem' => $port->getEquipment()->getId(),
+            ]);
+        }else{
+            $this->emit($this->getDisconnectEventName(), [
+                'port' => $port->getId(),
+            ]);
+        }
     }
 
     #[LiveAction]

@@ -14,15 +14,19 @@
                     {% if port.state %}<span>{% endif %}
                     <div class="form-check form-switch">
                         <input
-                                class="form-check-input"
+                                class="form-check-input {% if port.isSelectable == false %}disabled{% endif %}"
                                 type="checkbox"
                                 role="switch"
                                 {% if port.state %}checked{% endif %}
-                                data-action="change->live#action"
-                                {% if port.state %}
-                                    data-action-name="deactivatePort(portId={{ port.id }})"
+                                {% if port.isSelectable %}
+                                    data-action="change->live#action"
+                                    {% if port.state %}
+                                        data-action-name="deactivatePort(portId={{ port.id }})"
+                                    {% else %}
+                                        data-action-name="activatePort(portId={{ port.id }})"
+                                    {% endif %}
                                 {% else %}
-                                    data-action-name="activatePort(portId={{ port.id }})"
+                                    disabled
                                 {% endif %}
                         >
                     </div>
@@ -41,8 +45,10 @@
                         {% else %}
                             <span title="Click para editar"
                                     class="w-25 d-inline-block"
-                                    data-action="click->live#action"
-                                    data-action-name="activateEditingSpeed(portId={{ port.id }}, speed={{ port.speed }})"
+                                    {% if port.isSelectable %}
+                                        data-action="click->live#action"
+                                        data-action-name="activateEditingSpeed(portId={{ port.id }}, speed={{ port.speed }})"
+                                    {% endif %}
                                     style="cursor: pointer"
                             >
                                 {{ port.speed }}
@@ -67,8 +73,10 @@
                         </select>
                     {% else %}
                         <h6 class="card-subtitle mb-2" title="Click para editar"
-                            data-action="click->live#action"
-                            data-action-name="activateEditingType(portId={{ port.id }}, type={{ port.type_value }})"
+                            {% if port.isSelectable %}
+                                data-action="click->live#action"
+                                data-action-name="activateEditingType(portId={{ port.id }}, type={{ port.type_value }})"
+                            {% endif %}
                         >
                             {{ port.type_label }}
                         </h6>

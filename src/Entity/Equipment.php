@@ -247,17 +247,22 @@ class Equipment
      */
     public function disconnect(): static
     {
-        $this->port->setEquipment(null);
-        $this->port->setConnectionType(ConnectionType::Null);
-        $this->port = null;
+        if(!is_null($this->port)){
+            $this->port->setEquipment(null);
+            $this->port->setConnectionType(ConnectionType::Null);
+            $this->port = null;
+        }
+
         $this->deactivate();
 
         return $this;
     }
 
-    public function connect(Port $port): static
+    public function connect($container): static
     {
-        $this->setPort($port);
+        if($container instanceof Port){
+            $this->setPort($container);
+        }
 
         return $this;
     }

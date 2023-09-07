@@ -156,15 +156,37 @@ class Camera extends Equipment
 
     public function disconnect(): static
     {
-        parent::disconnect();
+        if(!is_null($this->port)){
+            $this->port->setEquipment(null);
+            $this->port->setConnectionType(ConnectionType::Null);
+            $this->port = null;
+        }
+
         if(!is_null($this->modem)){
             $this->modem->removeCamera($this);
         }
-        //$this->deactivate();
+
+        $this->deactivate();
 
         return $this;
     }
 
+    public function connect($container): static
+    {
+        if($container instanceof Modem){
+            $this->setModem($container);
+        }
 
+        if($container instanceof Port){
+            $this->setPort($container);
+        }
+
+        return $this;
+    }
+
+    public function isDisconnected()
+    {
+        return is_null($this->port) && is_null($this->modem);
+    }
 
 }

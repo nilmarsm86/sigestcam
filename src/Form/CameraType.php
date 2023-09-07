@@ -67,6 +67,7 @@ class CameraType extends AbstractType
                 'province' => $options['province'],
                 'municipality' => $options['municipality'],
                 'mapped' => false,
+                'crud' => $options['crud']
             ]);
         }
     }

@@ -15,14 +15,8 @@ class ModemType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $ipConstrains = [];
         $physicalAddress = [];
         if($options['crud'] === false){
-            $ipConstrains = [
-                new NotBlank(message: 'Establezca el IP del modem.'),
-                new Ip(message:'Establezca un IP válido.')
-            ];
-
             $physicalAddress = [
                 new NotBlank(message: 'La dirección física no debe estar vacía.'),
             ];
@@ -31,7 +25,6 @@ class ModemType extends AbstractType
         $builder
             ->add('ip', null, [
                 'label' => 'IP:',
-                'constraints' => $ipConstrains
             ])
             ->add('physicalAddress', TextareaType::class, [
                 'label' => 'Dirección física:',
@@ -59,6 +52,7 @@ class ModemType extends AbstractType
                 'province' => $options['province'],
                 'municipality' => $options['municipality'],
                 'mapped' => false,
+                'crud' => $options['crud']
             ]);
         }
     }

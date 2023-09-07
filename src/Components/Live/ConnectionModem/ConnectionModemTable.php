@@ -2,6 +2,7 @@
 
 namespace App\Components\Live\ConnectionModem;
 
+use App\Components\Live\ConnectionCamera\ConnectionCameraDetail;
 use App\Components\Live\ConnectionCamera\ConnectionCameraNew;
 use App\Components\Live\ConnectionDetailEditInline;
 use App\Components\Live\Traits\ComponentTable;
@@ -109,6 +110,12 @@ class ConnectionModemTable
         $this->changeFilter();
     }
 
+    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Simple')]
+    public function onConnectionCameraNewFormSuccessSimple(#[LiveArg] Camera $camera): void
+    {
+        $this->filterAndReload();
+    }
+
     /**
      * Get change table event name
      * @return string
@@ -142,6 +149,20 @@ class ConnectionModemTable
     #[LiveListener(ConnectionModemDetail::DEACTIVATE.'_Simple')]
     public function onConnectionModemDetailDeactivateSimple(): void
     {
+        $this->reload();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DISCONNECT.'_Simple')]
+    public function onConnectionCameraDetailDisconnectSimple(#[LiveArg] Modem $modem): void
+    {
+        //TODO que hacer cuando se desconecta una camara de un modem
+        $this->reload();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::CONNECT.'_Simple')]
+    public function onConnectionCameraDetailConnectSimple(#[LiveArg] Modem $modem): void
+    {
+        //TODO que hacer cuando se conecta una camara de un modem
         $this->reload();
     }
 

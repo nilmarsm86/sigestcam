@@ -9,15 +9,31 @@
                 {% if camera is null %}
                     disabled
                 {% else %}
-                    {% if port.getConnectionType() is not null %}
-                        disabled
+                    {% if port %}
+                        {% if port.getConnectionType() is not null %}
+                            disabled
+                        {% endif %}
+                    {% endif %}
+
+                    {% if modem %}
+                        {% if modem.port.getConnectionType() is not null %}
+                            disabled
+                        {% endif %}
                     {% endif %}
                 {% endif %}"
                 {% if camera is null %}
                     disabled
                 {% else %}
-                    {% if port.getConnectionType() is not null %}
-                        disabled
+                    {% if port %}
+                        {% if port.getConnectionType() is not null %}
+                            disabled
+                        {% endif %}
+                    {% endif%}
+
+                    {% if modem %}
+                        {% if modem.port.getConnectionType() is not null %}
+                            disabled
+                        {% endif %}
                     {% endif %}
                 {% endif %}
                 data-action="live#action"

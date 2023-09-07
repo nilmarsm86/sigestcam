@@ -143,8 +143,8 @@ class ConnectionCommutatorPortList
         $data['speed'] = $port->getSpeed();
         $data['id'] = $port->getId();
         $data['isSelectable'] = true;
-        $data['type_value'] = /*PortType::getValueFrom($port->getPortType())*/$port->getTypeValue();
-        $data['type_label'] = /*PortType::getLabelFrom($port->getPortType())*/$port->getTypeLabel();
+        $data['type_value'] = $port->getTypeValue();
+        $data['type_label'] = $port->getTypeLabel();
 
         if (is_null($port->getConnectionType())) {
             $data['connection'] = 'bg-gradient-danger';

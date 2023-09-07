@@ -9,6 +9,7 @@ use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
 use App\Entity\Port;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -31,13 +32,24 @@ class ConnectionCamera
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_Direct')]
-    public function onConnectionCommutatorPortListSelectedDirect(#[LiveArg] ?Port $port): void
+    public function onConnectionCommutatorPortListSelected(?Port $port): void
     {
         $this->commutator = null;
         $this->port = $port;
         $this->commutator = $port?->getCommutator();
         $this->modem = null;
+    }
+
+    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_Direct')]
+    public function onConnectionCommutatorPortListSelectedDirect(#[LiveArg] ?Port $port): void
+    {
+        $this->onConnectionCommutatorPortListSelected($port);
+    }
+
+    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_Simple')]
+    public function onConnectionCommutatorPortListSelectedSimple(#[LiveArg] ?Port $port): void
+    {
+        $this->onConnectionCommutatorPortListSelected($port);
     }
 
     #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
@@ -63,7 +75,7 @@ class ConnectionCamera
     #[LiveListener(ConnectionModemTable::DETAIL.'_Simple')]
     public function onConnectionModemTableDetailSimple(#[LiveArg] Modem $entity): void
     {
-        $this->commutator = $entity->getPort()->getCommutator();
+        $this->commutator = $entity->getPort()?->getCommutator();
         $this->port = $entity->getPort();
         $this->modem = $entity;
     }
@@ -74,6 +86,12 @@ class ConnectionCamera
         $this->commutator = null;
         $this->port = null;
         $this->modem = null;
+    }
+
+    #[LiveAction]
+    public function removeModem(): void
+    {
+        $this->modem = new Modem();
     }
 
 }

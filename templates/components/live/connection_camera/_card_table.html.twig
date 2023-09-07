@@ -7,12 +7,27 @@
 
     {% block card_header_options %}
         <div>
+            {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') %}
+                <button class="btn btn-primary btn-sm"
+                        aria-current="page"
+                        data-action="live#action"
+                        data-action-name="removeModem()"
+                >
+                    <i class="fas fa-circle"></i>
+                    Cámaras Inactivas
+                </button>
+            {% endif %}
+
             <button class="btn btn-primary btn-sm
                     {% if port is null %}
                         disabled
                     {% else %}
                         {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Direct') %}
                             {% if port.equipment is not null %}disabled{% endif %}
+                        {% endif %}
+
+                        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') %}
+                            {% if port.hasConnectedModem() and port.equipment.cameras.count >= 4 %}disabled{% endif %}
                         {% endif %}
                     {% endif %}"
                     aria-current="page"

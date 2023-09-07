@@ -33,7 +33,7 @@ class ConnectionCameraTable
     #[LiveProp(updateFromParent: true)]
     public ?Port $port = null;
 
-    #[LiveProp]
+    #[LiveProp(updateFromParent: true)]
     public ?Modem $modem = null;
 
     #[LiveProp(updateFromParent: true)]
@@ -57,6 +57,7 @@ class ConnectionCameraTable
     {
         $this->page = 1;
         $this->filterAndReload();
+        $this->emit($this->getChangeTableEventName());
     }
 
     private function filterAndReload(): void
@@ -87,7 +88,7 @@ class ConnectionCameraTable
         }
 
         if($this->connection->name === ConnectionType::Simple->name){
-            if(!is_null($this->modem)){
+            if(!is_null($this->modem->getId())){
                 $data = $this->cameraRepository->findCameraByModem($this->modem, $this->filter, $this->amount, $this->page);
             }else{
                 $data = $this->cameraRepository->findInactiveCamerasWithoutPortAndModem($this->filter, $this->amount, $this->page);
@@ -259,6 +260,18 @@ class ConnectionCameraTable
     public function onConnectionCameraDetailDeactivateFull(): void
     {
         $this->onConnectionCameraDetailDeactivate();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::CONNECT.'_Simple')]
+    public function onConnectionCameraDetailConnectSimple(): void
+    {
+        $this->reload();
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DISCONNECT.'_Simple')]
+    public function onConnectionCameraDetailDisconnectSimple(): void
+    {
+        $this->reload();
     }
 
 }

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\MunicipalityTrait;
 use App\Entity\Camera;
 use App\Entity\Municipality;
 use App\Form\CameraType;
@@ -16,6 +17,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/camera')]
 class CameraController extends AbstractController
 {
+    use MunicipalityTrait;
+
     #[Route('/', name: 'camera_index', methods: ['GET'])]
     public function index(Request $request, CameraRepository $cameraRepository, CrudActionService $crudActionService): Response
     {
@@ -34,8 +37,10 @@ class CameraController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $municipalityId = $request->request->all()['camera']['address']['municipality'];
-            $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
+            $dataAddress = $request->request->all()['camera']['address'];
+            $municipalityId = $dataAddress['municipality'] ?? null;
+            $municipality = $this->findMunicipalityForEquipment($entityManager, $municipalityId);
+
             $camera->setMunicipality($municipality);
             $camera->deactivate();
             $entityManager->persist($camera);
@@ -79,9 +84,7 @@ class CameraController extends AbstractController
             ? $request->request->all()['camera']['address']['province']
             : $camera->getMunicipality()->getProvince()->getId();
 
-        $municipalityId = isset($postData['camera'])
-            ? $request->request->all()['camera']['address']['municipality']
-            : $camera->getMunicipality()->getId();
+        $municipalityId = $this->findMunicipalityForExistEquipment($camera, $request, 'camera');
 
         $form = $this->createForm(CameraType::class, $camera, [
             'action' => $this->generateUrl('camera_edit', ['id' => $camera->getId()]),
@@ -92,7 +95,7 @@ class CameraController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
+            $municipality = $this->findMunicipalityForEquipment($entityManager, $municipalityId);
             $camera->setMunicipality($municipality);
             $entityManager->flush();
 

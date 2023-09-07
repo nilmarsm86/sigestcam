@@ -50,7 +50,7 @@ class Modem extends Equipment
         return $this;
     }
 
-    public function hasSlaveModem(): Bool
+    public function hasMasterModem(): Bool
     {
         return !is_null($this->getMasterModem());
     }
@@ -166,6 +166,19 @@ class Modem extends Equipment
     public function canAddCamera(): bool
     {
         return $this->cameras->count() < self::MAXIMUM_CAMERA_NUMBER;
+    }
+
+    public function connect($container): static
+    {
+        if($container instanceof Modem){
+            $this->setMasterModem($container);
+        }
+
+        if($container instanceof Port){
+            $this->setPort($container);
+        }
+
+        return $this;
     }
 
 }

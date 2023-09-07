@@ -14,11 +14,25 @@
                                 id="camera_connect{{ camera.id }}"
                                 autocomplete="off"
                                 {% if camera.disconnected == false %}checked{% endif %}
-                                data-action="change->live#action"
+
                                 {% if camera.disconnected == false %}
+                                    data-action="change->live#action"
                                     data-action-name="disconnect(camera={{ camera.id }})"
                                 {% else %}
-                                    data-action-name="connect(camera={{ camera.id }})"
+                                    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Direct') %}
+                                        data-action="change->live#action"
+                                        data-action-name="connect(camera={{ camera.id }})"
+                                    {% endif %}
+
+                                    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') %}
+                                        {% if port.hasConnectedModem() and port.equipment.cameras.count < 4 %}
+                                            data-action="change->live#action"
+                                            data-action-name="connect(camera={{ camera.id }})"
+                                        {% else %}
+                                            {# Mostrar una alerta de que el modem ya tiene conectada 4 camaras #}
+                                            data-action="connection-camera-detail#notAssociateCamera"
+                                        {% endif %}
+                                    {% endif %}
                                 {% endif %}
                         >
                         <label class="btn btn-primary" for="camera_connect{{ camera.id }}" title="Conectar / Desconectar">

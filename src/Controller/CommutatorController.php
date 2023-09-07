@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Controller\Traits\MunicipalityTrait;
 use App\Entity\Commutator;
 use App\Entity\Enums\PortType;
 use App\Entity\Municipality;
@@ -17,6 +18,8 @@ use Symfony\Component\Routing\Annotation\Route;
 #[Route('/commutator')]
 class CommutatorController extends AbstractController
 {
+    use MunicipalityTrait;
+
     #[Route('/', name: 'commutator_index', methods: ['GET'])]
     public function index(Request $request, CommutatorRepository $commutatorRepository, CrudActionService $crudActionService): Response
     {
@@ -37,11 +40,9 @@ class CommutatorController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             $dataAddress = $request->request->all()['commutator']['address'];
             $municipalityId = $dataAddress['municipality'] ?? null;
-            if(!is_null($municipalityId)){
-                $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
-                $commutator->setMunicipality($municipality);
-            }
+            $municipality = $this->findMunicipalityForEquipment($entityManager, $municipalityId);
 
+            $commutator->setMunicipality($municipality);
             $commutator->deactivate();
             $entityManager->persist($commutator);
             $entityManager->flush();
@@ -84,9 +85,7 @@ class CommutatorController extends AbstractController
             ? $request->request->all()['commutator']['address']['province']
             : $commutator->getMunicipality()->getProvince()->getId();
 
-        $municipalityId = isset($postData['commutator'])
-            ? $request->request->all()['commutator']['address']['municipality']
-            : $commutator->getMunicipality()->getId();
+        $municipalityId = $this->findMunicipalityForExistEquipment($commutator, $request, 'commutator');
 
         $form = $this->createForm(CommutatorType::class, $commutator, [
             'action' => $this->generateUrl('commutator_edit', ['id' => $commutator->getId()]),
@@ -97,7 +96,7 @@ class CommutatorController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $municipality = $entityManager->getRepository(Municipality::class)->find($municipalityId);
+            $municipality = $this->findMunicipalityForEquipment($entityManager, $municipalityId);
             $commutator->setMunicipality($municipality);
             $entityManager->flush();
 

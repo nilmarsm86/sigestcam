@@ -30,7 +30,7 @@
         connection: constant('App\\Entity\\Enums\\ConnectionType::Simple')
     }) }}
 
-{#    {{ component('ConnectionSave', {#}
-{#        connection: constant('App\\Entity\\Enums\\ConnectionType::Simple')#}
-{#    }) }}#}
+    {{ component('ConnectionSave', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::Simple')
+    }) }}
 {% endblock %}

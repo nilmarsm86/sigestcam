@@ -60,7 +60,9 @@ class ConnectionSave extends AbstractController
     #[LiveListener(ConnectionCameraTable::DETAIL.'_Simple')]
     public function onConnectionCameraTableDetailSimple(#[LiveArg] Camera $entity): void
     {
+        $this->modem = $entity->getModem();
         $this->onConnectionCameraTableDetail($entity);
+        $this->port = $this->getRealEntity($this->modem?->getPort());
     }
 
     #[LiveListener(ConnectionCameraTable::DETAIL.'_SlaveSwitch')]
@@ -116,6 +118,84 @@ class ConnectionSave extends AbstractController
         $this->onConnectionCameraTableChange();
     }
 
+    private function saveDirect(): string
+    {
+        if($this->port){
+            if(is_null($this->modem)){
+                $this->camera->setPort($this->port);
+
+                if($this->port->isFromCommutator()){
+                    $commutator = $this->port->getCommutator();
+                    $this->camera->setMunicipality($commutator->getMunicipality());
+                }
+            }
+        }
+
+        $this->entityManager->persist($this->camera);
+
+        $this->port->setConnectionType($this->connection);
+        if(!$this->port->isActive()){
+            $this->port->activate();
+        }
+        $this->entityManager->persist($this->port);
+
+        $commutator = $this->port->getCommutator();
+        if(!$commutator->isActive()){
+            $commutator->activate();
+        }
+
+        $this->entityManager->persist($commutator);
+
+        return 'connection_direct_list';
+    }
+
+    private function saveSimple(): string
+    {
+        if($this->port){
+            if(is_null($this->modem)){
+                $this->camera->setPort($this->port);
+
+                if($this->port->isFromCommutator()){
+                    $commutator = $this->port->getCommutator();
+                    $this->camera->setMunicipality($commutator->getMunicipality());
+                }
+            }
+        }
+
+        if($this->modem){
+            $this->camera->setModem($this->modem);
+            if(!$this->modem->isActive()){
+                $this->modem->activate();
+            }
+            $this->entityManager->persist($this->modem);
+            $port = $this->modem->getPort();
+            if($port->isFromCommutator()){
+                $commutator = $this->port->getCommutator();
+                $this->modem->setMunicipality($commutator->getMunicipality());
+                $this->camera->setMunicipality($commutator->getMunicipality());
+            }
+        }
+        $this->entityManager->persist($this->camera);
+
+        if(!$this->port){
+            $this->port = $this->modem->getPort();
+        }
+
+        $this->port->setConnectionType($this->connection);
+        if(!$this->port->isActive()){
+            $this->port->activate();
+        }
+        $this->entityManager->persist($this->port);
+
+        $commutator = $this->port->getCommutator();
+        if(!$commutator->isActive()){
+            $commutator->activate();
+        }
+        $this->entityManager->persist($commutator);
+
+        return 'connection_simple_list';
+    }
+
     /**
      * @throws Exception
      */
@@ -126,12 +206,25 @@ class ConnectionSave extends AbstractController
             $this->camera->activate();
         }
 
-        if($this->port){
-            $this->camera->setPort($this->port);
+        /*if($this->port){
+            if(is_null($this->modem)){
+                $this->camera->setPort($this->port);
+
+                if($this->port->isFromCommutator()){
+                    $commutator = $this->port->getCommutator();
+                    $this->camera->setMunicipality($commutator->getMunicipality());
+                }
+            }
         }
 
         if($this->modem){
             $this->camera->setModem($this->modem);
+            $port = $this->modem->getPort();
+            if($port->isFromCommutator()){
+                $commutator = $this->port->getCommutator();
+                $this->modem->setMunicipality($commutator->getMunicipality());
+                $this->camera->setMunicipality($commutator->getMunicipality());
+            }
         }
         $this->entityManager->persist($this->camera);
 
@@ -160,8 +253,29 @@ class ConnectionSave extends AbstractController
 
         $this->entityManager->flush();
 
-        $this->addFlash('success', 'Se a registrado una nueva conexión directa en el sistema.');
-        return $this->redirectToRoute('connection_direct_list', ['filter' => $this->camera->getIp()]);
+        $this->addFlash('success', 'Se a registrado una nueva conexión '.ConnectionType::getLabelFrom($this->connection).' en el sistema.');
+
+        $redirect = match ($this->connection) {
+            ConnectionType::Direct => 'connection_direct_list',
+            ConnectionType::Simple => 'connection_simple_list',
+            ConnectionType::SlaveSwitch => '',
+            ConnectionType::SlaveModem => '',
+            ConnectionType::Full => '',
+        };*/
+
+        $redirect = match ($this->connection) {
+            ConnectionType::Direct => $this->saveDirect(),
+            ConnectionType::Simple => $this->saveSimple(),
+            ConnectionType::SlaveSwitch => '',
+            ConnectionType::SlaveModem => '',
+            ConnectionType::Full => '',
+        };
+
+        $this->entityManager->flush();
+
+        $this->addFlash('success', 'Se a registrado una nueva conexión '.ConnectionType::getLabelFrom($this->connection).' en el sistema.');
+
+        return $this->redirectToRoute($redirect, ['filter' => $this->camera->getIp()]);
     }
 
     /**
@@ -291,7 +405,19 @@ class ConnectionSave extends AbstractController
     {
         $this->camera = null;
         $this->modem = $modem;
-        $this->port = null;
+        $this->port = $modem?->getPort();
+    }
+
+    public function getRealEntity($proxy)
+    {
+        if ($proxy instanceof \Doctrine\Persistence\Proxy) {
+            $proxy_class_name = get_class($proxy);
+            $class_name = $this->entityManager->getClassMetadata($proxy_class_name)->rootEntityName;
+            $this->entityManager->detach($proxy);
+            return $this->entityManager->find($class_name, $proxy->getId());
+        }
+
+        return $proxy;
     }
 
 }

@@ -20,9 +20,7 @@ class AddressType extends AbstractType
         private readonly ProvinceRepository $provinceRepository,
         private readonly MunicipalityRepository $municipalityRepository,
     )
-    {
-
-    }
+    {}
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
@@ -37,7 +35,7 @@ class AddressType extends AbstractType
                     'data-address-target' => "province",
                     'data-action' => 'change->address#selectProvince'
                 ],
-                'placeholder' => '-Seleccione-',
+                'placeholder' => $options['province'] ? null : '-Seleccione-',
                 'label' => 'Provincia:',
                 'label_attr' => [
                     'class' => 'fw-bold'
@@ -49,7 +47,7 @@ class AddressType extends AbstractType
             ])
             ->add('municipality', EntityType::class, [
                 'class' => Municipality::class,
-                'placeholder' => $options['province'] ? '-Seleccione provincia-' : '-Seleccione-',
+                'placeholder' => $options['municipality'] ? null : '-Seleccione una provincia-',
                 'query_builder' => function (EntityRepository $er) use ($options): QueryBuilder|array {
                     return $er->createQueryBuilder('m')->where('m.province = '.$options['province']);
                 },
@@ -76,18 +74,32 @@ class AddressType extends AbstractType
             'crud' => false
         ]);
 
-        $resolver->setAllowedTypes('province', 'int');
-        $resolver->setAllowedTypes('municipality', 'int');
+        $resolver->setAllowedTypes('province', ['int']);
+        $resolver->setAllowedTypes('municipality', ['int']);
         $resolver->setAllowedTypes('crud', 'bool');
     }
 
     private function getMunicipalityConstraints(array $options): array
     {
         $municipalityConstraints = [];
-        if(!$options['municipality'] && $options['crud']){
-            $municipalityConstraints = [
-                new NotBlank(message: 'Seleccione un municipio.')
-            ];
+        if($options['crud'] === true){
+            if($options['municipality'] !== 0){
+                $municipalityConstraints = [
+                    new NotBlank(message: 'Seleccione un municipio.')
+                ];
+            }else{
+                if($options['province'] !== 0){
+                    $municipalityConstraints = [
+                        new NotBlank(message: 'Seleccione un municipio.')
+                    ];
+                }
+            }
+        }else{
+            if($options['municipality'] === 0){
+                $municipalityConstraints = [
+                    new NotBlank(message: 'Seleccione un municipio.')
+                ];
+            }
         }
 
         return $municipalityConstraints;
@@ -96,10 +108,18 @@ class AddressType extends AbstractType
     private function getProvinceConstraints(array $options): array
     {
         $provinceConstraints = [];
-        if(!$options['province'] && $options['crud']){
-            $provinceConstraints = [
-                new NotBlank(message: 'Seleccione una provincia.')
-            ];
+        if($options['crud'] === true){
+            if($options['province'] !== 0){
+                $provinceConstraints = [
+                    new NotBlank(message: 'Seleccione una provincia.')
+                ];
+            }
+        }else{
+            if($options['province'] === 0){
+                $provinceConstraints = [
+                    new NotBlank(message: 'Seleccione una provincia.')
+                ];
+            }
         }
 
         return $provinceConstraints;

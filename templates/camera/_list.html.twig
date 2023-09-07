@@ -91,15 +91,15 @@
                             >
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary position-relative {% if camera.canHaveStructureCable == false %}disabled{% endif %}" title="Cable estructurado"
-                                {% if camera.canHaveStructureCable %}
+                            <a class="btn btn-sm btn-primary position-relative" title="Cable estructurado"
+
                                     {% if camera.structuredCable is null %}
                                        href="{{ path('structured_cable_new_camera', {'camera':camera.id}) }}"
                                    {% else %}
                                        href="{{ path('structured_cable_edit_camera', {'id':camera.structuredCable.id, 'camera':camera.id}) }}"
                                    {% endif%}
                                    data-action="page#showFormContent"
-                               {% endif %}
+
                             >
                                 <i class="fas fa-anchor"></i>
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill {% if camera.structuredCable %}bg-success{% else %}bg-danger{% endif %}">

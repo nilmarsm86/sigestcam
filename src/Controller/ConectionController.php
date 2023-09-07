@@ -87,4 +87,12 @@ class ConectionController extends AbstractController
         return $this->render('connection/simple_new.html.twig');
     }
 
+    #[Route('/simple_list', name: 'simple_list')]
+    public function simpleList(Request $request): Response
+    {
+        return $this->render('connection/simple_list.html.twig', [
+            'filter' => $request->query->get('filter', '')
+        ]);
+    }
+
 }
