@@ -78,15 +78,12 @@ class ModemRepository extends ServiceEntityRepository
     private function addFilter(QueryBuilder $builder, string $filter, bool $place = true): void
     {
         if($filter){
-            $predicate = "m.physicalAddress LIKE :filter ";
-            $predicate .= "OR m.brand LIKE :filter ";
+            $predicate = "m.brand LIKE :filter ";
             $predicate .= "OR m.contic LIKE :filter ";
-//            $predicate .= "OR m.electronicSerial LIKE :filter ";
             $predicate .= "OR m.inventory LIKE :filter ";
             $predicate .= "OR m.ip LIKE :filter ";
             $predicate .= "OR m.model LIKE :filter ";
             $predicate .= "OR m.physicalSerial LIKE :filter ";
-//            $predicate .= "OR m.user LIKE :filter ";
             if($place){
                 $predicate .= "OR mun.name LIKE :filter ";
                 $predicate .= "OR pro.name LIKE :filter ";

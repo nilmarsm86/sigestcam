@@ -17,7 +17,7 @@
             {% block table_body %}
                 {% for modem in data %}
                     <tr>
-                        <td>{{ modem.ip }}</td>
+                        <td><a href="{{ path('modem_index', {'filter':modem.ip}) }}">{{ modem.ip }}</a></td>
                         <td>{{ modem.brand }}</td>
                         <td>{{ modem.model }}</td>
                         <td>

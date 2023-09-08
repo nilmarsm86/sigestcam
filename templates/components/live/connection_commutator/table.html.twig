@@ -15,7 +15,7 @@
         {% block table_body %}
             {% for commutator in paginator.getData() %}
                 <tr>
-                    <td>{{ commutator.ip }}</td>
+                    <td><a href="{{ path('commutator_index', {'filter':commutator.ip}) }}">{{ commutator.ip }}</a></td>
                     <td>{{ commutator.gateway }}</td>
                     <td>{{ commutator.multicast }}</td>
                     <td>

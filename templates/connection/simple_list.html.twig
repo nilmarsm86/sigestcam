@@ -18,10 +18,10 @@
         }) }}
     </div>
 
-{#    {{ component('ConnectionList', {#}
-{#        title: 'Conexiones directas',#}
-{#        newHref: path('connection_direct_new'),#}
-{#        connection: constant('App\\Entity\\Enums\\ConnectionType::Direct'),#}
-{#        filter: filter#}
-{#    }) }}#}
+    {{ component('ConnectionList', {
+        title: 'Conexiones simples',
+        newHref: path('connection_simple_new'),
+        connection: constant('App\\Entity\\Enums\\ConnectionType::Simple'),
+        filter: filter
+    }) }}
 {% endblock %}

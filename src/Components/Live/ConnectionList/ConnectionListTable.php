@@ -51,7 +51,7 @@ class ConnectionListTable
     {
         $data = match ($this->connection) {
             ConnectionType::Direct => $this->cameraRepository->findByDirectConnection($this->filter, $this->amount, $this->page),
-//            ConnectionType::Simple => $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page),
+            ConnectionType::Simple => $this->cameraRepository->findBySimpleConnection($this->filter, $this->amount, $this->page),
 //            ConnectionType::SlaveSwitch => $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page),
 //            ConnectionType::SlaveModem => $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page),
 //            ConnectionType::Full => $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page),

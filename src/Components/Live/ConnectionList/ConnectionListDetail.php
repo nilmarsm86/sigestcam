@@ -92,15 +92,25 @@ class ConnectionListDetail
 //        $this->emit($this->getChangeTableEventName());
 //    }
 
-    #[LiveListener(ConnectionListTable::DETAIL.'_Direct')]
-    public function onConnectionListTableDetailDirect(#[LiveArg] int $entity): void
+    public function onConnectionListTableDetail(int $entity): void
     {
-
-        foreach($this->data as $key=>$value){
+        foreach($this->data as $key => $value){
             if($value['id'] === $entity){
                 $this->entityId = $key;
             }
         }
+    }
+
+    #[LiveListener(ConnectionListTable::DETAIL.'_Direct')]
+    public function onConnectionListTableDetailDirect(#[LiveArg] int $entity): void
+    {
+        $this->onConnectionListTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionListTable::DETAIL.'_Simple')]
+    public function onConnectionListTableDetailSimple(#[LiveArg] int $entity): void
+    {
+        $this->onConnectionListTableDetail($entity);
     }
 
 }

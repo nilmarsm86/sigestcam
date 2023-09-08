@@ -55,8 +55,7 @@ class CameraRepository extends ServiceEntityRepository
     private function addFilter(QueryBuilder $builder, string $filter, bool $place = true): void
     {
         if($filter){
-            $predicate = "c.physicalAddress LIKE :filter ";
-            $predicate .= "OR c.brand LIKE :filter ";
+            $predicate = "c.brand LIKE :filter ";
             $predicate .= "OR c.contic LIKE :filter ";
             $predicate .= "OR c.electronicSerial LIKE :filter ";
             $predicate .= "OR c.inventory LIKE :filter ";
@@ -65,8 +64,8 @@ class CameraRepository extends ServiceEntityRepository
             $predicate .= "OR c.physicalSerial LIKE :filter ";
             $predicate .= "OR c.user LIKE :filter ";
             if($place){
-                $predicate .= "OR m.name LIKE :filter ";
-                $predicate .= "OR p.name LIKE :filter ";
+                $predicate .= "OR mun.name LIKE :filter ";
+                $predicate .= "OR pro.name LIKE :filter ";
             }
 
             $builder->andWhere($predicate)
@@ -82,9 +81,9 @@ class CameraRepository extends ServiceEntityRepository
      */
     public function findCameras(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
-            ->innerJoin('c.municipality', 'm')
-            ->leftJoin('m.province', 'p');
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
         $this->addFilter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
@@ -108,9 +107,9 @@ class CameraRepository extends ServiceEntityRepository
 
     public function findCamerasWithPortByState(State $state, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
-            ->innerJoin('c.municipality', 'm')
-            ->leftJoin('m.province', 'p')
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro')
             ->where('c.state = :state')
             ->setParameter(':state', $state)
             ->andWhere('c.port IS NOT NULL');
@@ -165,9 +164,9 @@ class CameraRepository extends ServiceEntityRepository
      */
     public function findInactiveCamerasWithoutPort(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
-            ->innerJoin('c.municipality', 'm')
-            ->leftJoin('m.province', 'p')
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro')
             ->where('c.state = :state')
             ->setParameter(':state', State::Inactive)
             ->andWhere('c.port IS NULL');
@@ -178,9 +177,9 @@ class CameraRepository extends ServiceEntityRepository
 
     public function findInactiveCamerasWithoutPortAndModem(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
-            ->innerJoin('c.municipality', 'm')
-            ->leftJoin('m.province', 'p')
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro')
             ->where('c.state = :state')
             ->setParameter(':state', State::Inactive)
             ->andWhere('c.port IS NULL')
@@ -207,9 +206,9 @@ class CameraRepository extends ServiceEntityRepository
 
     public function findCameraByPort(Port $port, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
-            ->innerJoin('c.municipality', 'm')
-            ->leftJoin('m.province', 'p');
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
         $builder->leftJoin('c.port', 'port');
         $builder->andWhere($builder->expr()->in('port.id', $port->getId()));
         $this->addFilter($builder, $filter);
@@ -219,9 +218,9 @@ class CameraRepository extends ServiceEntityRepository
 
     public function findCameraByModem(Modem $modem, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
-            ->innerJoin('c.municipality', 'm')
-            ->leftJoin('m.province', 'p');
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
         $builder->leftJoin('c.modem', 'modem');
         $builder->andWhere($builder->expr()->in('modem.id', $modem->getId()));
         $this->addFilter($builder, $filter);
@@ -231,19 +230,60 @@ class CameraRepository extends ServiceEntityRepository
 
     public function findByDirectConnection(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')->select(['c', 'p', 'comm', 'm', 'pro']);
+        $builder = $this->createQueryBuilder('c')->select(['c', 'p', 'comm', 'mun', 'pro']);
         $builder->innerJoin('c.port', 'p')
             ->where('p.connectionType = :connectionType')
             ->setParameter(':connectionType', ConnectionType::Direct)
             ->innerJoin('p.commutator', 'comm')
-            ->innerJoin('c.municipality', 'm')
-            ->leftJoin('m.province', 'pro');
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
 
         if($filter){
-            $predicate = "c.ip LIKE :filter ";
+            $predicate = "c.brand LIKE :filter ";
+            $predicate .= "OR c.contic LIKE :filter ";
+            $predicate .= "OR c.electronicSerial LIKE :filter ";
+            $predicate .= "OR c.inventory LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR c.model LIKE :filter ";
+            $predicate .= "OR c.physicalSerial LIKE :filter ";
+            $predicate .= "OR c.user LIKE :filter ";
             $predicate .= "OR comm.ip LIKE :filter ";
-            $predicate .= "OR m.name LIKE :filter ";
+            $predicate .= "OR mun.name LIKE :filter ";
             $predicate .= "OR pro.name LIKE :filter ";
+
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
+        }
+        $query = $builder->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findBySimpleConnection(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'modem', 'p', 'comm', 'mun', 'pro']);
+        //$builder->innerJoin('c.port', 'p')
+        $builder->innerJoin('c.modem', 'modem')
+            ->innerJoin('modem.port', 'p')
+            ->where('p.connectionType = :connectionType')
+            ->setParameter(':connectionType', ConnectionType::Simple)
+            ->innerJoin('p.commutator', 'comm')
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
+
+        if($filter){
+            $predicate = "c.brand LIKE :filter ";
+            $predicate .= "OR c.contic LIKE :filter ";
+            $predicate .= "OR c.electronicSerial LIKE :filter ";
+            $predicate .= "OR c.inventory LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR c.model LIKE :filter ";
+            $predicate .= "OR c.physicalSerial LIKE :filter ";
+            $predicate .= "OR c.user LIKE :filter ";
+            $predicate .= "OR comm.ip LIKE :filter ";
+            $predicate .= "OR modem.ip LIKE :filter ";
+            $predicate .= "OR mun.name LIKE :filter ";
+            $predicate .= "OR pro.name LIKE :filter ";
+
             $builder->andWhere($predicate)
                 ->setParameter(':filter','%'.$filter.'%');
         }

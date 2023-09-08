@@ -6,6 +6,7 @@ use App\Entity\Commutator;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -44,6 +45,28 @@ class CommutatorRepository extends ServiceEntityRepository
         }
     }
 
+    private function addFilter(QueryBuilder $builder, string $filter, bool $place = true): void
+    {
+        if($filter){
+            $predicate = "c.multicast LIKE :filter ";
+            $predicate .= "OR c.gateway LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR c.brand LIKE :filter ";
+            $predicate .= "OR c.brand LIKE :filter ";
+            $predicate .= "OR c.physicalSerial LIKE :filter ";
+            $predicate .= "OR c.model LIKE :filter ";
+            $predicate .= "OR c.inventory LIKE :filter ";
+            $predicate .= "OR c.contic LIKE :filter ";
+            if($place){
+                $predicate .= "OR mun.name LIKE :filter ";
+                $predicate .= "OR pro.name LIKE :filter ";
+            }
+
+            $builder->andWhere($predicate)
+                    ->setParameter(':filter','%'.$filter.'%');
+        }
+    }
+
     /**
      * @param string $filter
      * @param int $amountPerPage
@@ -52,10 +75,10 @@ class CommutatorRepository extends ServiceEntityRepository
      */
     public function findCommutator(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
-        $builder = $this->createQueryBuilder('c')->select(['c', 'm', 'p'])
-            ->innerJoin('c.municipality', 'm')
-            ->leftJoin('m.province', 'p');
-        if($filter){
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
+        /*if($filter){
             $predicate = "c.multicast LIKE :filter ";
             $predicate .= "OR c.gateway LIKE :filter ";
             $predicate .= "OR c.ip LIKE :filter ";
@@ -64,8 +87,8 @@ class CommutatorRepository extends ServiceEntityRepository
 
             $builder->andWhere($predicate)
                 ->setParameter(':filter','%'.$filter.'%');
-        }
-
+        }*/
+        $this->addFilter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
     }

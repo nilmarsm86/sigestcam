@@ -36,7 +36,7 @@
             connection: constant('App\\Entity\\Enums\\ConnectionType::Simple'),
             options:  [
                 {label: 'Nueva', href:path('connection_simple_new'), icon: 'fa-plus'},
-                {label: 'Listado', href: '', icon: 'fa-list'}
+                {label: 'Listado', href: path('connection_simple_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Modem', 'Cámara'],
             amount: simple_connections
