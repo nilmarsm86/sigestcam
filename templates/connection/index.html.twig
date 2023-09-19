@@ -47,8 +47,8 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch'),
             options:  [
-                {label: 'Nueva', href:'', icon: 'fa-plus'},
-                {label: 'Listado', href: '', icon: 'fa-list'}
+                {label: 'Nueva', href:path('connection_slave_switch_new'), icon: 'fa-plus'},
+                {label: 'Listado', href: path('connection_slave_switch_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Switch esclavo', 'Cámara'],
             amount: slave_switch_connections

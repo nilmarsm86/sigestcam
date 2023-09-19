@@ -1,0 +1,27 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Listado de conexiones switch esclavo{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Listado de conexiones switch esclavo</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Conexiones', href: path('connection_index')},
+                {label: 'Conexion switch esclavo', href: '#'},
+                {label: 'Listado'},
+            ],
+            current: 'Listado'
+        }) }}
+    </div>
+
+    {{ component('ConnectionList', {
+        title: 'Conexiones switch esclavos',
+        newHref: path('connection_slave_switch_new'),
+        connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch'),
+        filter: filter
+    }) }}
+{% endblock %}

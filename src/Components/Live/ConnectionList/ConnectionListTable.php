@@ -52,9 +52,9 @@ class ConnectionListTable
         $data = match ($this->connection) {
             ConnectionType::Direct => $this->cameraRepository->findByDirectConnection($this->filter, $this->amount, $this->page),
             ConnectionType::Simple => $this->cameraRepository->findBySimpleConnection($this->filter, $this->amount, $this->page),
-//            ConnectionType::SlaveSwitch => $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page),
-//            ConnectionType::SlaveModem => $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page),
-//            ConnectionType::Full => $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page),
+            ConnectionType::SlaveSwitch => $this->cameraRepository->findBySlaveSwitchConnection($this->filter, $this->amount, $this->page),
+//            ConnectionType::SlaveModem => $this->cameraRepository->findCommutator($this->filter, $this->amount, $this->page),
+//            ConnectionType::Full => $this->cameraRepository->findCommutator($this->filter, $this->amount, $this->page),
         };
 
         $this->reloadData($data);
@@ -73,7 +73,7 @@ class ConnectionListTable
      * Get show detail event name
      * @return string
      */
-    private function getShowDetailEventName(): string
+    protected function getShowDetailEventName(): string
     {
         return static::DETAIL.'_'.$this->connection->name;
     }

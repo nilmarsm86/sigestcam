@@ -248,8 +248,11 @@ class Equipment
     public function disconnect(): static
     {
         if(!is_null($this->port)){
+            //$this->port->getCommutator()?->disconnect();
             $this->port->setEquipment(null);
-            $this->port->setConnectionType(ConnectionType::Null);
+            if(!is_null($this->port->getConnectionType())){
+                $this->port->setConnectionType(ConnectionType::Null);
+            }
             $this->port = null;
         }
 

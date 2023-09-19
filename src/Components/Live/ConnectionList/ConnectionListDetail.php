@@ -113,4 +113,10 @@ class ConnectionListDetail
         $this->onConnectionListTableDetail($entity);
     }
 
+    #[LiveListener(ConnectionListTable::DETAIL.'_SlaveSwitch')]
+    public function onConnectionListTableDetailSlaveSwitch(#[LiveArg] int $entity): void
+    {
+        $this->onConnectionListTableDetail($entity);
+    }
+
 }

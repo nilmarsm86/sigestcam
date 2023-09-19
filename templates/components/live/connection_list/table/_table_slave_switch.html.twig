@@ -3,7 +3,8 @@
         <tr>
             <th>Switch</th>
             <th>Puerto</th>
-            <th>Modem</th>
+            <th>Switch esclavo</th>
+            <th>Puerto esclavo</th>
             <th>Cámara</th>
             <th>Provincia</th>
             <th>Municipio</th>
@@ -17,53 +18,72 @@
                 <td>
                     <a href="{{ path('commutator_state') }}" class="text-decoration-none"
                        data-action="page#state:prevent"
-                       data-page-id-param="{{ camera.modem.port.commutator.id }}"
-                            {% if camera.modem.port.commutator.state %}
+                       data-page-id-param="{{ camera.port.commutator.port.commutator.id }}"
+                            {% if camera.port.commutator.port.commutator.state %}
                                 data-page-state-param="0"
                             {% else %}
                                 data-page-state-param="1"
                             {% endif %}
                     >
                             <span
-                                    class="badge {% if camera.modem.port.commutator.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                                    class="badge {% if camera.port.commutator.port.commutator.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
                             >
-                                {{ camera.modem.port.commutator.ip }}
+                                {{ camera.port.commutator.port.commutator.ip }}
                             </span>
-                        {% if camera.modem.port.commutator.gateway %}({{ camera.modem.port.commutator.gateway }}){% endif%}
-                        {% if camera.modem.port.commutator.multicast %}[{{ camera.modem.port.commutator.multicast }}]{% endif %}
+                        {% if camera.port.commutator.port.commutator.gateway %}({{ camera.port.commutator.port.commutator.gateway }}){% endif%}
+                        {% if camera.port.commutator.port.commutator.multicast %}[{{ camera.port.commutator.port.commutator.multicast }}]{% endif %}
                     </a>
                 </td>
                 <td>
                     <a href="{{ path('port_state') }}"
                        data-action="page#state:prevent"
-                       data-page-id-param="{{ camera.modem.port.id }}"
-                            {% if camera.modem.port.state %}
+                       data-page-id-param="{{ camera.port.commutator.port.id }}"
+                            {% if camera.port.commutator.port.state %}
                                 data-page-state-param="0"
                             {% else %}
                                 data-page-state-param="1"
                             {% endif %}
                     >
                             <span
-                                    class="badge {% if camera.modem.port.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                                    class="badge {% if camera.port.commutator.port.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
                             >
-                                {{ camera.modem.port.number }}
+                                {{ camera.port.commutator.port.number }}
                             </span>
                     </a>
                 </td>
                 <td>
-                    <a href="{{ path('modem_state') }}"
+                    <a href="{{ path('commutator_state') }}" class="text-decoration-none"
                        data-action="page#state:prevent"
-                       data-page-id-param="{{ camera.modem.id }}"
-                            {% if camera.modem.state %}
+                       data-page-id-param="{{ camera.port.commutator.id }}"
+                            {% if camera.port.commutator.state %}
                                 data-page-state-param="0"
                             {% else %}
                                 data-page-state-param="1"
                             {% endif %}
                     >
                             <span
-                                    class="badge {% if camera.modem.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                                    class="badge {% if camera.port.commutator.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
                             >
-                                {{ camera.modem.ip }}
+                                {{ camera.port.commutator.ip }}
+                            </span>
+                        {% if camera.port.commutator.gateway %}({{ camera.port.commutator.gateway }}){% endif%}
+                        {% if camera.port.commutator.multicast %}[{{ camera.port.commutator.multicast }}]{% endif %}
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('port_state') }}"
+                       data-action="page#state:prevent"
+                       data-page-id-param="{{ camera.port.id }}"
+                            {% if camera.port.state %}
+                                data-page-state-param="0"
+                            {% else %}
+                                data-page-state-param="1"
+                            {% endif %}
+                    >
+                            <span
+                                    class="badge {% if camera.port.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                            >
+                                {{ camera.port.number }}
                             </span>
                     </a>
                 </td>

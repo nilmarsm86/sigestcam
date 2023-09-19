@@ -1,0 +1,65 @@
+<div {{ attributes }} style="position: relative">
+    {% embed "embeds/async_table.html.twig" %}
+        {% block table_head %}
+            <tr>
+                <th>IP</th>
+                <th>Puerta de enlace</th>
+                <th>Dirección multicast</th>
+                <th>Estado</th>
+                <th>Provincia</th>
+                <th>Municipio</th>
+                <th></th>
+            </tr>
+        {% endblock %}
+
+        {% block table_body %}
+            {% for commutator in paginator.getData() %}
+                <tr>
+                    <td>
+                        {% if commutator.ip %}
+                        <a href="{{ path('commutator_index', {'filter':commutator.ip}) }}">
+                            {{ commutator.ip }}
+                        </a>
+                        {% else %}
+                            <a href="{{ path('commutator_edit', {'id':commutator.id}) }}">
+                                Sin IP
+                            </a>
+                        {% endif %}
+
+                    </td>
+                    <td>{{ commutator.gateway }}</td>
+                    <td>{{ commutator.multicast }}</td>
+                    <td>
+                        {% if commutator.state == "1"  %}
+                            <span class="badge text-bg-success">Activo</span>
+                        {% else %}
+                            <span class="badge text-bg-danger">Inactivo</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ commutator.municipality.province.name }}</td>
+                    <td>{{ commutator.municipality.name }}</td>
+                    <td>
+                        <button title="Detalle del switch"
+                                type="button"
+                                class="btn btn-primary btn-sm"
+                                aria-current="page"
+{#                                {% if entityId is not same as commutator.id %}#}
+                                    data-action="live#action"
+                                    data-action-name="prevent|detail(entityId={{ commutator.id }})"
+{#                                {% endif %}#}
+                        >
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7">
+                        No se encontraron registros
+                    </td>
+                </tr>
+            {% endfor %}
+        {% endblock %}
+    {% endembed %}
+    <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
+</div>

@@ -67,7 +67,7 @@ class ConnectionCommutatorPortList
      * Get deactivate event name
      * @return string
      */
-    private function getDeactivateEventName(): string
+    protected function getDeactivateEventName(): string
     {
         return static::DEACTIVATE.'_'.$this->connection->name;
     }
@@ -76,9 +76,18 @@ class ConnectionCommutatorPortList
      * Get deactivate event name
      * @return string
      */
-    private function getActivateEventName(): string
+    protected function getActivateEventName(): string
     {
         return static::ACTIVATE.'_'.$this->connection->name;
+    }
+
+    /**
+     * Get deactivate event name
+     * @return string
+     */
+    protected function getSelectedEventName(): string
+    {
+        return static::SELECTED.'_'.$this->connection->name;
     }
 
     #[LiveAction]
@@ -93,7 +102,7 @@ class ConnectionCommutatorPortList
             }
         }
 
-        $this->emit(static::SELECTED.'_'.$this->connection->name, [
+        $this->emit($this->getSelectedEventName(), [
             'port' => $portId,
         ]);
     }
@@ -117,7 +126,7 @@ class ConnectionCommutatorPortList
      * @param Commutator $commutator
      * @return array
      */
-    private function portsInfo(Commutator $commutator): array
+    protected function portsInfo(Commutator $commutator): array
     {
         $this->forSelect = PortType::forSelect();
         $ports = [];
@@ -133,7 +142,7 @@ class ConnectionCommutatorPortList
      * @param Port $port
      * @return array
      */
-    private function portData(Port $port): array
+    protected function portData(Port $port): array
     {
         $data = [];
         $data['number'] = $port->getNumber();
@@ -164,7 +173,7 @@ class ConnectionCommutatorPortList
         return $data;
     }
 
-    private function onConnectionCommutatorTableDetail(Commutator $entity): void
+    protected function onConnectionCommutatorTableDetail(Commutator $entity): void
     {
         $this->ports = $this->portsInfo($entity);
         $this->selected = null;
@@ -207,7 +216,7 @@ class ConnectionCommutatorPortList
      * Update table from filter, amount or page
      * @return void
      */
-    public function onConnectionCommutatorTableChange(): void
+    protected function onConnectionCommutatorTableChange(): void
     {
         $this->ports = null;
     }
@@ -242,7 +251,7 @@ class ConnectionCommutatorPortList
         $this->onConnectionCommutatorTableChange();
     }
 
-    private function onConnectionCommutatorDetailDeactivate(Commutator $entity): void
+    protected function onConnectionCommutatorDetailDeactivate(Commutator $entity): void
     {
         $this->select(null);
         foreach($this->ports as $key=>$value){

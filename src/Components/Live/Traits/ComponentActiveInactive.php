@@ -10,13 +10,13 @@ trait ComponentActiveInactive
 {
     #[LiveProp]
     public ?bool $active = false;
-    private mixed $entity;
+    protected mixed $entity;
 
     /**
      * Get deactivate event name
      * @return string
      */
-    private function getDeactivateEventName(): string
+    protected function getDeactivateEventName(): string
     {
         return ':deactivate';
     }
@@ -25,7 +25,7 @@ trait ComponentActiveInactive
      * Get deactivate event name
      * @return string
      */
-    private function getActivateEventName(): string
+    protected function getActivateEventName(): string
     {
         return ':activate';
     }

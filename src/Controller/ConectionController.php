@@ -95,4 +95,18 @@ class ConectionController extends AbstractController
         ]);
     }
 
+    #[Route('/slave_switch_new', name: 'slave_switch_new')]
+    public function slaveSwitchNew(): Response
+    {
+        return $this->render('connection/slave_switch_new.html.twig');
+    }
+
+    #[Route('/slave_switch_list', name: 'slave_switch_list')]
+    public function slaveSwitchList(Request $request): Response
+    {
+        return $this->render('connection/slave_switch_list.html.twig', [
+            'filter' => $request->query->get('filter', '')
+        ]);
+    }
+
 }

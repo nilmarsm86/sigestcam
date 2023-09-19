@@ -51,7 +51,7 @@ class ConnectionCameraDetail
      * Get deactivate event name
      * @return string
      */
-    private function getDeactivateEventName(): string
+    protected function getDeactivateEventName(): string
     {
         return static::DEACTIVATE.'_'.$this->connection->name;
     }
@@ -60,7 +60,7 @@ class ConnectionCameraDetail
      * Get deactivate event name
      * @return string
      */
-    private function getActivateEventName(): string
+    protected function getActivateEventName(): string
     {
         return static::ACTIVATE.'_'.$this->connection->name;
     }
@@ -214,6 +214,7 @@ class ConnectionCameraDetail
     public function disconnect(#[LiveArg] Camera $camera): void
     {
         $camera->disconnect();
+
         $this->entityManager->persist($camera);
         $this->entityManager->flush();
         $this->active = false;
@@ -239,7 +240,7 @@ class ConnectionCameraDetail
     public function preactivate(#[LiveArg] int $entityId, #[LiveArg] string $elementId): void
     {
         $entity = $this->entityManager->find($this->entity, $entityId);
-        if(is_null($entity->getPort())){
+        if($entity->notModemNotPort()){
             $this->dispatchBrowserEvent($this->getActivateEventName(), [
                 'elementId' => $elementId
             ]);
@@ -254,6 +255,22 @@ class ConnectionCameraDetail
                 'entity' => $entity->getId(),
             ]);
         }
+    }
+
+    #[LiveAction]
+    public function predeactivate(#[LiveArg] int $entityId): void
+    {
+        $entity = $this->entityManager->find($this->entity, $entityId);
+        $entity->deactivate();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+        $this->active = false;
+
+        $this->camera = null;
+
+        $this->emit($this->getDeactivateEventName(), [
+            'entity' => $entity->getId(),
+        ]);
     }
 
 }

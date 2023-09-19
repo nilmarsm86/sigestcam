@@ -21,7 +21,7 @@
                                     data-action-name="connect(modem={{ modem.id }})"
                                 {% endif %}
                         >
-                        <label class="btn btn-primary" for="mdoem_connect{{ modem.id }}" title="Conectar / Desconectar">
+                        <label class="btn btn-primary" for="modem_connect{{ modem.id }}" title="Conectar / Desconectar">
                             <i class="fas fa-plug text-white"></i>
                         </label>
                         <!-- BOTON DE DESCONETAR -->
@@ -30,12 +30,12 @@
                         <input
                                 type="checkbox"
                                 class="btn-check btn-primary"
-                                id="mdoem{{ modem.id }}"
+                                id="modem{{ modem.id }}"
                                 autocomplete="off"
                                 {% if active %}checked{% endif %}
                                 data-action="change->live#action"
                                 {% if active %}
-                                    data-action-name="deactivate(entityId={{ modem.id }})"
+                                    data-action-name="predeactivate(entityId={{ modem.id }})"
                                 {% else %}
                                     data-action-name="preactivate(entityId={{ modem.id }}, elementId=modem{{ modem.id }})"
                                 {% endif %}

@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Components\Live\ConnectionCommutator;
+namespace App\Components\Live\ConnectionSlaveCommutator;
 
+use App\Components\Live\ConnectionCommutator\ConnectionCommutatorNew;
 use App\Components\Live\Traits\ComponentNewForm;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
@@ -18,8 +19,8 @@ use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/connection_commutator/new.html.twig')]
-class ConnectionCommutatorNew extends AbstractController
+#[AsLiveComponent(template: 'components/live/connection_slave_commutator/new.html.twig')]
+class ConnectionSlaveCommutatorNew extends ConnectionCommutatorNew
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
@@ -29,33 +30,16 @@ class ConnectionCommutatorNew extends AbstractController
     const FORM_SUCCESS = self::class.'_form_success';
     const MODAL_CLOSE = 'modal_form_close';
 
-    #[LiveProp]
-    public ?Commutator $commut = null;
-
-    #[LiveProp(writable: true)]
-    public ?string $province = null;
-
-    #[LiveProp(writable: true)]
-    public ?string $municipality = null;
-
-    #[LiveProp]
-    public ?ConnectionType $connection = null;
-
-//    #[LiveProp(updateFromParent: true)]
-//    public ?Port $masterPort = null;
+    #[LiveProp(updateFromParent: true)]
+    public ?Port $masterPort = null;
 
     protected function instantiateForm(): FormInterface
     {
-        $options = [
+        return $this->createForm(CommutatorType::class, $this->commut, [
             'province' => (int) $this->province,
-            'municipality' => (int) $this->municipality
-        ];
-
-//        if(!is_null($this->masterPort)){
-//            $options['crud'] = true;
-//        }
-
-        return $this->createForm(CommutatorType::class, $this->commut, $options);
+            'municipality' => (int) $this->municipality,
+            'crud' => true
+        ]);
     }
 
     #[LiveAction]
@@ -67,20 +51,15 @@ class ConnectionCommutatorNew extends AbstractController
             //lanzar evento a JS
             $this->dispatchBrowserEvent(static::MODAL_CLOSE);
             $commutator = $this->mapped($municipalityRepository, $this->getForm()->getData());
-//            if(!is_null($this->masterPort)){
-//                $commutator->setMasterCommutator($this->masterPort->getCommutator());
-//            }
+            $commutator->setMasterCommutator($this->masterPort->getCommutator());
+            $commutator->setMunicipality($this->masterPort->getCommutator()->getMunicipality());
             $commutatorRepository->save($commutator, true);
 
             $this->emitSuccess([
                 'commutator' => $commutator->getId(),
             ]);
         }
-    }
 
-    protected function mapped(MunicipalityRepository $municipalityRepository, Commutator $commutator): Commutator
-    {
-        return $commutator->setMunicipality($municipalityRepository->find($this->municipality));
     }
 
     /**
@@ -91,4 +70,5 @@ class ConnectionCommutatorNew extends AbstractController
     {
         return static::FORM_SUCCESS.'_'.$this->connection->name;
     }
+
 }

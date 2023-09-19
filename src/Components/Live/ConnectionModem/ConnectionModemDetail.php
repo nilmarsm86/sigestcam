@@ -3,7 +3,6 @@
 namespace App\Components\Live\ConnectionModem;
 
 use App\Components\Live\Traits\ComponentActiveInactive;
-use App\Entity\Camera;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
 use App\Entity\Port;
@@ -52,16 +51,16 @@ class ConnectionModemDetail
      * Get deactivate event name
      * @return string
      */
-    private function getDeactivateEventName(): string
+    protected function getDeactivateEventName(): string
     {
         return static::DEACTIVATE.'_'.$this->connection->name;
     }
 
     /**
-     * Get deactivate event name
+     * Get activate event name
      * @return string
      */
-    private function getActivateEventName(): string
+    protected function getActivateEventName(): string
     {
         return static::ACTIVATE.'_'.$this->connection->name;
     }
@@ -173,6 +172,22 @@ class ConnectionModemDetail
                 'entity' => $entity->getId(),
             ]);
         }
+    }
+
+    #[LiveAction]
+    public function predeactivate(#[LiveArg] int $entityId): void
+    {
+        $entity = $this->entityManager->find($this->entity, $entityId);
+        $entity->deactivate();
+        $this->entityManager->persist($entity);
+        $this->entityManager->flush();
+        $this->active = false;
+
+        $this->modem = null;
+
+        $this->emit($this->getDeactivateEventName(), [
+            'entity' => $entity->getId(),
+        ]);
     }
 
 }

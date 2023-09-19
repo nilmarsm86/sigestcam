@@ -88,7 +88,6 @@ class RequestFormPayloadValueResolver implements ValueResolverInterface, EventSu
             try {
                 $payload = $this->$payloadMapper($request, $type, $argument);
             } catch (PartialDenormalizationException $e) {
-                dump($e);
                 throw new HttpException($validationFailedCode, implode("\n", array_map(static fn ($e) => $e->getMessage(), $e->getErrors())), $e);
             }
 

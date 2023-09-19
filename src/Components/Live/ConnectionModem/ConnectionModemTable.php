@@ -119,7 +119,7 @@ class ConnectionModemTable
      * Get change table event name
      * @return string
      */
-    private function getChangeTableEventName(): string
+    protected function getChangeTableEventName(): string
     {
         return static::CHANGE.'_'.$this->connection->name;
     }
@@ -128,7 +128,7 @@ class ConnectionModemTable
      * Get show detail event name
      * @return string
      */
-    private function getShowDetailEventName(): string
+    protected function getShowDetailEventName(): string
     {
         return static::DETAIL.'_'.$this->connection->name;
     }

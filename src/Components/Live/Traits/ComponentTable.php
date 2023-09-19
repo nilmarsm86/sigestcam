@@ -39,7 +39,7 @@ trait ComponentTable
         $this->reload();
     }
 
-    private function reloadData(mixed $data): void
+    protected function reloadData(mixed $data): void
     {
         $this->paginator = new Paginator($data, $this->amount, $this->page);
         $this->data = $data->getQuery()->getResult(AbstractQuery::HYDRATE_ARRAY);
@@ -50,7 +50,7 @@ trait ComponentTable
      * Get change table event name
      * @return string
      */
-    private function getChangeTableEventName(): string
+    protected function getChangeTableEventName(): string
     {
         return ':change:table';
     }
@@ -59,7 +59,7 @@ trait ComponentTable
      * Get show detail event name
      * @return string
      */
-    private function getShowDetailEventName(): string
+    protected function getShowDetailEventName(): string
     {
         return ':show:detail';
     }

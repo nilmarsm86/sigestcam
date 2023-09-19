@@ -157,8 +157,13 @@ class Camera extends Equipment
     public function disconnect(): static
     {
         if(!is_null($this->port)){
+            //if($this->port->isFromCommutator()){
+                //$this->port->getCommutator()?->disconnect();
+            //}
             $this->port->setEquipment(null);
-            $this->port->setConnectionType(ConnectionType::Null);
+            if(!is_null($this->port->getConnectionType())){
+                $this->port->setConnectionType(ConnectionType::Null);
+            }
             $this->port = null;
         }
 
@@ -187,6 +192,11 @@ class Camera extends Equipment
     public function isDisconnected()
     {
         return is_null($this->port) && is_null($this->modem);
+    }
+
+    public function notModemNotPort(): bool
+    {
+        return (is_null($this->getPort()) && is_null($this->getModem()));
     }
 
 }

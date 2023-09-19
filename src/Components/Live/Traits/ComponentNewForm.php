@@ -21,12 +21,12 @@ trait ComponentNewForm
      * Get form success event name
      * @return string
      */
-    private function getSuccessFormEventName(): string
+    protected function getSuccessFormEventName(): string
     {
         return ':form_success';
     }
 
-    private function isSubmitAndValid(): bool
+    protected function isSubmitAndValid(): bool
     {
         return $this->getForm()->isSubmitted() && $this->getForm()->isValid();
     }
@@ -36,7 +36,7 @@ trait ComponentNewForm
      * @param $eventData
      * @return void
      */
-    private function emitSuccess($eventData): void
+    protected function emitSuccess($eventData): void
     {
         $this->isSuccessful = true;
         $this->emit($this->getSuccessFormEventName(), $eventData);

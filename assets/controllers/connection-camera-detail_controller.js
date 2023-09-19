@@ -12,12 +12,9 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
 
     initialize() {
-        window.addEventListener('App\\Components\\Live\\ConnectionCamera\\ConnectionCameraDetail_activate_Direct', (event) => {
-            event.preventDefault();
-            alert('Para poder activar una camara debe estar conectada a un puerto o modem.');
-            this.element.querySelector('#' + event.detail.elementId).checked = false;
-
-        });
+        window.addEventListener('App\\Components\\Live\\ConnectionCamera\\ConnectionCameraDetail_activate_Direct', this.notConnectedCamera.bind(this));
+        window.addEventListener('App\\Components\\Live\\ConnectionCamera\\ConnectionCameraDetail_activate_Simple', this.notConnectedCamera.bind(this));
+        window.addEventListener('App\\Components\\Live\\ConnectionCamera\\ConnectionCameraDetail_activate_SlaveSwitch', this.notConnectedCamera.bind(this));
     }
 
     notAssociateCamera(event){
@@ -25,6 +22,13 @@ export default class extends Controller {
 
         event.currentTarget.checked = false;
         alert('Ya el modem tiene conectado 4 camaras, no se puede asociar esta cámara.');
+    }
+
+    notConnectedCamera(event){
+        event.preventDefault();
+
+        alert('Para poder activar una camara debe estar conectada a un puerto o modem.');
+        this.element.querySelector('#' + event.detail.elementId).checked = false;
     }
 
 

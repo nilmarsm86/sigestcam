@@ -90,7 +90,7 @@ class ConnectionCameraNew extends AbstractController
      * Get form success event name
      * @return string
      */
-    private function getSuccessFormEventName(): string
+    protected function getSuccessFormEventName(): string
     {
         return static::FORM_SUCCESS.'_'.$this->connection->name;
     }

@@ -44,7 +44,8 @@ class Commutator extends Equipment implements HarborInterface
     //#[Assert\NotBlank(message: 'La direccion multicast no debe estar vacía.')]
     private ?string $multicast = null;
 
-    #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: self::class)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Assert\Valid]
     private ?self $masterCommutator = null;
 

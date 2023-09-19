@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Commutator;
+use App\Entity\Enums\State;
+use App\Entity\Port;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\AbstractQuery;
@@ -77,7 +79,9 @@ class CommutatorRepository extends ServiceEntityRepository
     {
         $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
             ->innerJoin('c.municipality', 'mun')
-            ->leftJoin('mun.province', 'pro');
+            ->leftJoin('mun.province', 'pro')
+            ->andWhere('c.gateway IS NOT NULL');
+            //->andWhere('c.multicast IS NOT NULL');
         /*if($filter){
             $predicate = "c.multicast LIKE :filter ";
             $predicate .= "OR c.gateway LIKE :filter ";
@@ -88,6 +92,49 @@ class CommutatorRepository extends ServiceEntityRepository
             $builder->andWhere($predicate)
                 ->setParameter(':filter','%'.$filter.'%');
         }*/
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findByPort(Port $port, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
+        $builder->leftJoin('c.port', 'port');
+        $builder->andWhere($builder->expr()->in('port.id', $port->getId()));
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findInactiveWithoutPort(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro')
+            ->where('c.state = :state')
+            ->setParameter(':state', State::Inactive)
+            ->andWhere('c.port IS NULL');
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findActiveAndSlave(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            //->innerJoin('c.masterCommutator', 'masterC')
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro')
+            ->where('c.state = :state')
+            ->setParameter(':state', State::Active)
+            ->andWhere('c.port IS NULL')
+            ->andWhere('c.masterCommutator IS NULL')
+            ->andWhere('c.gateway IS NULL')
+            ->andWhere('c.multicast IS NULL');
+
         $this->addFilter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);

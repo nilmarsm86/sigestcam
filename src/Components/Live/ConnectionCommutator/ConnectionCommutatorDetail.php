@@ -38,12 +38,12 @@ class ConnectionCommutatorDetail
      * Get deactivate event name
      * @return string
      */
-    private function getDeactivateEventName(): string
+    protected function getDeactivateEventName(): string
     {
         return static::DEACTIVATE.'_'.$this->connection->name;
     }
 
-    private function onConnectionCommutatorTableDetail(#[LiveArg] Commutator $entity): void
+    protected function onConnectionCommutatorTableDetail(#[LiveArg] Commutator $entity): void
     {
         if(isset($this->commutator['id'])){
             if($this->commutator['id'] !== $entity->getId()){
@@ -86,7 +86,7 @@ class ConnectionCommutatorDetail
         $this->onConnectionCommutatorTableDetail($entity);
     }
 
-    private function details(Commutator $commutator): array
+    protected function details(Commutator $commutator): array
     {
         $switch = [];
         $switch['id'] = $commutator->getId();
@@ -112,7 +112,7 @@ class ConnectionCommutatorDetail
      * @param Commutator $commutator
      * @return array
      */
-    private function portsInfo(Commutator $commutator): array
+    protected function portsInfo(Commutator $commutator): array
     {
         $ports = [];
         foreach($commutator->getPorts() as $port){
@@ -127,7 +127,7 @@ class ConnectionCommutatorDetail
      * @param Port $port
      * @return array
      */
-    private function portData(Port $port): array
+    protected function portData(Port $port): array
     {
         $data = [];
         $data['number'] = $port->getNumber();
@@ -153,7 +153,7 @@ class ConnectionCommutatorDetail
      * Update table from filter, amount or page
      * @return void
      */
-    public function onConnectionCommutatorTableChange(): void
+    protected function onConnectionCommutatorTableChange(): void
     {
         $this->commutator = null;
     }

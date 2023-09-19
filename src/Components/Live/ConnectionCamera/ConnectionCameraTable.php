@@ -95,6 +95,14 @@ class ConnectionCameraTable
             }
         }
 
+        if($this->connection->name === ConnectionType::SlaveSwitch->name){
+            if($this->port->hasConnectedCamera()){
+                $data = $this->cameraRepository->findCameraByPortAndNotModem($this->port, $this->filter, $this->amount, $this->page);
+            }else{
+                $data = $this->cameraRepository->findInactiveCamerasWithoutPort($this->filter, $this->amount, $this->page);
+            }
+        }
+
         $this->reloadData($data);
     }
 
@@ -143,7 +151,7 @@ class ConnectionCameraTable
      * Get change table event name
      * @return string
      */
-    private function getChangeTableEventName(): string
+    protected function getChangeTableEventName(): string
     {
         return static::CHANGE.'_'.$this->connection->name;
     }
@@ -152,7 +160,7 @@ class ConnectionCameraTable
      * Get show detail event name
      * @return string
      */
-    private function getShowDetailEventName(): string
+    protected function getShowDetailEventName(): string
     {
         return static::DETAIL.'_'.$this->connection->name;
     }

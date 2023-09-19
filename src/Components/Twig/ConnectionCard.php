@@ -19,7 +19,7 @@ final class ConnectionCard
     public array $options = [];
     public array $components = [];
     public string $color;
-    public $amount = null;
+    public ?int $amount = null;
 
     public function __construct(private readonly PortRepository $portRepository)
     {
@@ -29,7 +29,6 @@ final class ConnectionCard
     {
         $this->color = match ($connection) {
             ConnectionType::Direct => 'primary',
-//            ConnectionType::Null => throw new \Exception('To be implemented'),
             ConnectionType::Simple => 'success',
             ConnectionType::SlaveSwitch => 'info',
             ConnectionType::SlaveModem => 'warning',

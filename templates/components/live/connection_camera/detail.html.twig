@@ -33,6 +33,13 @@
                                             data-action="connection-camera-detail#notAssociateCamera"
                                         {% endif %}
                                     {% endif %}
+
+                                    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}
+{#                                        {% if port.hasConnectedCamera() == false and port.hasConnectedCommutator() %}#}
+                                            data-action="change->live#action"
+                                            data-action-name="connect(camera={{ camera.id }})"
+{#                                        {% endif %}#}
+                                    {% endif %}
                                 {% endif %}
                         >
                         <label class="btn btn-primary" for="camera_connect{{ camera.id }}" title="Conectar / Desconectar">
@@ -49,7 +56,7 @@
                                 {% if active %}checked{% endif %}
                                 data-action="change->live#action"
                                 {% if active %}
-                                    data-action-name="deactivate(entityId={{ camera.id }})"
+                                    data-action-name="predeactivate(entityId={{ camera.id }})"
                                 {% else %}
                                     data-action-name="preactivate(entityId={{ camera.id }}, elementId=camera{{ camera.id }})"
                                 {% endif %}

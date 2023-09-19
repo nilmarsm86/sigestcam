@@ -27,11 +27,11 @@ class ConnectionCommutatorTable
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-    public function __construct(private readonly CommutatorRepository $commutatorRepository)
+    public function __construct(protected readonly CommutatorRepository $commutatorRepository)
     {
     }
 
-    private function reload()
+    protected function reload()
     {
         $this->entityId = null;
         $data = $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page);
@@ -43,7 +43,7 @@ class ConnectionCommutatorTable
      * @param Commutator $commutator
      * @return void
      */
-    private function onConnectionCommutatorNewFormSuccess(Commutator $commutator): void
+    protected function onConnectionCommutatorNewFormSuccess(Commutator $commutator): void
     {
         $this->filter = $commutator->getIp();
         $this->changeFilter();
@@ -83,7 +83,7 @@ class ConnectionCommutatorTable
      * Get change table event name
      * @return string
      */
-    public function getChangeTableEventName(): string
+    protected function getChangeTableEventName(): string
     {
         return static::CHANGE.'_'.$this->connection->name;
     }
@@ -92,7 +92,7 @@ class ConnectionCommutatorTable
      * Get show detail event name
      * @return string
      */
-    private function getShowDetailEventName(): string
+    protected function getShowDetailEventName(): string
     {
         return static::DETAIL.'_'.$this->connection->name;
     }

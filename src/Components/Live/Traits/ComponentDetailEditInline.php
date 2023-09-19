@@ -50,7 +50,7 @@ trait ComponentDetailEditInline
     #[LiveProp]
     public ?bool $textarea = false;
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(protected readonly EntityManagerInterface $entityManager)
     {
     }
 
@@ -102,7 +102,7 @@ trait ComponentDetailEditInline
      * @param mixed $entity
      * @return array
      */
-    private function validate(ValidatorInterface $validator, mixed $entity): array
+    protected function validate(ValidatorInterface $validator, mixed $entity): array
     {
         $constraints = [];
         foreach ($this->constraints as $constraint) {
@@ -121,7 +121,7 @@ trait ComponentDetailEditInline
      * Get form success event name
      * @return string
      */
-    private function getSaveEventName(): string
+    protected function getSaveEventName(): string
     {
         return ':save';
     }
@@ -130,7 +130,7 @@ trait ComponentDetailEditInline
      * Get show secure event name
      * @return string
      */
-    private function getShowSecureEventName(): string
+    protected function getShowSecureEventName(): string
     {
         return ':show_secure';
     }

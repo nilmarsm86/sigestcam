@@ -1,11 +1,15 @@
 <div {{ attributes.defaults(stimulus_controller('page connection-list-table')) }} data-page-target="listContainer" style="position: relative">
 
     {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Direct') %}
-        {{ include('components/live/connection_list/_table_direct.html.twig') }}
+        {{ include('components/live/connection_list/table/_table_direct.html.twig') }}
     {% endif %}
 
     {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') %}
-        {{ include('components/live/connection_list/_table_simple.html.twig') }}
+        {{ include('components/live/connection_list/table/_table_simple.html.twig') }}
+    {% endif %}
+
+    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}
+        {{ include('components/live/connection_list/table/_table_slave_switch.html.twig') }}
     {% endif %}
 
     <div class="row">

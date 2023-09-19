@@ -41,7 +41,7 @@ class ConnectionDetailEditInline
      * Get form success event name
      * @return string
      */
-    private function getSaveEventName(): string
+    protected function getSaveEventName(): string
     {
         return $this->entity.'_save_'.$this->connection->name;
     }
@@ -50,7 +50,7 @@ class ConnectionDetailEditInline
      * Get show secure event name
      * @return string
      */
-    private function getShowSecureEventName(): string
+    protected function getShowSecureEventName(): string
     {
         return static::SHOW_SECURE;
     }
@@ -59,7 +59,7 @@ class ConnectionDetailEditInline
      * @param mixed $entity
      * @return string|null
      */
-    private function validateUniqueIp(mixed $entity): ?string
+    protected function validateUniqueIp(mixed $entity): ?string
     {
         //este codigo se podria convertir en un validador
         if ($this->setter === 'setIp') {
@@ -81,7 +81,7 @@ class ConnectionDetailEditInline
      * @param mixed $entity
      * @return array
      */
-    private function validate(ValidatorInterface $validator, mixed $entity): array
+    protected function validate(ValidatorInterface $validator, mixed $entity): array
     {
         $constraints = [];
         foreach ($this->constraints as $constraint) {

@@ -18,7 +18,6 @@
         {% block card_body %}
             {{ component('ConnectionCommutatorTable', {connection: connection}) }}
 {#            {% if commutator is not null %}#}
-{#                {{ dump(commutator.id) }}#}
                 <div class="row">
                     {{ component('ConnectionCommutatorDetail', {connection: connection}) }}
                     {{ component('ConnectionCommutatorPortList', {connection: connection}) }}

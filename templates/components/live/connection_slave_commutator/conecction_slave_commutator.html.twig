@@ -1,0 +1,55 @@
+<div {{ attributes }}>
+    {% if masterCommutator and masterPort %}
+        {% embed "embeds/card.html.twig" %}
+            {% block card_css_class %}mb-4{% endblock %}
+
+            {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+            {% block card_title %}Switch esclavo{% endblock %}
+
+            {% block card_header_options %}
+                <div>
+                    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') and masterPort.hasConnectedCommutator() == false %}
+                        <button class="btn btn-primary btn-sm"
+                                aria-current="page"
+                                data-action="live#action"
+                                data-action-name="findInactive()"
+                        >
+                            <i class="fas fa-circle"></i>
+                            Switch Inactivos
+                        </button>
+                    {% endif %}
+
+                    <button class="btn btn-primary btn-sm active" aria-current="page" data-bs-toggle="modal" data-bs-target="#add-slave-switch">
+                        <i class="fas fa-plus"></i>
+                        Nuevo switch esclavo
+                    </button>
+                </div>
+            {% endblock %}
+
+            {% block card_body %}
+                {{ component('ConnectionSlaveCommutatorTable', {connection: connection, masterCommutator: commutator, masterPort: masterPort, inactive: inactive}) }}
+    {#            {% if commutator is not null %}#}
+                    <div class="row">
+                        {{ component('ConnectionSlaveCommutatorDetail', {connection: connection, masterPort: masterPort}) }}
+                        {{ component('ConnectionSlaveCommutatorPortList', {connection: connection, masterPort: masterPort}) }}
+                    </div>
+    {#            {% endif %}#}
+            {% endblock %}
+        {% endembed %}
+
+        <!-- Modal -->
+        {{ component('ModalForm', {
+            title: 'Agregar Switch esclavo',
+            src: 'ConnectionSlaveCommutatorNew',
+            vars: {
+                connection: connection,
+                masterPort: masterPort
+            },
+            type: 'component',
+            id: 'add-slave-switch'
+        }) }}
+        <!-- Modal -->
+    {% endif %}
+</div>
+

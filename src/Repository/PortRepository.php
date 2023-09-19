@@ -107,7 +107,7 @@ class PortRepository extends ServiceEntityRepository
      */
     public function findAmountSlaveModemConnections(): array|int
     {
-        return $this->findAmountByConnectionType(ConnectionType::SlaveSwitch);
+        return $this->findAmountByConnectionType(ConnectionType::SlaveModem);
     }
 
     /**

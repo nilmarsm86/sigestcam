@@ -1,0 +1,13 @@
+<div class="col-8" {{ attributes }}>
+    {% if ports is not null %}
+        <h4>Puertos del switch esclavo:</h4>
+        <hr>
+        <div class="row" style="position: relative">
+            {% for port in ports %}
+                {{ include('components/live/connection_slave_commutator/_port_detail.html.twig') }}
+            {% endfor %}
+            <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
+        </div>
+    {% endif %}
+
+</div>

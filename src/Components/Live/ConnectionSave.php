@@ -6,6 +6,7 @@ use App\Components\Live\ConnectionCamera\ConnectionCameraTable;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
 use App\Components\Live\ConnectionModem\ConnectionModemTable;
+use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorPortList;
 use App\Components\Live\Traits\ComponentActiveInactive;
 use App\Entity\Camera;
 use App\Entity\Enums\ConnectionType;
@@ -41,6 +42,9 @@ class ConnectionSave extends AbstractController
 
     #[LiveProp]
     public ?Modem $modem = null;
+
+    #[LiveProp]
+    public ?Port $slavePort = null;
 
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
@@ -118,7 +122,7 @@ class ConnectionSave extends AbstractController
         $this->onConnectionCameraTableChange();
     }
 
-    private function saveDirect(): string
+    protected function saveDirect(): string
     {
         if($this->port){
             if(is_null($this->modem)){
@@ -149,7 +153,7 @@ class ConnectionSave extends AbstractController
         return 'connection_direct_list';
     }
 
-    private function saveSimple(): string
+    protected function saveSimple(): string
     {
         if($this->port){
             if(is_null($this->modem)){
@@ -196,17 +200,41 @@ class ConnectionSave extends AbstractController
         return 'connection_simple_list';
     }
 
-    private function saveSlaveSwitch(): string
+    protected function saveSlaveSwitch(): string
     {
+        if($this->port && $this->slavePort){
+            $masterPort = $this->port;
+            $masterCommutator = $masterPort->getCommutator();
+            $slavePort = $this->slavePort;
+            $slaveCommutator = $slavePort->getCommutator();
+
+            $slaveCommutator->setPort($masterPort);
+            $this->camera->setPort($slavePort);
+
+            $slaveCommutator->setMunicipality($masterCommutator->getMunicipality());
+            $this->camera->setMunicipality($masterCommutator->getMunicipality());
+
+            $masterPort->setConnectionType($this->connection);
+
+            $masterCommutator->activate();
+            $masterPort->activate();
+            $slaveCommutator->activate();
+            $slavePort->activate();
+
+            $this->entityManager->persist($slaveCommutator);
+            $this->entityManager->persist($slavePort);
+            $this->entityManager->persist($this->camera);
+        }
+
         return 'connection_slave_switch_list';
     }
 
-    private function saveSlaveModem(): string
+    protected function saveSlaveModem(): string
     {
         return 'connection_slave_modem_list';
     }
 
-    private function saveFull(): string
+    protected function saveFull(): string
     {
         return 'connection_full_list';
     }
@@ -405,6 +433,18 @@ class ConnectionSave extends AbstractController
     public function onConnectionCommutatorPortListSelectedFull(#[LiveArg] ?Port $port): void
     {
         $this->onConnectionCommutatorPortListSelected($port);
+    }
+
+    public function onConnectionSlaveCommutatorPortListSelected(?Port $port): void
+    {
+        $this->camera = null;
+        $this->slavePort = $port;
+    }
+
+    #[LiveListener(ConnectionSlaveCommutatorPortList::SELECTED.'_SlaveSwitch')]
+    public function onConnectionSlaveCommutatorPortListSelectedSlaveSwitch(#[LiveArg] ?Port $port): void
+    {
+        $this->onConnectionSlaveCommutatorPortListSelected($port);
     }
 
     #[LiveListener(ConnectionModemTable::CHANGE.'_Simple')]

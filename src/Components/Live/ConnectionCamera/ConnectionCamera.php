@@ -3,7 +3,9 @@ namespace App\Components\Live\ConnectionCamera;
 
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
+use App\Components\Live\ConnectionModem\ConnectionModemDetail;
 use App\Components\Live\ConnectionModem\ConnectionModemTable;
+use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorPortList;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
@@ -52,12 +54,35 @@ class ConnectionCamera
         $this->onConnectionCommutatorPortListSelected($port);
     }
 
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
-    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
+    #[LiveListener(ConnectionSlaveCommutatorPortList::SELECTED.'_SlaveSwitch')]
+    public function onConnectionSlaveCommutatorPortListSelectedSlaveSwitch(#[LiveArg] ?Port $port): void
+    {
+        $this->onConnectionCommutatorPortListSelected($port);
+    }
+
+    protected function onConnectionCommutatorTableDetail(Commutator $entity): void
     {
         $this->commutator = $entity;
         $this->port = null;
         $this->modem = null;
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
+    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Simple')]
+    public function onConnectionCommutatorTableDetailSimple(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_SlaveSwitch')]
+    public function onConnectionCommutatorTableDetailSlaveSwitch(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
     }
 
     /**
@@ -85,6 +110,12 @@ class ConnectionCamera
     {
         $this->commutator = null;
         $this->port = null;
+        $this->modem = null;
+    }
+
+    #[LiveListener(ConnectionModemDetail::DEACTIVATE.'_Simple')]
+    public function onConnectionModemDetailDeactivateSimple(): void
+    {
         $this->modem = null;
     }
 

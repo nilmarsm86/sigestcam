@@ -19,7 +19,8 @@ class Modem extends Equipment
 
     const MAXIMUM_CAMERA_NUMBER = 4;
 
-    #[ORM\OneToOne(targetEntity: self::class, cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: self::class)]
+    #[ORM\JoinColumn(nullable: true)]
     #[Assert\Valid]
     private ?self $masterModem = null;
 

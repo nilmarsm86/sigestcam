@@ -1,16 +1,20 @@
 <div class="row" {{ attributes }}>
-    {% dump(entityId) %}
     {% if entityId is not null %}
-        {{ include('components/live/connection_list/_detail_commutator.html.twig') }}
+        {{ include('components/live/connection_list/detail/_detail_commutator.html.twig', {'slaveCommutator':false}) }}
 
         {% set camera = data[entityId] %}
         {% if camera.modem is defined %}
-            {{ include('components/live/connection_list/_detail_modem.html.twig') }}
-{#</div>#}
-{#<div class="row">#}
+            {{ include('components/live/connection_list/detail/_detail_modem.html.twig') }}
             <div class="col-4"></div>
         {% endif %}
 
-        {{ include('components/live/connection_list/_detail_camera.html.twig') }}
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}
+            <div class="col-8"></div>
+
+            {{ include('components/live/connection_list/detail/_detail_commutator.html.twig', {'slaveCommutator':true}) }}
+        {% endif %}
+
+
+        {{ include('components/live/connection_list/detail/_detail_camera.html.twig') }}
     {% endif %}
 </div>

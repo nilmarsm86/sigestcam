@@ -216,6 +216,19 @@ class CameraRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $amountPerPage);
     }
 
+    public function findCameraByPortAndNotModem(Port $port, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
+        $builder->leftJoin('c.port', 'port');
+        $builder->andWhere($builder->expr()->in('port.id', $port->getId()))
+                ->andWhere('c.modem IS NULL');
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
     public function findCameraByModem(Modem $modem, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
         $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
@@ -281,6 +294,39 @@ class CameraRepository extends ServiceEntityRepository
             $predicate .= "OR c.user LIKE :filter ";
             $predicate .= "OR comm.ip LIKE :filter ";
             $predicate .= "OR modem.ip LIKE :filter ";
+            $predicate .= "OR mun.name LIKE :filter ";
+            $predicate .= "OR pro.name LIKE :filter ";
+
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
+        }
+        $query = $builder->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findBySlaveSwitchConnection(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'slavePort', 'slaveCommutator', 'masterPort', 'masterCommutator', 'mun', 'pro']);
+        $builder->innerJoin('c.port', 'slavePort')
+            //->where('p.connectionType = :connectionType')
+            //->setParameter(':connectionType', ConnectionType::SlaveSwitch)
+            ->innerJoin('slavePort.commutator', 'slaveCommutator')
+            ->innerJoin('slaveCommutator.port', 'masterPort')
+            ->innerJoin('masterPort.commutator', 'masterCommutator')
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
+
+        if($filter){
+            $predicate = "c.brand LIKE :filter ";
+            $predicate .= "OR c.contic LIKE :filter ";
+            $predicate .= "OR c.electronicSerial LIKE :filter ";
+            $predicate .= "OR c.inventory LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR c.model LIKE :filter ";
+            $predicate .= "OR c.physicalSerial LIKE :filter ";
+            $predicate .= "OR c.user LIKE :filter ";
+            $predicate .= "OR slaveCommutator.ip LIKE :filter ";
+            $predicate .= "OR masterCommutator.ip LIKE :filter ";
             $predicate .= "OR mun.name LIKE :filter ";
             $predicate .= "OR pro.name LIKE :filter ";
 
