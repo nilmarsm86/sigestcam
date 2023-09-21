@@ -26,30 +26,63 @@ class ConnectionModem
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_Simple')]
-    public function onConnectionCommutatorPortListSelectedSimple(#[LiveArg] ?Port $port): void
+    public function onConnectionCommutatorPortListSelected(?Port $port): void
     {
         $this->commutator = null;
         $this->port = $port;
         $this->commutator = $port?->getCommutator();
     }
 
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Simple')]
-    public function onConnectionCommutatorTableDetailSimple(#[LiveArg] Commutator $entity): void
+    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_Simple')]
+    public function onConnectionCommutatorPortListSelectedSimple(#[LiveArg] ?Port $port): void
+    {
+        $this->onConnectionCommutatorPortListSelected($port);
+    }
+
+    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_SlaveModem')]
+    public function onConnectionCommutatorPortListSelectedSlaveModem(#[LiveArg] ?Port $port): void
+    {
+        $this->onConnectionCommutatorPortListSelected($port);
+    }
+
+    public function onConnectionCommutatorTableDetail(Commutator $entity): void
     {
         $this->commutator = $entity;
         $this->port = null;
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Simple')]
+    public function onConnectionCommutatorTableDetailSimple(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_SlaveModem')]
+    public function onConnectionCommutatorTableDetailSlaveModem(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
     }
 
     /**
      * Update table from filter, amount or page just in direct connections
      * @return void
      */
-    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Simle')]
-    public function onConnectionCommutatorTableChangeSimple(): void
+    public function onConnectionCommutatorTableChange(): void
     {
         $this->commutator = null;
         $this->port = null;
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Simle')]
+    public function onConnectionCommutatorTableChangeSimple(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
+    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_SlaveModem')]
+    public function onConnectionCommutatorTableChangeSlaveModem(): void
+    {
+        $this->onConnectionCommutatorTableChange();
     }
 
 }

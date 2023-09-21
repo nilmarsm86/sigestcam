@@ -1,8 +1,9 @@
 <?php
 
-namespace App\Components\Live\ConnectionModem;
+namespace App\Components\Live\ConnectionSlaveModem;
 
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
+use App\Components\Live\ConnectionModem\ConnectionModemNew;
 use App\Components\Live\Traits\ComponentNewForm;
 use App\Entity\Camera;
 use App\Entity\Enums\ConnectionType;
@@ -21,8 +22,8 @@ use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\ComponentWithFormTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/connection_modem/new.html.twig')]
-class ConnectionModemNew extends AbstractController
+#[AsLiveComponent(template: 'components/live/connection_slave_modem/new.html.twig')]
+class ConnectionSlaveModemNew extends ConnectionModemNew
 {
     use DefaultActionTrait;
     use ComponentWithFormTrait;
@@ -71,6 +72,11 @@ class ConnectionModemNew extends AbstractController
                 $modem->setPort($this->port);
                 $modem->setMunicipality($this->port->getCommutator()->getMunicipality());
             }
+
+//            if(!is_null($this->masterModem)){
+//                $modem->setMasterModem($this->masterModem);
+//                $modem->setMunicipality($this->masterModem->getCommutator()->getMunicipality());
+//            }
 
             $modemRepository->save($modem, true);
 

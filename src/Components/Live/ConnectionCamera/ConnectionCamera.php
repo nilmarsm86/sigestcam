@@ -6,6 +6,7 @@ use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
 use App\Components\Live\ConnectionModem\ConnectionModemDetail;
 use App\Components\Live\ConnectionModem\ConnectionModemTable;
 use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorPortList;
+use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorTable;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
@@ -85,6 +86,12 @@ class ConnectionCamera
         $this->onConnectionCommutatorTableDetail($entity);
     }
 
+    #[LiveListener(ConnectionSlaveCommutatorTable::DETAIL.'_SlaveSwitch')]
+    public function onConnectionSlaveCommutatorTableDetailSlaveSwitch(#[LiveArg] Commutator $entity): void
+    {
+        $this->onConnectionCommutatorTableDetail($entity);
+    }
+
     /**
      * Update table from filter, amount or page just in direct connections
      * @return void
@@ -123,6 +130,14 @@ class ConnectionCamera
     public function removeModem(): void
     {
         $this->modem = new Modem();
+    }
+
+    #[LiveListener(ConnectionSlaveCommutatorTable::CHANGE.'_SlaveSwitch')]
+    public function onConnectionSlaveCommutatorTableChangeSlaveSwitch(): void
+    {
+        $this->commutator = null;
+        $this->port = null;
+        $this->modem = null;
     }
 
 }

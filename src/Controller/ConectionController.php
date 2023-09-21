@@ -109,4 +109,18 @@ class ConectionController extends AbstractController
         ]);
     }
 
+    #[Route('/slave_modem_new', name: 'slave_modem_new')]
+    public function slaveModemNew(): Response
+    {
+        return $this->render('connection/slave_modem_new.html.twig');
+    }
+
+    #[Route('/slave_modem_list', name: 'slave_modem_list')]
+    public function slaveModemList(Request $request): Response
+    {
+        return $this->render('connection/slave_modem_list.html.twig', [
+            'filter' => $request->query->get('filter', '')
+        ]);
+    }
+
 }

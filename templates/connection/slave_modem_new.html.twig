@@ -1,0 +1,40 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Conexiones{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Nueva conexión modem esclavo</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Conexiones', href: path('connection_index')},
+                {label: 'Conexion modem esclavo', href: '#'},
+                {label: 'Nueva'},
+            ],
+            current: 'Nueva'
+        }) }}
+    </div>
+
+    {{ component('ConnectionCommutator', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveModem')
+    }) }}
+
+    {{ component('ConnectionModem', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveModem')
+    }) }}
+
+    {{ component('ConnectionSlaveModem', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveModem')
+    }) }}
+
+    {{ component('ConnectionCamera', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveModem')
+    }) }}
+
+    {{ component('ConnectionSave', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch')
+    }) }}
+{% endblock %}

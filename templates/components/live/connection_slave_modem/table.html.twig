@@ -1,0 +1,58 @@
+<div {{ attributes }} style="position: relative">
+    {% if port is not null or modem is not null %}
+        {% embed "embeds/async_table.html.twig" %}
+            {% block table_head %}
+                <tr>
+                    <th>Ip</th>
+                    <th>Marca</th>
+                    <th>Modelo</th>
+                    <th>Estado</th>
+                    <th>Cámaras</th>
+                    <th>Provincia</th>
+                    <th>Municipio</th>
+                    <th></th>
+                </tr>
+            {% endblock %}
+
+            {% block table_body %}
+                {% for modem in data %}
+                    <tr>
+                        <td><a href="{{ path('modem_index', {'filter':modem.ip}) }}">{{ modem.ip }}</a></td>
+                        <td>{{ modem.brand }}</td>
+                        <td>{{ modem.model }}</td>
+                        <td>
+                            {% if modem.state == "1"  %}
+                                <span class="badge text-bg-success">Activo</span>
+                            {% else %}
+                                <span class="badge text-bg-danger">Inactivo</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ modem.cameras }}</td>
+                        <td>{{ modem.municipality.province.name }}</td>
+                        <td>{{ modem.municipality.name }}</td>
+                        <td>
+                            <button title="Detalle de la cámara"
+                                    type="button"
+                                    class="btn btn-primary btn-sm"
+                                    aria-current="page"
+{#                                    {% if entityId is not same as modem.id %}#}
+                                        data-action="live#action"
+                                        data-action-name="prevent|detail(entityId={{ modem.id }})"
+{#                                    {% endif %}#}
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">
+                            No se encontraron registros
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endblock %}
+        {% endembed %}
+        <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
+    {% endif %}
+</div>

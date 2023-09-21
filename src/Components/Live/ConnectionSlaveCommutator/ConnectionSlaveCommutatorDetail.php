@@ -32,4 +32,10 @@ class ConnectionSlaveCommutatorDetail extends ConnectionCommutatorDetail
         $this->onConnectionCommutatorTableDetail($entity);
     }
 
+    #[LiveListener(ConnectionSlaveCommutatorTable::CHANGE.'_SlaveSwitch')]
+    public function onConnectionSlaveCommutatorTableChangeSlaveSwitch(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
 }

@@ -98,17 +98,29 @@ class ConnectionModemTable
     }
 
     /**
-     * When save new commutator table filer by it
-     * @param Camera $modem
+     * When save new modem, table filer by it
+     * @param Modem $modem
      * @return void
      */
-    #[LiveListener(ConnectionModemNew::FORM_SUCCESS.'_Simple')]
-    public function onConnectionModemNewFormSuccessSimple(#[LiveArg] Modem $modem): void
+    public function onConnectionModemNewFormSuccess(Modem $modem): void
     {
         $this->filter = $modem->getIp();
         $this->changeFilter();
     }
 
+    #[LiveListener(ConnectionModemNew::FORM_SUCCESS.'_Simple')]
+    public function onConnectionModemNewFormSuccessSimple(#[LiveArg] Modem $modem): void
+    {
+        $this->onConnectionModemNewFormSuccess($modem);
+    }
+
+    #[LiveListener(ConnectionModemNew::FORM_SUCCESS.'_SlaveModem')]
+    public function onConnectionModemNewFormSuccessSlaveModem(#[LiveArg] Modem $modem): void
+    {
+        $this->onConnectionModemNewFormSuccess($modem);
+    }
+
+    //PORQUE ESTA AQUI
     #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Simple')]
     public function onConnectionCameraNewFormSuccessSimple(#[LiveArg] Camera $camera): void
     {
@@ -133,8 +145,24 @@ class ConnectionModemTable
         return static::DETAIL.'_'.$this->connection->name;
     }
 
+    protected function onConnectionDetailEditInlineSaveModem(): void
+    {
+        $this->reload();
+    }
+
     #[LiveListener(ConnectionDetailEditInline::SAVE_MODEM.'_Simple')]
     public function onConnectionDetailEditInlineSaveModemSimple(): void
+    {
+        $this->onConnectionDetailEditInlineSaveModem();
+    }
+
+    #[LiveListener(ConnectionDetailEditInline::SAVE_MODEM.'_SlaveModem')]
+    public function onConnectionDetailEditInlineSaveModemSlaveModem(): void
+    {
+        $this->onConnectionDetailEditInlineSaveModem();
+    }
+
+    public function onConnectionModemDetailActivate(): void
     {
         $this->reload();
     }
@@ -142,27 +170,66 @@ class ConnectionModemTable
     #[LiveListener(ConnectionModemDetail::ACTIVATE.'_Simple')]
     public function onConnectionModemDetailActivateSimple(): void
     {
+        $this->onConnectionModemDetailActivate();
+    }
+
+    #[LiveListener(ConnectionModemDetail::ACTIVATE.'_SlaveModem')]
+    public function onConnectionModemDetailActivateSlaveModem(): void
+    {
+        $this->onConnectionModemDetailActivate();
+    }
+
+    public function onConnectionModemDetailDeactivate(): void
+    {
         $this->reload();
     }
 
     #[LiveListener(ConnectionModemDetail::DEACTIVATE.'_Simple')]
     public function onConnectionModemDetailDeactivateSimple(): void
     {
+        $this->onConnectionModemDetailDeactivate();
+    }
+
+    #[LiveListener(ConnectionModemDetail::DEACTIVATE.'_SlaveModem')]
+    public function onConnectionModemDetailDeactivateSlaveModem(): void
+    {
+        $this->onConnectionModemDetailDeactivate();
+    }
+
+    public function onConnectionCameraDetailDisconnect(Modem $modem): void
+    {
+        //TODO que hacer cuando se desconecta una camara de un modem
         $this->reload();
     }
 
     #[LiveListener(ConnectionCameraDetail::DISCONNECT.'_Simple')]
     public function onConnectionCameraDetailDisconnectSimple(#[LiveArg] Modem $modem): void
     {
-        //TODO que hacer cuando se desconecta una camara de un modem
+        $this->onConnectionCameraDetailDisconnect($modem);
+    }
+
+    #[LiveListener(ConnectionCameraDetail::DISCONNECT.'_SlaveModem')]
+    public function onConnectionCameraDetailDisconnectSlaveModem(#[LiveArg] Modem $modem): void
+    {
+        $this->onConnectionCameraDetailDisconnect($modem);
+    }
+
+    public function onConnectionCameraDetailConnect(Modem $modem): void
+    {
+        //TODO que hacer cuando se conecta una camara de un modem
         $this->reload();
     }
 
     #[LiveListener(ConnectionCameraDetail::CONNECT.'_Simple')]
     public function onConnectionCameraDetailConnectSimple(#[LiveArg] Modem $modem): void
     {
-        //TODO que hacer cuando se conecta una camara de un modem
-        $this->reload();
+        $this->onConnectionCameraDetailConnect($modem);
+    }
+
+    #[LiveListener(ConnectionCameraDetail::CONNECT.'_SlaveModem')]
+    public function onConnectionCameraDetailConnectSlaveModem(#[LiveArg] Modem $modem): void
+    {
+        $this->onConnectionCameraDetailConnect($modem);
     }
 
 }

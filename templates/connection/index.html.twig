@@ -59,8 +59,8 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveModem'),
             options:  [
-                {label: 'Nueva', href:'', icon: 'fa-plus'},
-                {label: 'Listado', href: '', icon: 'fa-list'}
+                {label: 'Nueva', href:path('connection_slave_modem_new'), icon: 'fa-plus'},
+                {label: 'Listado', href: path('connection_slave_modem_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Modem', 'Modem esclavo', 'Cámara'],
             amount: slave_modem_connections

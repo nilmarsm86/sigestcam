@@ -45,6 +45,9 @@ class ConnectionSlaveCommutatorTable extends ConnectionCommutatorTable
     {
         $this->page = 1;
         $this->filterAndReload();
+        if($this->inactive){
+            $this->emit($this->getChangeTableEventName());
+        }
     }
 
     private function filterAndReload(): void

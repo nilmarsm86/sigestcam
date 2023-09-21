@@ -1,0 +1,58 @@
+<div {{ attributes }}>
+    {% if commutator and port %}
+        {% embed "embeds/card.html.twig" %}
+            {% block card_css_class %}mb-4{% endblock %}
+
+            {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+            {% block card_title %}Modem esclavo{% endblock %}
+
+            {% block card_header_options %}
+                <div>
+                    <button class="btn btn-primary btn-sm
+                            {% if port is null %}
+                                disabled
+                            {% else %}
+                                {% if port.equipment is not null %}disabled{% endif %}
+                            {% endif %}"
+                            aria-current="page"
+                            data-bs-toggle="modal"
+                            data-bs-target="#add-modem"
+                    >
+                        <i class="fas fa-plus"></i>
+                        Nuevo
+                    </button>
+                </div>
+            {% endblock %}
+
+            {% block card_body %}
+                {% if port is not null %}
+                    <div data-loading="addClass(d-none)">
+                        {{ component('ConnectionModemTable', {connection:connection, commutator: commutator, port: port}) }}
+                    </div>
+{#                    {% if port.equipment is not null %}#}
+                        <div class="row">
+                            {{ component('ConnectionModemDetail', {connection:connection, port: port}) }}
+                        </div>
+{#                    {% endif %}#}
+                {% endif %}
+            {% endblock %}
+        {% endembed %}
+
+        {% if port is not null and port.equipment is null %}
+            <!-- Modal -->
+            {{ component('ModalForm', {
+                title: 'Agregar Modem',
+                src: 'ConnectionModemNew',
+                vars: {
+                    connection:connection,
+                    port: port
+                },
+                type: 'component',
+                id: 'add-modem'
+            }) }}
+            <!-- Modal -->
+        {% endif %}
+    {% endif %}
+</div>
+

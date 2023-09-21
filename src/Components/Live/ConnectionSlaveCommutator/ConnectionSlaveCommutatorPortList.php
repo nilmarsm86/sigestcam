@@ -34,6 +34,12 @@ class ConnectionSlaveCommutatorPortList extends ConnectionCommutatorPortList
         $this->onConnectionCommutatorTableDetail($entity);
     }
 
+    #[LiveListener(ConnectionSlaveCommutatorTable::CHANGE.'_SlaveSwitch')]
+    public function onConnectionSlaveCommutatorTableChangeSlaveSwitch(): void
+    {
+        $this->onConnectionCommutatorTableChange();
+    }
+
     /**
      * Get deactivate event name
      * @return string

@@ -19,6 +19,8 @@ class ConnectionSlaveCommutator extends ConnectionCommutator
 {
 //    use DefaultActionTrait;
 
+    const CHANGE = self::class.'_change';
+
     #[LiveProp]
     public ?Commutator $masterCommutator = null;
 
@@ -55,6 +57,16 @@ class ConnectionSlaveCommutator extends ConnectionCommutator
     public function findInactive(): void
     {
         $this->inactive = true;
+        //$this->emit($this->getChangeFullComponentEventName());
+    }
+
+    /**
+     * Get change table event name
+     * @return string
+     */
+    protected function getChangeFullComponentEventName(): string
+    {
+        return static::CHANGE.'_'.$this->connection->name;
     }
 
 }
