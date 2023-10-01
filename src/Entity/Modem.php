@@ -17,9 +17,9 @@ class Modem extends Equipment
 {
     use ConnectedTrait;
 
-    const MAXIMUM_CAMERA_NUMBER = 4;
+    const MAXIMUM_CONNECTED_NUMBER = 4;
 
-    #[ORM\ManyToOne(targetEntity: self::class)]
+    #[ORM\ManyToOne(targetEntity: self::class, inversedBy: 'modems')]
     #[ORM\JoinColumn(nullable: true)]
     #[Assert\Valid]
     private ?self $masterModem = null;
@@ -31,11 +31,19 @@ class Modem extends Equipment
     )]
     private Collection $cameras;
 
+    #[ORM\OneToMany(mappedBy: 'masterModem', targetEntity: self::class)]
+    #[Assert\Count(
+        max: 4,
+        maxMessage: 'El modem no puede tener más de 4 modems esclavos conectados.'
+    )]
+    private Collection $modems;
+
     public function __construct()
     {
         parent::__construct();
         $this->ip = null;
         $this->cameras = new ArrayCollection();
+        $this->modems = new ArrayCollection();
         $this->enumState = State::Active;
     }
 
@@ -69,8 +77,8 @@ class Modem extends Equipment
      */
     public function addCamera(Camera $camera): static
     {
-        if($this->cameras->count() === self::MAXIMUM_CAMERA_NUMBER){
-            throw new Exception('You have reached the maximum number of cameras allowed to connect.');
+        if(!$this->canAddCameraOrModem()){
+            throw new Exception('You have reached the maximum number of cameras/modems allowed to connect.');
         }
 
         if (!$this->cameras->contains($camera)) {
@@ -87,6 +95,43 @@ class Modem extends Equipment
             // set the owning side to null (unless already changed)
             if ($camera->getModem() === $this) {
                 $camera->setModem(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Modem>
+     */
+    public function getModems(): Collection
+    {
+        return $this->modems;
+    }
+
+    /**
+     * @throws Exception
+     */
+    public function addModem(Modem $modem): static
+    {
+        if(!$this->canAddCameraOrModem()){
+            throw new Exception('You have reached the maximum number of cameras/modems allowed to connect.');
+        }
+
+        if (!$this->modems->contains($modem)) {
+            $this->modems->add($modem);
+            $modem->setMasterModem($this);
+        }
+
+        return $this;
+    }
+
+    public function removeModem(Modem $modem): static
+    {
+        if ($this->modems->removeElement($modem)) {
+            // set the owning side to null (unless already changed)
+            if ($modem->getMasterModem() === $this) {
+                $modem->setMasterModem(null);
             }
         }
 
@@ -128,6 +173,16 @@ class Modem extends Equipment
         return $this;
     }
 
+    private function deactivateModems(): static
+    {
+        foreach ($this->getModems() as $modem) {
+            /** @var Modem $modem */
+            $modem->deactivate();
+        }
+
+        return $this;
+    }
+
     /**
      * @throws Exception
      */
@@ -164,9 +219,14 @@ class Modem extends Equipment
         return true;
     }
 
-    public function canAddCamera(): bool
+    public function canAddCameraOrModem(): bool
     {
-        return $this->cameras->count() < self::MAXIMUM_CAMERA_NUMBER;
+        return $this->getConnectedNumber() < self::MAXIMUM_CONNECTED_NUMBER;
+    }
+
+    public function getConnectedNumber(): int
+    {
+        return $this->cameras->count() + $this->modems->count();
     }
 
     public function connect($container): static

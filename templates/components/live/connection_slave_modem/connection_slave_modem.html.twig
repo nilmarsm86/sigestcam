@@ -1,5 +1,5 @@
 <div {{ attributes }}>
-    {% if commutator and port %}
+    {% if masterModem %}
         {% embed "embeds/card.html.twig" %}
             {% block card_css_class %}mb-4{% endblock %}
 
@@ -9,18 +9,28 @@
 
             {% block card_header_options %}
                 <div>
-                    <button class="btn btn-primary btn-sm
-                            {% if port is null %}
-                                disabled
-                            {% else %}
-                                {% if port.equipment is not null %}disabled{% endif %}
-                            {% endif %}"
+                    <button class="btn btn-primary btn-sm"
+                            aria-current="page"
+                            data-action="live#action"
+                            data-action-name="removeModem()"
+                    >
+                        <i class="fas fa-circle"></i>
+                        Modems esclavos Inactivos
+                    </button>
+
+                    <button class="btn btn-primary btn-sm"
+{#                            {% if port is null %}#}
+{#                                disabled#}
+{#                            {% else %}#}
+{#                                {% if port.equipment is not null %}disabled{% endif %}#}
+{#                            {% endif %}"#}
+                            {% if masterModem.getConnectedNumber() >= 4 %}disabled{% endif %}
                             aria-current="page"
                             data-bs-toggle="modal"
-                            data-bs-target="#add-modem"
+                            data-bs-target="#add-slave-modem"
                     >
                         <i class="fas fa-plus"></i>
-                        Nuevo
+                        Nuevo modem esclavo
                     </button>
                 </div>
             {% endblock %}
@@ -28,28 +38,28 @@
             {% block card_body %}
                 {% if port is not null %}
                     <div data-loading="addClass(d-none)">
-                        {{ component('ConnectionModemTable', {connection:connection, commutator: commutator, port: port}) }}
+                        {{ component('ConnectionSlaveModemTable', {connection:connection, masterModem: masterModem}) }}
                     </div>
 {#                    {% if port.equipment is not null %}#}
                         <div class="row">
-                            {{ component('ConnectionModemDetail', {connection:connection, port: port}) }}
+                            {{ component('ConnectionSlaveModemDetail', {connection:connection, port: port}) }}
                         </div>
 {#                    {% endif %}#}
                 {% endif %}
             {% endblock %}
         {% endembed %}
 
-        {% if port is not null and port.equipment is null %}
+        {% if masterModem and masterModem.getConnectedNumber() < 4 %}
             <!-- Modal -->
             {{ component('ModalForm', {
                 title: 'Agregar Modem',
-                src: 'ConnectionModemNew',
+                src: 'ConnectionSlaveModemNew',
                 vars: {
                     connection:connection,
-                    port: port
+                    masterModem: masterModem
                 },
                 type: 'component',
-                id: 'add-modem'
+                id: 'add-slave-modem'
             }) }}
             <!-- Modal -->
         {% endif %}

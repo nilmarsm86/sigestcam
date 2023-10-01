@@ -27,7 +27,7 @@
                         {% endif %}
 
                         {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') %}
-                            {% if port.hasConnectedModem() and port.equipment.cameras.count >= 4 %}disabled{% endif %}
+                            {% if port.hasConnectedModem() and port.equipment.getConnectedNumber() >= 4 %}disabled{% endif %}
                         {% endif %}
                     {% endif %}"
                     aria-current="page"

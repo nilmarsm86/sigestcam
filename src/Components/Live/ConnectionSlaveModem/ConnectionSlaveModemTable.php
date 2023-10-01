@@ -43,17 +43,21 @@ class ConnectionSlaveModemTable extends ConnectionModemTable
 //    #[LiveProp(updateFromParent: true)]
 //    public ?Commutator $commutator = null;
 
+    #[LiveProp(updateFromParent: true)]
+    public ?Modem $masterModem = null;
+
 //    public function __construct(private readonly ModemRepository $modemRepository, private CameraRepository $cameraRepository)
 //    {
 //    }
 
-//    //cuando se monta por primera vez el componete
-//    public function mount(ConnectionType $connection, Port $port): void
-//    {
-//        $this->connection = $connection;
-//        $this->port = $port;
-//        $this->filterAndReload();
-//    }
+    //cuando se monta por primera vez el componete
+    public function mount(ConnectionType $connection, Port $port = null, Modem $masterModem = null): void
+    {
+        $this->connection = $connection;
+        $this->port = $port;
+        $this->masterModem = $masterModem;
+        $this->filterAndReload();
+    }
 
 //    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
 //    public function __invoke(): void
@@ -62,33 +66,29 @@ class ConnectionSlaveModemTable extends ConnectionModemTable
 //        $this->filterAndReload();
 //    }
 
-//    private function filterAndReload(): void
-//    {
-//        $this->entityId = null;
-//        $this->filter = ($this->port->hasConnectedModem()) ? $this->port->getEquipment()->getIp() : '';
-//        $this->reload();
-//    }
+    protected function filterAndReload(): void
+    {
+        $this->entityId = null;
+        //$this->filter = ($this->masterModem->hasConnectedModem()) ? $this->port->getEquipment()->getIp() : '';
+        $this->filter = '';
+        $this->reload();
+    }
 
-//    private function reload(): void
-//    {
-//        if(is_null($this->filter)){
-//            $this->filter = '';
-//        }
-//
-//        //cambiar la forma en la que se buscan los datos
-//        if($this->port->hasConnectedModem()){
-////            if($this->port->isActive()){
-////                $data = $this->modemRepository->findActiveModemsWithPort($this->filter, $this->amount, $this->page);
-////            }else{
-////                $data = $this->modemRepository->findInactiveModemsWithPort($this->filter, $this->amount, $this->page);
-////            }
-//            $data = $this->modemRepository->findModemByPort($this->port, $this->filter, $this->amount, $this->page);
-//        }else{
-//            $data = $this->modemRepository->findInactiveModemsWithoutPort($this->filter, $this->amount, $this->page);
-//        }
-//        $this->reloadData($data);
-//        $this->setCamerasAmount();
-//    }
+    protected function reload(): void
+    {
+        if(is_null($this->filter)){
+            $this->filter = '';
+        }
+
+        //cambiar la forma en la que se buscan los datos
+        if(!is_null($this->masterModem->getId())){
+            $data = $this->modemRepository->findModemByMaster($this->masterModem, $this->filter, $this->amount, $this->page);
+        }else{
+            $data = $this->modemRepository->findInactiveModemsWithoutPortAndMasterModem($this->filter, $this->amount, $this->page);
+        }
+        $this->reloadData($data);
+        $this->setCamerasAmount();
+    }
 
 //    //mejorar
 //    private function setCamerasAmount()

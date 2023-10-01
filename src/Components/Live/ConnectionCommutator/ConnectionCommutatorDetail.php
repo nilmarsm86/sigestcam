@@ -29,7 +29,7 @@ class ConnectionCommutatorDetail
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(protected readonly EntityManagerInterface $entityManager)
     {
         $this->entity = Commutator::class;
     }

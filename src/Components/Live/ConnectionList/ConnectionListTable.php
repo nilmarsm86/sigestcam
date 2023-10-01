@@ -34,7 +34,7 @@ class ConnectionListTable
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-    public function __construct(private readonly CameraRepository $cameraRepository)
+    public function __construct(protected readonly CameraRepository $cameraRepository)
     {
     }
 
@@ -47,7 +47,7 @@ class ConnectionListTable
         $this->reload();
     }
 
-    private function reload()
+    protected function reload()
     {
         $data = match ($this->connection) {
             ConnectionType::Direct => $this->cameraRepository->findByDirectConnection($this->filter, $this->amount, $this->page),

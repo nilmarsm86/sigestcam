@@ -1,5 +1,5 @@
 <div {{ attributes }} style="position: relative">
-    {% if port is not null or modem is not null %}
+    {% if masterModem is not null %}
         {% embed "embeds/async_table.html.twig" %}
             {% block table_head %}
                 <tr>
@@ -47,7 +47,7 @@
                 {% else %}
                     <tr>
                         <td colspan="7">
-                            No se encontraron registros
+                            No se encontraron registros. Intente buscar entre los modems inactivos.
                         </td>
                     </tr>
                 {% endfor %}

@@ -7,6 +7,9 @@
                     <th>Marca</th>
                     <th>Modelo</th>
                     <th>Estado</th>
+                    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveModem') %}
+                        <th>Modems esclavos</th>
+                    {% endif %}
                     <th>Cámaras</th>
                     <th>Provincia</th>
                     <th>Municipio</th>
@@ -27,6 +30,9 @@
                                 <span class="badge text-bg-danger">Inactivo</span>
                             {% endif %}
                         </td>
+                        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveModem') %}
+                            <td>{{ modem.modems }}</td>
+                        {% endif %}
                         <td>{{ modem.cameras }}</td>
                         <td>{{ modem.municipality.province.name }}</td>
                         <td>{{ modem.municipality.name }}</td>

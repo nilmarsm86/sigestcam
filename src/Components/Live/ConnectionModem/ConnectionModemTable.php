@@ -42,7 +42,7 @@ class ConnectionModemTable
     #[LiveProp(updateFromParent: true)]
     public ?Commutator $commutator = null;
 
-    public function __construct(private readonly ModemRepository $modemRepository, private CameraRepository $cameraRepository)
+    public function __construct(protected readonly ModemRepository $modemRepository, protected CameraRepository $cameraRepository)
     {
     }
 
@@ -61,14 +61,14 @@ class ConnectionModemTable
         $this->filterAndReload();
     }
 
-    private function filterAndReload(): void
+    protected function filterAndReload(): void
     {
         $this->entityId = null;
         $this->filter = ($this->port->hasConnectedModem()) ? $this->port->getEquipment()->getIp() : '';
         $this->reload();
     }
 
-    private function reload(): void
+    protected function reload(): void
     {
         if(is_null($this->filter)){
             $this->filter = '';
@@ -87,13 +87,24 @@ class ConnectionModemTable
         }
         $this->reloadData($data);
         $this->setCamerasAmount();
+        if($this->connection->name === ConnectionType::SlaveModem->name){
+            $this->setModemsAmount();
+        }
     }
 
     //mejorar
-    private function setCamerasAmount()
+    protected function setCamerasAmount()
     {
         for($i=0;$i<count($this->data);$i++){
             $this->data[$i]['cameras'] = $this->cameraRepository->findAmountCamerasByModemId($this->data[$i]['id']);
+        }
+    }
+
+    //mejorar
+    protected function setModemsAmount()
+    {
+        for($i=0;$i<count($this->data);$i++){
+            $this->data[$i]['modems'] = $this->modemRepository->findAmountSlaveModemsByMasterModemId($this->data[$i]['id']);
         }
     }
 

@@ -68,15 +68,15 @@ class ConnectionSlaveModemNew extends ConnectionModemNew
         if($this->isSubmitAndValid()){
             /** @var Modem $modem */
             $modem = $this->getForm()->getData();
-            if(!is_null($this->port)){
-                $modem->setPort($this->port);
-                $modem->setMunicipality($this->port->getCommutator()->getMunicipality());
-            }
-
-//            if(!is_null($this->masterModem)){
-//                $modem->setMasterModem($this->masterModem);
-//                $modem->setMunicipality($this->masterModem->getCommutator()->getMunicipality());
+//            if(!is_null($this->port)){
+//                $modem->setPort($this->port);
+//                $modem->setMunicipality($this->port->getCommutator()->getMunicipality());
 //            }
+
+            if(!is_null($this->masterModem)){
+                $modem->setMasterModem($this->masterModem);
+                $modem->setMunicipality($this->masterModem->getMunicipality());
+            }
 
             $modemRepository->save($modem, true);
 

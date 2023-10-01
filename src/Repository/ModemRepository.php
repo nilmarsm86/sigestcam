@@ -196,6 +196,20 @@ class ModemRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $amountPerPage);
     }
 
+    public function findInactiveModemsWithoutPortAndMasterModem(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('m')->select(['m', 'mun', 'pro'])
+            ->innerJoin('m.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro')
+            ->where('m.state = :state')
+            ->setParameter(':state', State::Inactive)
+            ->andWhere('m.port IS NULL')
+            ->andWhere('m.masterModem IS NULL');
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('m.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
     public function findModemsByCommutator(Commutator $commutator, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
         $portsId = [];
@@ -223,6 +237,18 @@ class ModemRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $amountPerPage);
     }
 
+    public function findModemByMaster(Modem $masterModem, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('m')->select(['m', 'mun', 'pro'])
+            ->innerJoin('m.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
+        $builder->leftJoin('m.masterModem', 'master');
+        $builder->andWhere($builder->expr()->in('master.id', $masterModem->getId()));
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('m.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
     public function findByDirectConnection(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
         $builder = $this->createQueryBuilder('m')->select(['m', 'p', 'comm', 'mun', 'pro']);
@@ -245,6 +271,18 @@ class ModemRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $amountPerPage);
     }
 
-
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function findAmountSlaveModemsByMasterModemId($modemId): array|int
+    {
+        return $this->createQueryBuilder('m')
+            ->select('COUNT(m) as total')
+            ->leftJoin('m.masterModem', 'masterModem')
+            ->where('masterModem.id = '.$modemId)
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
 
 }

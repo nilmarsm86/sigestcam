@@ -36,7 +36,7 @@ class ConnectionModemDetail
     #[LiveProp(updateFromParent: true)]
     public ?Port $port = null;
 
-    public function __construct(private readonly EntityManagerInterface $entityManager)
+    public function __construct(protected readonly EntityManagerInterface $entityManager)
     {
         $this->entity = Modem::class;
     }
@@ -69,7 +69,7 @@ class ConnectionModemDetail
      * Get connect event name
      * @return string
      */
-    private function getConnectEventName(): string
+    protected function getConnectEventName(): string
     {
         return static::CONNECT.'_'.$this->connection->name;
     }
@@ -78,13 +78,12 @@ class ConnectionModemDetail
      * Get disconnect event name
      * @return string
      */
-    private function getDisconnectEventName(): string
+    protected function getDisconnectEventName(): string
     {
         return static::DISCONNECT.'_'.$this->connection->name;
     }
 
-    #[LiveListener(ConnectionModemTable::DETAIL.'_Simple')]
-    public function onConnectionModemTableDetailSimple(#[LiveArg] Modem $entity): void
+    public function onConnectionModemTableDetail(Modem $entity): void
     {
         if(isset($this->modem['id'])){
             if($this->modem['id'] !== $entity->getId()){
@@ -97,7 +96,19 @@ class ConnectionModemDetail
         }
     }
 
-    private function details(Modem $modem): array
+    #[LiveListener(ConnectionModemTable::DETAIL.'_Simple')]
+    public function onConnectionModemTableDetailSimple(#[LiveArg] Modem $entity): void
+    {
+        $this->onConnectionModemTableDetail($entity);
+    }
+
+    #[LiveListener(ConnectionModemTable::DETAIL.'_SlaveModem')]
+    public function onConnectionModemTableDetailSlaveModem(#[LiveArg] Modem $entity): void
+    {
+        $this->onConnectionModemTableDetail($entity);
+    }
+
+    protected function details(Modem $modem): array
     {
         $cam = [];
         $cam['id'] = $modem->getId();

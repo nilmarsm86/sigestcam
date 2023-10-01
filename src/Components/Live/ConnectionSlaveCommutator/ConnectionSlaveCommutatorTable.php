@@ -50,7 +50,7 @@ class ConnectionSlaveCommutatorTable extends ConnectionCommutatorTable
         }
     }
 
-    private function filterAndReload(): void
+    protected function filterAndReload(): void
     {
         $this->entityId = null;
         $this->filter = ($this->masterPort?->hasConnectedCommutator()) ? $this->masterPort->getEquipment()->getIp() : '';
