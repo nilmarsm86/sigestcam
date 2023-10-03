@@ -1,5 +1,7 @@
 {{ form_row(form.ip) }}
-{{ form_row(form.gateway) }}
+{% if masterPort is not defined %}
+    {{ form_row(form.gateway) }}
+{% endif %}
 {{ form_row(form.multicast) }}
 {% if form.portsAmount is defined %}
     {{ form_row(form.portsAmount) }}
@@ -22,8 +24,10 @@
     >
 {% endif %}
 
-    {{ form_row(form.address.province) }}
-    {{ form_row(form.address.municipality) }}
+    {% if form.address is defined %}
+        {{ form_row(form.address.province) }}
+        {{ form_row(form.address.municipality) }}
+    {% endif %}
 
 {% if isSuccessful is not defined %}
     </div>

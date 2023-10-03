@@ -121,7 +121,7 @@ class ModemController extends AbstractController
         return $this->render("modem/$template", [
             'modem' => $modem,
             'form' => $form,
-            'title' => 'Editar cámara'
+            'title' => 'Editar modem'
         ]);
     }
 

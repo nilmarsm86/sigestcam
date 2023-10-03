@@ -53,6 +53,7 @@ class RegistrationFormType extends AbstractType
                         'class' => 'form-control form-control-user no-border-left',
                     ],
                 ],
+                'invalid_message' => 'Las contraseñas no coinciden.'
             ])
         ;
     }

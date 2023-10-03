@@ -26,13 +26,15 @@ class CommutatorType extends AbstractType
                 new Ip(message:'Establezca un IP válido.')
             ];
 
+            $physicalAddress = [
+                new NotBlank(message: 'La dirección física no debe estar vacía.'),
+            ];
+        }
+
+        if($options['crud'] === false && $options['slave'] === false){
             $gatewayConstrains = [
                 new NotBlank(message: 'El IP gateway no debe estar vacío.'),
                 new Ip(message:'Establezca un IP gateway válido.')
-            ];
-
-            $physicalAddress = [
-                new NotBlank(message: 'La dirección física no debe estar vacía.'),
             ];
         }
 
@@ -66,14 +68,16 @@ class CommutatorType extends AbstractType
             ])
             ->add('contic', null, [
                 'label' => 'Contic:',
-            ])
-            ->add('address', AddressType::class, [
+            ]);
+        if($options['crud']) {
+            $builder->add('address', AddressType::class, [
                 'province' => $options['province'],
                 'municipality' => $options['municipality'],
                 'mapped' => false,
                 'crud' => $options['crud']
-            ])
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+            ]);
+        }
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
                 $commutator = $event->getData();
                 $form = $event->getForm();
 
@@ -101,7 +105,8 @@ class CommutatorType extends AbstractType
             ],
             'province' => 0,
             'municipality' => 0,
-            'crud' => false
+            'crud' => false,
+            'slave' => false,
         ]);
 
         $resolver->setAllowedTypes('province', 'int');

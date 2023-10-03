@@ -38,7 +38,8 @@ class ConnectionSlaveCommutatorNew extends ConnectionCommutatorNew
         return $this->createForm(CommutatorType::class, $this->commut, [
             'province' => (int) $this->province,
             'municipality' => (int) $this->municipality,
-            'crud' => true
+            'crud' => false,
+            'slave' => true,
         ]);
     }
 
@@ -50,9 +51,10 @@ class ConnectionSlaveCommutatorNew extends ConnectionCommutatorNew
         if($this->isSubmitAndValid()){
             //lanzar evento a JS
             $this->dispatchBrowserEvent(static::MODAL_CLOSE);
-            $commutator = $this->mapped($municipalityRepository, $this->getForm()->getData());
+            $commutator = $this->getForm()->getData();
             $commutator->setMasterCommutator($this->masterPort->getCommutator());
             $commutator->setMunicipality($this->masterPort->getCommutator()->getMunicipality());
+            $commutator->setPort($this->masterPort);
             $commutatorRepository->save($commutator, true);
 
             $this->emitSuccess([
