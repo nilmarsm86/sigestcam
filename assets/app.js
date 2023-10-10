@@ -7,6 +7,7 @@ import './bootstrap.js';
  */
 
 import './bootstrap/js/bootstrap.min.js';
+//import './js/chart.min.js';
 import './js/bs-init.js';
 import './js/theme.js';
 import Backdrop from "./components/backdrop.js";

@@ -1,0 +1,159 @@
+{% embed "embeds/card.html.twig" %}
+    {% block card_css_class %}mb-4{% endblock %}
+
+    {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+    {% block card_title %}Listado de reportes abiertos{% endblock %}
+
+    {% block card_header_options %}
+        <div>
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle show dropdown-sm {% if app.request.query.get('type') %}active{% endif %}" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-server"></i>
+                    Tipo
+                </button>
+                <ul class="dropdown-menu">
+                    {% for type in types %}
+                        {% if type.value != '' %}
+                            <li>
+                                <a class="dropdown-item" href="{{ path('report_index', {'type':type.value}+app.request.query.all) }}">
+                                    <i class="fas {% if type.value == app.request.query.get('type') %}fa-check-square{% else %}fa-square-full{% endif %} text-gray-700"></i>
+                                    {{ type.getLabelFrom(type) }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle show dropdown-sm {% if app.request.query.get('state') %}active{% endif %}" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-check"></i>
+                    Estado
+                </button>
+                <ul class="dropdown-menu">
+                    {% for state in states %}
+                        {% if state.value != '' %}
+                            <li>
+                                <a class="dropdown-item" href="{{ path('report_index', {'state':state.value}+app.request.query.all) }}">
+                                    <i class="fas {% if state.value == app.request.query.get('state') %}fa-check-square{% else %}fa-square-full{% endif %} text-gray-700"></i>
+                                    {{ state.getLabelFrom(state) }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle show dropdown-sm {% if app.request.query.get('priority') %}active{% endif %}" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-arrow-down"></i>
+                    Prioridad
+                </button>
+                <ul class="dropdown-menu">
+                    {% for priority in priorities %}
+                        {% if priority.value != '' %}
+                            <li>
+                                <a class="dropdown-item" href="{{ path('report_index', {'priority':priority.value}+app.request.query.all) }}">
+                                    <i class="fas {% if priority.value == app.request.query.get('priority') %}fa-check-square{% else %}fa-square-full{% endif %} text-gray-700"></i>
+                                    {{ priority.getLabelFrom(priority) }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+{#            <a class="btn btn-primary btn-sm active"#}
+{#               data-action="page#showFormContent"#}
+{#               href="{{ path('report_new') }}"#}
+{#            >#}
+{#                <i class="fas fa-plus"></i>#}
+{#                Nuevo#}
+{#            </a>#}
+        </div>
+    {% endblock %}
+
+    {% block card_body %}
+        {% embed "embeds/table.html.twig" %}
+            {% block table_head %}
+                <tr>
+{#                    <th>Id</th>#}
+                    <th>Número</th>
+                    <th>Especialidad</th>
+                    <th>Fecha de creación</th>
+                    <th>Hora</th>
+{#                    <th>CloseDate</th>#}
+                    <th>Tipo</th>
+{#                    <th>InterruptionReason</th>#}
+                    <th>Prioridad</th>
+{#                    <th>Flaw</th>#}
+{#                    <th>Observation</th>#}
+{#                    <th>Solution</th>#}
+{#                    <th>Unit</th>#}
+                    <th>Estado</th>
+                    <th>Objetivo</th>
+                    <th></th>
+                </tr>
+            {% endblock %}
+
+            {% block table_body %}
+                {% for report in paginator.getData() %}
+{#                    {% dump(report) %}#}
+                        <tr>
+{#                            <td>{{ report.id }}</td>#}
+                            <td>{{ report.number }}</td>
+                            <td>{{ report.specialty }}</td>
+                            <td>{{ report.entryDate ? report.entryDate|date('d/m/Y') : '' }}</td>
+                            <td>{{ report.entryDate ? report.entryDate|date('H:i:s') : '' }}</td>
+{#                            <td>{{ report.closeDate ? report.closeDate|date('Y-m-d H:i:s') : '' }}</td>#}
+                            <td>{{ report.type.getLabelFrom(report.type) }}</td>
+{#                            <td>{{ report.interruptionReason }}</td>#}
+                            <td>
+                                <span class="badge
+                                {% if report.priority is same as constant('App\\Entity\\Enums\\Priority::Hight') %}
+                                    text-bg-danger
+                                {% endif %}
+                                {% if report.priority is same as constant('App\\Entity\\Enums\\Priority::Medium') %}
+                                    text-bg-warning
+                                {% endif %}
+                                {% if report.priority is same as constant('App\\Entity\\Enums\\Priority::Low') %}
+                                    text-bg-success
+                                {% endif %}
+                                ">
+                                    {{ report.priority.getLabelFrom(report.priority) }}
+                                </span>
+                            </td>
+{#                            <td>{{ report.flaw }}</td>#}
+{#                            <td>{{ report.observation }}</td>#}
+{#                            <td>{{ report.solution }}</td>#}
+{#                            <td>{{ report.unit }}</td>#}
+                            <td>
+                                <span class="badge
+                                {% if report.state is same as constant('App\\Entity\\Enums\\ReportState::Open') %}
+                                    text-bg-info
+                                {% endif %}
+                                {% if report.state is same as constant('App\\Entity\\Enums\\ReportState::Close') %}
+                                    text-bg-secondary
+                                {% endif %}
+                                ">
+                                    {{ report.state.getLabelFrom(report.state) }}
+                                </span>
+                            </td>
+                            <td>{{ report.aim.getLabelFrom(report.aim) }}</td>
+                            <td>
+                                <a class="btn btn-sm btn-primary" href="{{ path('report_show', {'id': report.id}) }}" data-action="page#showFormContent" title="Detalle del reporte">
+                                    <i class="fas fa-eye"></i>
+                                </a>
+{#                                <a href="{{ path('report_edit', {'id': report.id}) }}">edit</a>#}
+                            </td>
+                        </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="13">No se encontraron reportes.</td>
+                    </tr>
+                {% endfor %}
+            {% endblock %}
+        {% endembed %}
+    {% endblock %}
+{% endembed %}

@@ -1,0 +1,89 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Detalle del Reporte{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Detalle del reporte</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Reporte', href: path('report_index')},
+                {label: 'Detalle'},
+            ],
+            current: 'Detalle'
+        }) }}
+    </div>
+
+    {{ include('commutator/_detail.html.twig', {'showButton': true, 'title': title}) }}
+{#    <h1>Report</h1>#}
+
+{#    <table class="table">#}
+{#        <tbody>#}
+{#            <tr>#}
+{#                <th>Id</th>#}
+{#                <td>{{ report.id }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Number</th>#}
+{#                <td>{{ report.number }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Specialty</th>#}
+{#                <td>{{ report.specialty }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>EntryDate</th>#}
+{#                <td>{{ report.entryDate ? report.entryDate|date('Y-m-d H:i:s') : '' }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>CloseDate</th>#}
+{#                <td>{{ report.closeDate ? report.closeDate|date('Y-m-d H:i:s') : '' }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Type</th>#}
+{#                <td>{{ report.type }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>InterruptionReason</th>#}
+{#                <td>{{ report.interruptionReason }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Priority</th>#}
+{#                <td>{{ report.priority }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Flaw</th>#}
+{#                <td>{{ report.flaw }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Observation</th>#}
+{#                <td>{{ report.observation }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Solution</th>#}
+{#                <td>{{ report.solution }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Unit</th>#}
+{#                <td>{{ report.unit }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>State</th>#}
+{#                <td>{{ report.state }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Aim</th>#}
+{#                <td>{{ report.aim }}</td>#}
+{#            </tr>#}
+{#        </tbody>#}
+{#    </table>#}
+
+{#    <a href="{{ path('app_report_index') }}">back to list</a>#}
+
+{#    <a href="{{ path('app_report_edit', {'id': report.id}) }}">edit</a>#}
+
+{#    {{ include('report/_delete_form.html.twig') }}#}
+{% endblock %}

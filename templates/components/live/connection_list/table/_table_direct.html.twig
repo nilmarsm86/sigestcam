@@ -31,6 +31,10 @@
                         {% if camera.port.commutator.gateway %}({{ camera.port.commutator.gateway }}){% endif%}
                         {% if camera.port.commutator.multicast %}[{{ camera.port.commutator.multicast }}]{% endif %}
                     </a>
+
+                    <a href="{{ path('report_new', {'equipment':camera.port.commutator.id}) }}" class="ms-1">
+                        <i class="fas fa-clipboard" title="Reportar switch"></i>
+                    </a>
                 </td>
                 <td>
                     <a href="{{ path('port_state') }}"
@@ -50,7 +54,7 @@
                     </a>
                 </td>
                 <td>
-                    <a href="{{ path('camera_state') }}"
+                    <a href="{{ path('camera_state') }}" class="text-decoration-none"
                        data-action="page#state:prevent"
                        data-page-id-param="{{ camera.id }}"
                             {% if camera.state %}
@@ -65,6 +69,17 @@
                                 {{ camera.ip }}
                             </span>
                     </a>
+                    {% if camera.state %}
+                        <a
+                                href="#"
+                                class="ms-1"
+                                data-action="connection-list-table#report"
+                                data-connection-list-table-equipment-param="{{ camera.id }}"
+                                data-connection-list-table-type-param="1"
+                        >
+                            <i class="fas fa-clipboard" title="Reportar cámara"></i>
+                        </a>
+                    {% endif %}
                 </td>
                 <td>{{ camera.municipality.province.name }}</td>
                 <td>{{ camera.municipality.name }}</td>

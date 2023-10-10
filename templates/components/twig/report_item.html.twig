@@ -1,0 +1,14 @@
+<a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {'type': reportType.value}) }}">
+    <div class="me-3">
+        <div class="bg-{{ color }} icon-circle">
+            <i class="fas {{ icon }} text-white"></i>
+        </div>
+    </div>
+    <div>
+        <span class="small text-gray-500">December 12, 2019</span>
+        <p>
+            <span class="badge bg-danger badge-counter">{{ this.getAmount() }}</span>
+            {{ title }}
+        </p>
+    </div>
+</a>

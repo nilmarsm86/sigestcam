@@ -1,4 +1,6 @@
-<div {{ attributes.defaults(stimulus_controller('page connection-list-table')) }} data-page-target="listContainer" style="position: relative">
+<div {{ attributes.defaults(stimulus_controller('page connection-list-table')) }} data-page-target="listContainer"
+    style="position: relative" data-action="submit-form-async:success->connection-list-table#closeModal"
+>
 
     {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Direct') %}
         {{ include('components/live/connection_list/table/_table_direct.html.twig') }}
@@ -15,5 +17,14 @@
     <div class="row">
         {{ component('ConnectionListDetail', {connection: connection, data: data}) }}
     </div>
+
+    {{ component('ModalForm', {
+        title: 'Reportar equipo',
+        src: 'App\\Controller\\ReportController::new',
+        vars: {'modal': true},
+        type: 'controller',
+        id: 'new-report'
+    }) }}
+
     <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
 </div>

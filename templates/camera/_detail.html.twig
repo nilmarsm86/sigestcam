@@ -73,6 +73,58 @@
                         <th>Número de serie electronico:</th>
                         <td>{{ camera.electronicSerial }}</td>
                     </tr>
+                    {% if camera.isActive() %}
+                        <tr>
+                            <th>Conexion:</th>
+                            <td>
+                                <ul>
+                                    {% if camera.port %}
+                                        <li><strong>Puerto:</strong> {{ camera.port.number }}</li>
+                                        <li>
+                                            <strong>Switch:</strong>
+                                            <a href="{{ path('commutator_show', {'id':camera.port.commutator.id}) }}">
+                                                {{ camera.port.commutator }}
+                                            </a>
+                                        </li>
+                                        {% if camera.port.commutator.port %}
+                                            <li><strong>Puerto:</strong> {{ camera.port.commutator.port.number }}</li>
+                                            <li>
+                                                <strong>Switch Maestro:</strong>
+                                                <a href="{{ path('commutator_show', {'id':camera.port.commutator.port.commutator.id}) }}">
+                                                    {{ camera.port.commutator.port.commutator }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if camera.modem %}
+                                        <li>
+                                            <strong>Modem:</strong>
+                                            <a href="{{ path('modem_show', {'id':camera.modem.id}) }}">
+                                                {{ camera.modem }}
+                                            </a>
+                                        </li>
+                                        <li><strong>Puerto:</strong> {{ camera.modem.port.number }}</li>
+                                        <li>
+                                            <strong>Switch:</strong>
+                                            <a href="{{ path('commutator_show', {'id':camera.modem.port.commutator.id}) }}">
+                                                {{ camera.modem.port.commutator }}
+                                            </a>
+                                        </li>
+                                        {% if camera.modem.port.commutator.port %}
+                                            <li><strong>Puerto:</strong> {{ camera.modem.port.commutator.port.number }}</li>
+                                            <li>
+                                                <strong>Switch Maestro:</strong>
+                                                <a href="{{ path('commutator_show', {'id':camera.modem.port.commutator.port.commutator.id}) }}">
+                                                    {{ camera.modem.port.commutator.port.commutator }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

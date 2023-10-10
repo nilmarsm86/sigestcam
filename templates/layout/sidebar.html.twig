@@ -16,15 +16,16 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ path('report_index') }}">
             <i class="fas fa-table"></i>
             <span>Reportes</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#">
+        <a class="nav-link" href="{{ path('report_new') }}">
             <i class="far fa-user-circle"></i>
-            <span>Equipamiento</span></a>
+            <span>Crear reporte</span>
+        </a>
     </li>
     <li class="nav-item">
         <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('crud_commutator_') %}active{% endif %}"

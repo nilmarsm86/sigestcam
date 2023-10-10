@@ -1,5 +1,6 @@
 import { Controller } from '@hotwired/stimulus';
 import { getComponent } from '@symfony/ux-live-component';
+import {useProcessResponse} from "../behaviors/use-process-response.js";
 
 /*
  * This is an example Stimulus controller!
@@ -11,6 +12,10 @@ import { getComponent } from '@symfony/ux-live-component';
  * Delete this file or adapt it for your use!
  */
 export default class extends Controller {
+
+    connect() {
+        useProcessResponse(this);
+    }
 
     async initialize() {
         this.component = await getComponent(this.element);
@@ -31,4 +36,41 @@ export default class extends Controller {
         }
         this.component.action('disconnect', {'camera': event.params.camera});
     }
+
+    report(event){
+        event.preventDefault();
+
+        const modalElement = this.element.querySelector('#new-report');
+        modalElement.querySelector('#report_equipment').value = event.params.equipment;
+        modalElement.querySelector('#report_type').value = event.params.type;
+
+        const myModal = new bootstrap.Modal(modalElement);
+        myModal.show();
+    }
+
+    async closeModal(event){
+        const modalElement = this.element.querySelector('#new-report');
+        const form = modalElement.querySelector('form');
+        form.reset();
+
+        modalElement.querySelector('button[class=btn-close]').click();
+
+        const response = event.detail.response;
+        await this.processResponseToast(response);
+    }
+
+    selectReason(event){
+        event.preventDefault();
+
+        let rowReportInterruptionReason = this.element.querySelector('#report_interruptionReason').parentElement.parentElement;
+        if(event.currentTarget.value === "-1"){
+            rowReportInterruptionReason.style.display = 'flex';
+            this.element.querySelector('#report_interruptionReason').value = '';
+        }else{
+            rowReportInterruptionReason.style.display = 'none';
+            this.element.querySelector('#report_interruptionReason').value = event.currentTarget.options[event.currentTarget.selectedIndex].text;
+        }
+    }
+
+
 }

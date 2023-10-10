@@ -23,7 +23,7 @@ enum ReportType: string
         }
 
         return match ($enum) {
-            self::Camera => 'Camara',
+            self::Camera => 'Cámara',
             self::Modem => 'Modem',
             self::Msam => 'Msam',
             self::Server => 'Servidor',

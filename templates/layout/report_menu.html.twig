@@ -1,0 +1,43 @@
+<div class="nav-item dropdown no-arrow">
+    <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown" href="#">
+{#        <span class="badge bg-danger badge-counter">12</span>#}
+        <i class="fas fa-clipboard-list fa-fw"></i>
+        Reportes por equipo
+    </a>
+    <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
+        <h6 class="dropdown-header">Equipamiento del sistema</h6>
+
+        {{ component('ReportItem', {
+            title: 'Reportes de cámara',
+            icon: 'fa-file-alt',
+            reportType: constant('App\\Entity\\Enums\\ReportType::Camera')
+        }) }}
+
+        {{ component('ReportItem', {
+            title: 'Reportes de modem',
+            icon: 'fa-file-alt',
+            reportType: constant('App\\Entity\\Enums\\ReportType::Modem')
+        }) }}
+
+        {{ component('ReportItem', {
+            title: 'Reportes de Msam',
+            icon: 'fa-file-alt',
+            reportType: constant('App\\Entity\\Enums\\ReportType::Msam')
+        }) }}
+
+        {{ component('ReportItem', {
+            title: 'Reportes de Switch',
+            icon: 'fa-file-alt',
+            reportType: constant('App\\Entity\\Enums\\ReportType::Switch')
+        }) }}
+
+        {{ component('ReportItem', {
+            title: 'Reportes de servidores',
+            icon: 'fa-file-alt',
+            reportType: constant('App\\Entity\\Enums\\ReportType::Server')
+        }) }}
+        <a class="dropdown-item text-center small text-gray-500" href="{{ path('report_index') }}">
+            Mostrar todos los reportes
+        </a>
+    </div>
+</div>

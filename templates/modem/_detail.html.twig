@@ -61,6 +61,52 @@
                             {% endif %}
                         </td>
                     </tr>
+                    {% if modem.isActive() %}
+                        <tr>
+                            <th>Conexion:</th>
+                            <td>
+                                <ul>
+                                    {% if modem.port %}
+                                        <li><strong>Puerto:</strong> {{ modem.port.number }}</li>
+                                        <li>
+                                            <strong>Switch:</strong>
+                                            <a href="{{ path('commutator_show', {'id':modem.port.commutator.id}) }}">{{ modem.port.commutator }}</a>
+                                        </li>
+                                        {% if modem.port.commutator.port %}
+                                            <li><strong>Puerto:</strong> {{ modem.port.commutator.port.number }}</li>
+                                            <li>
+                                                <strong>Switch Maestro:</strong>
+                                                <a href="{{ path('commutator_show', {'id':modem.port.commutator.port.commutator.id}) }}">{{ modem.port.commutator.port.commutator }}</a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+
+                                    {% if modem.masterModem %}
+                                        <li>
+                                            <strong>Modem:</strong>
+                                            <a href="{{ path('modem_show', {'id':modem.masterModem.id}) }}">{{ modem.masterModem }}</a>
+                                        </li>
+                                        <li><strong>Puerto:</strong> {{ modem.masterModem.port.number }}</li>
+                                        <li>
+                                            <strong>Switch:</strong>
+                                            <a href="{{ path('commutator_show', {'id':modem.masterModem.port.commutator.id}) }}">
+                                                {{ modem.masterModem.port.commutator }}
+                                            </a>
+                                        </li>
+                                        {% if modem.masterModem.port.commutator.port %}
+                                            <li><strong>Puerto:</strong> {{ modem.masterModem.port.commutator.port.number }}</li>
+                                            <li>
+                                                <strong>Switch Maestro:</strong>
+                                                <a href="{{ path('commutator_show', {'id':modem.masterModem.port.commutator.port.commutator.id}) }}">
+                                                    {{ modem.masterModem.port.commutator.port.commutator }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                    {% endif %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

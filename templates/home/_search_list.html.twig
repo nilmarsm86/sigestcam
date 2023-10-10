@@ -1,0 +1,75 @@
+{% embed "embeds/card.html.twig" %}
+    {% block card_css_class %}mb-4{% endblock %}
+
+    {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+    {% block card_title %}Equipos con IP: <strong>{{ app.request.query.get('filter') }}</strong>{% endblock %}
+
+{#    {% block card_header_options %}#}
+{#        <div>#}
+{#            <a class="btn btn-primary btn-sm active"#}
+{#               data-action="page#showFormContent"#}
+{#               href="{{ path('camera_new') }}"#}
+{#            >#}
+{#                <i class="fas fa-plus"></i>#}
+{#                Nuevo#}
+{#            </a>#}
+{#        </div>#}
+{#    {% endblock %}#}
+
+    {% block card_body %}
+        {% embed "embeds/table.html.twig" %}
+            {% block table_head %}
+                <tr>
+                    <th>IP</th>
+                    <th>Equipo</th>
+                    <th>Estado</th>
+                    <th>Provincia</th>
+                    <th>Municipio</th>
+                    <th></th>
+                </tr>
+            {% endblock %}
+
+            {% block table_body %}
+                {% for equipment in paginator.getData() %}
+{#                    {{ dump(equipment) }}#}
+                    <tr>
+                        <td>{{ equipment.ip }}</td>
+                        {% if equipment.class is same as 'Commutator' %}
+                            <td>Commutador</td>
+                        {% endif %}
+
+                        {% if equipment.class is same as 'Camera' %}
+                            <td>Cámara</td>
+                        {% endif %}
+
+                        {% if equipment.class is same as 'Modem' %}
+                            <td>Modem</td>
+                        {% endif %}
+
+                        {% if equipment.class is same as 'Msam' %}
+                            <td>Msam</td>
+                        {% endif %}
+
+                        {% if equipment.class is same as 'Server' %}
+                            <td>Servidor</td>
+                        {% endif %}
+
+                        {% if equipment.isActive() %}
+                            <td>Activo</td>
+                        {% else %}
+                            <td>Inactivo</td>
+                        {% endif %}
+                        <td>{{ equipment.municipality.province }}</td>
+                        <td>{{ equipment.municipality }}</td>
+                        <td></td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="13">No se encontraron equipos.</td>
+                    </tr>
+                {% endfor %}
+            {% endblock %}
+        {% endembed %}
+    {% endblock %}
+{% endembed %}

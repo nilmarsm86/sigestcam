@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Equipment;
+use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -16,6 +18,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class EquipmentRepository extends ServiceEntityRepository
 {
+    use PaginateTarit;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Equipment::class);
@@ -37,6 +41,23 @@ class EquipmentRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
+     */
+    public function generalSearch(string $filter, int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('e')->select(['e', 'mun', 'pro'])
+            ->innerJoin('e.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro')
+            ->andWhere("e.ip LIKE :filter ")
+            ->setParameter(':filter','%'.$filter.'%');
+        $query = $builder->orderBy('e.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
     }
 
 //    /**

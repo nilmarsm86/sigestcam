@@ -22,10 +22,10 @@ class Report
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'El reporte debe de tener un número.')]
+//    #[Assert\NotBlank(message: 'El reporte debe de tener un número.')]
 //    #[Assert\NotNull(message: 'El número del reporte no puede ser nulo.')]
-    #[Assert\Positive]
-    private string $number;
+//    #[Assert\Positive]
+    private ?string $number = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El reporte debe de tener una especialidad.')]
@@ -33,10 +33,8 @@ class Report
     private string $specialty = 'video_vigilancia';
 
     #[ORM\Column]
-    #[Assert\NotBlank(message: 'El reporte debe de tener una fecha.')]
-//    #[Assert\NotNull(message: 'La fecha del reporte no puede ser nula.')]
     #[Assert\DateTime]
-    private ?DateTimeImmutable $entryDate;
+    private ?DateTimeImmutable $entryDate = null;
 
     #[ORM\Column(nullable: true)]
     #[Assert\DateTime]
@@ -110,7 +108,7 @@ class Report
 
     public function __construct()
     {
-        $this->entryDate = new DateTimeImmutable('now');
+        //$this->entryDate = new DateTimeImmutable('now');
         $this->enumPriority = Priority::Hight;
         $this->enumState = ReportState::Open;
     }
@@ -173,7 +171,7 @@ class Report
         return $this->enumType;
     }
 
-    private function setType(ReportType $type): static
+    public function setType(ReportType $type): static
     {
         $this->enumType = $type;
 
@@ -332,6 +330,13 @@ class Report
     public function getMunicipality(): Municipality
     {
         return $this->getEquipment()->getMunicipality();
+    }
+
+    #[ORM\PrePersist]
+    public function beforeSave(): void
+    {
+        $this->entryDate = new DateTimeImmutable('now');
+        $this->number = $this->entryDate->getTimestamp().'-'.$this->equipment->getShortName();
     }
 
     #[ORM\PrePersist]

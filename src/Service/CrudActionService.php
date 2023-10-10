@@ -15,7 +15,7 @@ class CrudActionService
     {
     }
 
-    public function indexAction(Request $request, ServiceEntityRepository $repository, string $findMethod, string $templateDir): string
+    public function indexAction(Request $request, ServiceEntityRepository $repository, string $findMethod, string $templateDir, array $vars = []): string
     {
         $filter = $request->query->get('filter', '');
         $amountPerPage = $request->query->get('amount', 10);
@@ -28,7 +28,7 @@ class CrudActionService
         return $this->environment->render("$templateDir/$template", [
             'filter' => $filter,
             'paginator' => new Paginator($data, $amountPerPage, $pageNumber)
-        ]);
+        ]+$vars);
     }
 
     public function showAction(Request $request, object $entity, string $templateDir, string $type, string $title): string
