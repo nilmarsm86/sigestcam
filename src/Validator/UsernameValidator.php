@@ -11,7 +11,7 @@ class UsernameValidator extends ConstraintValidator
     public function validate($value, Constraint $constraint)
     {
         if (!$constraint instanceof Username) {
-            throw new UnexpectedTypeException($constraint, Password::class);
+            throw new UnexpectedTypeException($constraint, Username::class);
         }
 
         /*

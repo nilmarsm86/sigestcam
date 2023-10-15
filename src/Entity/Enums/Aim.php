@@ -21,7 +21,7 @@ enum Aim: string
 
         return match ($enum) {
             self::Objective => 'Objetivo',
-            self::NoObjective => 'No objetivo',
+            self::NoObjective => 'Vía',
             default => '-Seleccione-'
         };
     }

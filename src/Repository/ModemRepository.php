@@ -285,4 +285,12 @@ class ModemRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function findAmountModem(): int
+    {
+        return $this->createQueryBuilder('m')
+            ->select('COUNT(m) as total')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 }

@@ -33,6 +33,17 @@
                         {% if camera.port.commutator.port.commutator.gateway %}({{ camera.port.commutator.port.commutator.gateway }}){% endif%}
                         {% if camera.port.commutator.port.commutator.multicast %}[{{ camera.port.commutator.port.commutator.multicast }}]{% endif %}
                     </a>
+                    {% if camera.port.commutator.port.commutator.state and app.user.isOfficer() %}
+                        <a
+                                href="#"
+                                class="ms-1"
+{#                                data-action="connection-list-table#report"#}
+{#                                data-connection-list-table-equipment-param="{{ camera.id }}"#}
+{#                                data-connection-list-table-type-param="1"#}
+                        >
+                            <i class="fas fa-clipboard" title="Reportar Switch"></i>
+                        </a>
+                    {% endif %}
                 </td>
                 <td>
                     <a href="{{ path('port_state') }}"
@@ -69,6 +80,17 @@
                         {% if camera.port.commutator.gateway %}({{ camera.port.commutator.gateway }}){% endif%}
                         {% if camera.port.commutator.multicast %}[{{ camera.port.commutator.multicast }}]{% endif %}
                     </a>
+                    {% if camera.port.commutator.state and app.user.isOfficer() %}
+                        <a
+                                href="#"
+                                class="ms-1"
+                                {#                                data-action="connection-list-table#report"#}
+                                {#                                data-connection-list-table-equipment-param="{{ camera.id }}"#}
+                                {#                                data-connection-list-table-type-param="1"#}
+                        >
+                            <i class="fas fa-clipboard" title="Reportar Switch esclavo"></i>
+                        </a>
+                    {% endif %}
                 </td>
                 <td>
                     <a href="{{ path('port_state') }}"
@@ -103,6 +125,17 @@
                                 {{ camera.ip }}
                             </span>
                     </a>
+                    {% if camera.state and app.user.isOfficer() %}
+                        <a
+                                href="#"
+                                class="ms-1"
+                                {#                                data-action="connection-list-table#report"#}
+                                {#                                data-connection-list-table-equipment-param="{{ camera.id }}"#}
+                                {#                                data-connection-list-table-type-param="1"#}
+                        >
+                            <i class="fas fa-clipboard" title="Reportar cámara"></i>
+                        </a>
+                    {% endif %}
                 </td>
                 <td>{{ camera.municipality.province.name }}</td>
                 <td>{{ camera.municipality.name }}</td>

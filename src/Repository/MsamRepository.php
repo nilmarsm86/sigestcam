@@ -39,6 +39,14 @@ class MsamRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAmountMsam(): int
+    {
+        return $this->createQueryBuilder('m')
+            ->select('COUNT(m) as total')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return Msam[] Returns an array of Msam objects
 //     */

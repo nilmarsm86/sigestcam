@@ -281,4 +281,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return in_array('ROLE_ADMIN', $this->getRoles());
     }
+
+    public function isOfficer(): bool
+    {
+        return in_array('ROLE_OFFICER', $this->getRoles());
+    }
 }

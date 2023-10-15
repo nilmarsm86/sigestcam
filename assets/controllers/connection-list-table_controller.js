@@ -59,18 +59,4 @@ export default class extends Controller {
         await this.processResponseToast(response);
     }
 
-    selectReason(event){
-        event.preventDefault();
-
-        let rowReportInterruptionReason = this.element.querySelector('#report_interruptionReason').parentElement.parentElement;
-        if(event.currentTarget.value === "-1"){
-            rowReportInterruptionReason.style.display = 'flex';
-            this.element.querySelector('#report_interruptionReason').value = '';
-        }else{
-            rowReportInterruptionReason.style.display = 'none';
-            this.element.querySelector('#report_interruptionReason').value = event.currentTarget.options[event.currentTarget.selectedIndex].text;
-        }
-    }
-
-
 }

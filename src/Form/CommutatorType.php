@@ -76,6 +76,15 @@ class CommutatorType extends AbstractType
                 'mapped' => false,
                 'crud' => $options['crud']
             ]);
+        }else{
+            if($options['crud'] === false && $options['slave'] === false){
+                $builder->add('address', AddressType::class, [
+                    'province' => $options['province'],
+                    'municipality' => $options['municipality'],
+                    'mapped' => false,
+                    'crud' => $options['crud']
+                ]);
+            }
         }
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
                 $commutator = $event->getData();

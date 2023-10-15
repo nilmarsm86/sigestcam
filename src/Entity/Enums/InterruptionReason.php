@@ -14,6 +14,7 @@ enum InterruptionReason: string
     case ElectricFluid = '3';
     case Substitution = '4';
     case Modem = '5';
+    case WithoutLink = '6';
     case Null = '-1';
 
     public static function getLabelFrom(BackedEnum|string $enum): string
@@ -28,6 +29,7 @@ enum InterruptionReason: string
             self::ElectricFluid => 'Fluido eléctrico',
             self::Substitution => 'Sustitución',
             self::Modem => 'Modem',
+            self::WithoutLink => 'Sin enlace',
             self::Null => 'Otra',
             default => '-Seleccione-'
         };

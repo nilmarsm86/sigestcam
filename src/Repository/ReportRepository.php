@@ -7,6 +7,7 @@ use App\Entity\Enums\Priority;
 use App\Entity\Enums\ReportState;
 use App\Entity\Enums\ReportType;
 use App\Entity\Enums\State;
+use App\Entity\Equipment;
 use App\Entity\Report;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -57,13 +58,11 @@ class ReportRepository extends ServiceEntityRepository
             if(str_contains($filter, '/')){
                 $predicate = "r.entryDate LIKE :filter ";
                 $date = preg_split('/\//', $filter);
-//                if(str_contains($date[2], ':')){
-//                    $data[3] = preg_split('/ /', $date[2])[1];
-//                }
                 $filter = join('-', array_reverse($date));
             }else{
                 $predicate = "r.number LIKE :filter ";
-                $predicate .= "r.interruptionReason LIKE :filter ";
+                $predicate .= "OR r.interruptionReason LIKE :filter ";
+                $predicate .= "OR e.physicalSerial LIKE :filter ";
 
                 if($place){
                     $predicate .= "OR mun.name LIKE :filter ";
@@ -154,9 +153,45 @@ class ReportRepository extends ServiceEntityRepository
     {
         $builder = $this->createQueryBuilder('r')->select('COUNT(r) as total');
         $this->addState($builder, ReportState::Open->value);
-        $this->addPriority($builder, '');
+//        $this->addPriority($builder, '');
         $this->addType($builder, $type->value);
-        $builder->andWhere("r.interruptionReason LIKE :filter ")->setParameter(':filter','%'.InterruptionReason::getLabelFrom($interruption).'%');
+        $this->addFilter($builder, (new \DateTime('now'))->format('d/m/Y'));
+        $builder->andWhere("r.interruptionReason LIKE :reason ")->setParameter(':reason','%'.InterruptionReason::getLabelFrom($interruption).'%');
+        return $builder->getQuery()->getSingleScalarResult();
+    }
+
+    public function findInterruption()
+    {
+        $clasicalReasons = [
+            InterruptionReason::getLabelFrom(InterruptionReason::Rip),
+            InterruptionReason::getLabelFrom(InterruptionReason::Connectivity),
+            InterruptionReason::getLabelFrom(InterruptionReason::ElectricFluid),
+            InterruptionReason::getLabelFrom(InterruptionReason::Substitution),
+            InterruptionReason::getLabelFrom(InterruptionReason::Modem),
+            InterruptionReason::getLabelFrom(InterruptionReason::WithoutLink),
+        ];
+
+        $builder = $this->createQueryBuilder('r')->select('COUNT(r) as total');
+        $this->addState($builder, ReportState::Open->value);
+        $this->addFilter($builder, (new \DateTime('now'))->format('d/m/Y'));
+        $builder->andWhere($builder->expr()->notIn('r.interruptionReason', $clasicalReasons));
+        return $builder->getQuery()->getSingleScalarResult();
+    }
+
+    public function findOpenForEquipment(Equipment $equipment)
+    {
+        $builder = $this->createQueryBuilder('r')->select('COUNT(r) as total');
+        $this->addState($builder, ReportState::Open->value);
+//        $this->addPriority($builder, '');
+//        $this->addType($builder, $type->value);
+        $builder->andWhere("r.equipment = :equipment")->setParameter(':equipment',$equipment);
+        return $builder->getQuery()->getSingleScalarResult();
+    }
+
+    public function findOpenAmountReportsByMonth($month): int
+    {
+        $builder = $this->createQueryBuilder('r')->select('COUNT(r) as total');
+        $builder->andWhere("r.entryDate LIKE :filter ")->setParameter(':filter','%'.(new \DateTime())->format('Y').'-'.$month.'-%');
         return $builder->getQuery()->getSingleScalarResult();
     }
 

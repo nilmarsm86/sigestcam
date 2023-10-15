@@ -8,6 +8,11 @@
     {% block card_header_options %}
         <div>
             <div class="dropdown d-inline-block">
+                <a href="{{ path('report_index') }}" class="btn btn-primary btn-sm">
+                    <i class="fas fa-clipboard-list"></i>
+                    Todos los reportes
+                </a>
+
                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle show dropdown-sm {% if app.request.query.get('type') %}active{% endif %}" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-server"></i>
                     Tipo
@@ -81,7 +86,7 @@
 {#                    <th>Id</th>#}
                     <th>Número</th>
                     <th>Especialidad</th>
-                    <th>Fecha de creación</th>
+                    <th>Fecha</th>
                     <th>Hora</th>
 {#                    <th>CloseDate</th>#}
                     <th>Tipo</th>
@@ -92,7 +97,7 @@
 {#                    <th>Solution</th>#}
 {#                    <th>Unit</th>#}
                     <th>Estado</th>
-                    <th>Objetivo</th>
+                    <th>Función</th>
                     <th></th>
                 </tr>
             {% endblock %}
@@ -145,7 +150,9 @@
                                 <a class="btn btn-sm btn-primary" href="{{ path('report_show', {'id': report.id}) }}" data-action="page#showFormContent" title="Detalle del reporte">
                                     <i class="fas fa-eye"></i>
                                 </a>
-{#                                <a href="{{ path('report_edit', {'id': report.id}) }}">edit</a>#}
+                                <a class="btn btn-sm btn-primary" href="{{ path('report_edit', {'id': report.id}) }}" data-action="page#showFormContent" title="Modificar reporte">
+                                    <i class="fas fa-edit"></i>
+                                </a>
                             </td>
                         </tr>
                 {% else %}

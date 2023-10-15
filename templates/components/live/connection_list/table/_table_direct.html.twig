@@ -69,7 +69,7 @@
                                 {{ camera.ip }}
                             </span>
                     </a>
-                    {% if camera.state %}
+                    {% if camera.state and app.user.isOfficer() %}
                         <a
                                 href="#"
                                 class="ms-1"

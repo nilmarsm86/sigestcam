@@ -39,6 +39,14 @@ class ServerRepository extends ServiceEntityRepository
         }
     }
 
+    public function findAmountServers(): int
+    {
+        return $this->createQueryBuilder('s')
+            ->select('COUNT(s) as total')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return Server[] Returns an array of Server objects
 //     */

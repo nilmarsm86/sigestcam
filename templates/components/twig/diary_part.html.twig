@@ -6,7 +6,7 @@
         Cantidades
     </a>
     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
-        <h6 class="dropdown-header">Parte diario</h6>
+        <h6 class="dropdown-header">Parte diario: {{ 'now'| date('d/m/Y') }}</h6>
         <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Rotura', type: '1'}) }}">
             <div class="bg-info icon-circle dropdown-list-image me-3">
                 <span class="fw-bold fa-3x font-monospace">{{ this.ripCamera() }}</span>
@@ -65,18 +65,19 @@
                 <p class="small text-gray-500 mb-0">Cámaras</p>
             </div>
         </a>
-{#        <a class="dropdown-item d-flex align-items-center" href="#">#}
-{#            <div class="bg-info icon-circle dropdown-list-image me-3">#}
-{#                <span class="fw-bold fa-3x font-monospace">4</span>#}
-{#                <div class="bg-success status-indicator"></div>#}
-{#            </div>#}
-{#            <div class="fw-bold">#}
-{#                <div class="">#}
-{#                    <span>Pendientes por sustitucion de modem</span>#}
-{#                </div>#}
-{#                <p class="small text-gray-500 mb-0">Cámaras</p>#}
-{#            </div>#}
-{#        </a>#}
+
+        <a class="dropdown-item d-flex align-items-center" href="#">
+            <div class="bg-info icon-circle dropdown-list-image me-3">
+                <span class="fw-bold fa-3x font-monospace">{{ this.others() }}</span>
+                <div class="bg-success status-indicator"></div>
+            </div>
+            <div class="fw-bold">
+                <div class="">
+                    <span>Otros reportes</span>
+                </div>
+                <p class="small text-gray-500 mb-0">Todos los equipos</p>
+            </div>
+        </a>
 
 {#        <a class="dropdown-item text-center small text-gray-500" href="#">#}
 {#            Mostrar reportes externos#}

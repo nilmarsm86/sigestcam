@@ -351,6 +351,14 @@ class CameraRepository extends ServiceEntityRepository
             ->getSingleScalarResult();
     }
 
+    public function findAmountCameras(): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c) as total')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
+
 //    /**
 //     * @return Camera[] Returns an array of Camera objects
 //     */

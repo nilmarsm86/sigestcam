@@ -8,27 +8,27 @@
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('connection_') %}active{% endif %}"
-           href="{{ path('connection_index') }}"
-        >
-            <i class="fas fa-server"></i>
-            <span>Conexiones</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('report_index') }}">
-            <i class="fas fa-table"></i>
+        <a class="nav-link {% if app.request.attributes.get('_route') == 'report_index' %}active{% endif %}" href="{{ path('report_index') }}">
+            <i class="fas fa-clipboard"></i>
             <span>Reportes</span>
         </a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="{{ path('report_new') }}">
-            <i class="far fa-user-circle"></i>
-            <span>Crear reporte</span>
+        <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('connection_') %}active{% endif %}"
+           href="{{ path('connection_index') }}"
+        >
+            <i class="fas fa-plug"></i>
+            <span>Conexiones</span>
         </a>
     </li>
+{#    <li class="nav-item">#}
+{#        <a class="nav-link" href="{{ path('report_new') }}">#}
+{#            <i class="far fa-user-circle"></i>#}
+{#            <span>Crear reporte</span>#}
+{#        </a>#}
+{#    </li>#}
     <li class="nav-item">
-        <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('crud_commutator_') %}active{% endif %}"
+        <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('commutator_') %}active{% endif %}"
            href="{{ path('commutator_index') }}"
         >
             <i class="fas fa-server"></i>
@@ -39,7 +39,7 @@
            href="{{ path('modem_index') }}"
         >
             <i class="fas fa-server"></i>
-            <span>Modem</span></a>
+            <span>Modems</span></a>
     </li>
     <li class="nav-item">
         <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('camera_') %}active{% endif %}"
@@ -47,6 +47,18 @@
         >
             <i class="fas fa-video"></i>
             <span>Cámaras</span></a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-server"></i>
+            <span>Msams</span>
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="nav-link" href="#">
+            <i class="fas fa-server"></i>
+            <span>Servidores</span>
+        </a>
     </li>
     {% if is_granted('ROLE_ADMIN')%}
         <li class="nav-item">
@@ -58,12 +70,6 @@
             </a>
         </li>
     {% endif %}
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-key"></i>
-            <span>Partes</span>
-        </a>
-    </li>
     <li class="nav-item">
         <a class="nav-link" href="#"
            onclick="confirm('Está seguro que desea salir del sistema?') ? location.replace('{{ path('app_logout') }}') : ''">

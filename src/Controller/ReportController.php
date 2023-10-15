@@ -51,25 +51,27 @@ class ReportController extends AbstractController
         $form = $this->createForm(ReportType::class, $report,[
             'action' => $this->generateUrl('report_new'),
             'equipment' => (int) $request->query->get('equipment')
+            //deberia pasar el rol auenticado y ponerlo en un campo oculto,
+            //de esta forma puedo validar que el rol autenticado tiene los permisos correspondientes
+            //sino muestro mensaje de error en el formulario
         ]);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $report->setManagementOfficer($this->getUser());//verificar que el usuario autenticado tiene ese rol
-            $report->setBoss($this->getUser());//verificar que el usuario autenticado tiene ese rol
             $entityManager->persist($report);
             $entityManager->flush();
 
             //si el formulario se mando correctamente por ajax
             if($request->isXmlHttpRequest()){
                 return $this->render("partials/_form_success.html.twig", [
-                    'id' => 'new_camera_'.$report->getId(),
+                    'id' => 'new_report_'.$report->getId(),
                     'type' => 'text-bg-success',
-                    'message' => 'Se ha creado el reporte.'
+                    'message' => 'Se ha creado el reporte con el número '.$report->getNumber()
                 ]);
             }
 
-            $this->addFlash('success', 'Se ha creado el reporte.');
+            $this->addFlash('success', 'Se ha creado el reporte con el número '.$report->getNumber());
             return $this->redirectToRoute('app_report_index', [], Response::HTTP_SEE_OTHER);
         }
 
@@ -94,21 +96,51 @@ class ReportController extends AbstractController
         return new Response($template);
     }
 
-    #[Route('/{id}/edit', name: 'report_edit', methods: ['GET', 'POST'])]
+    #[Route('/{id}/edit', name: 'report_edit', requirements: ['id' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Report $report, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(ReportType::class, $report);
+        $form = $this->createForm(ReportType::class, $report, [
+            'action' => $this->generateUrl('report_edit', ['id' => $report->getId()]),
+            'equipment' => $report->getEquipment()->getId(),
+            'existReport' => true
+        ]);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->flush();
+        if ($form->isSubmitted()) {
+            if($form->isValid()){
+                $report->close();
+                $entityManager->flush();
 
-            return $this->redirectToRoute('app_report_index', [], Response::HTTP_SEE_OTHER);
+                //si el formulario se mando correctamente por ajax
+                if($request->isXmlHttpRequest()){
+                    return $this->render("partials/_form_success.html.twig", [
+                        'id' => 'edit_report_'.$report->getId(),
+                        'type' => 'text-bg-success',
+                        'message' => 'Se ha '.($report->isOpen() ? 'modificado' : 'cerrado').' el reporte con el número '.$report->getNumber()
+                    ]);
+                }
+
+                $this->addFlash('success', 'Se ha '.($report->isOpen() ? 'modificado' : 'cerrado').' el reporte con el número '.$report->getNumber());
+                return $this->redirectToRoute('report_index', ['state' => 0], Response::HTTP_SEE_OTHER);
+            }else{
+                $template = ($request->isXmlHttpRequest()) ? '_form_fields.html.twig' : 'edit.html.twig';
+
+                return $this->render("report/$template", [
+                    'report' => $report,
+                    'form' => $form,
+                    'title' => 'Editar reporte',
+                    'modal' => false
+                ]);
+            }
         }
 
-        return $this->render('report/edit.html.twig', [
+        $template = ($request->isXmlHttpRequest()) ? '_form.html.twig' : 'edit.html.twig';
+
+        return $this->render("report/$template", [
             'report' => $report,
             'form' => $form,
+            'title' => 'Editar reporte',
+            'modal' => false
         ]);
     }
 

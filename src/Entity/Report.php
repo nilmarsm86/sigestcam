@@ -7,6 +7,7 @@ use App\Entity\Enums\Priority;
 use App\Entity\Enums\ReportState;
 use App\Entity\Enums\ReportType;
 use App\Repository\ReportRepository;
+use DateTime;
 use DateTimeImmutable;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
@@ -33,11 +34,11 @@ class Report
     private string $specialty = 'video_vigilancia';
 
     #[ORM\Column]
-    #[Assert\DateTime]
+//    #[Assert\DateTime]
     private ?DateTimeImmutable $entryDate = null;
 
     #[ORM\Column(nullable: true)]
-    #[Assert\DateTime]
+//    #[Assert\DateTime]
     private ?DateTimeImmutable $closeDate = null;
 
     #[ORM\Column(length: 255)]
@@ -99,7 +100,7 @@ class Report
     #[ORM\Column(length: 255)]
     private string $aim;
 
-    #[Assert\Choice(choices: [Aim::NoObjective, Aim::Objective], message: 'Seleccione un aim válido.')]
+    #[Assert\Choice(choices: [Aim::NoObjective, Aim::Objective], message: 'Seleccione una función válida.')]
     private Aim $enumAim;
 
     #[ORM\ManyToOne]
@@ -108,7 +109,8 @@ class Report
 
     public function __construct()
     {
-        //$this->entryDate = new DateTimeImmutable('now');
+//        $this->entryDate = new \DateTime();
+//        $this->number = $this->entryDate->getTimestamp().'-'.$this->equipment->getShortName();
         $this->enumPriority = Priority::Hight;
         $this->enumState = ReportState::Open;
     }
@@ -142,17 +144,17 @@ class Report
         return $this;
     }*/
 
-    public function getEntryDate(): DateTimeImmutable
+    public function getEntryDate(): ?DateTimeImmutable
     {
         return $this->entryDate;
     }
 
-    /*public function setEntryDate(\DateTimeImmutable $entryDate): static
+    public function setEntryDate(DateTimeImmutable $entryDate): static
     {
         $this->entryDate = $entryDate;
 
         return $this;
-    }*/
+    }
 
     public function getCloseDate(): ?DateTimeImmutable
     {
@@ -195,7 +197,7 @@ class Report
         return $this->enumPriority;
     }
 
-    private function setPriority(Priority $priority): static
+    public function setPriority(Priority $priority): static
     {
         $this->enumPriority = $priority;
 
@@ -255,12 +257,12 @@ class Report
         return $this->unit;
     }
 
-    /*public function setUnit(string $unit): static
+    public function setUnit(string $unit): static
     {
         $this->unit = $unit;
 
         return $this;
-    }*/
+    }
 
     public function getBoss(): User
     {
@@ -291,7 +293,7 @@ class Report
         return $this->enumState;
     }
 
-    private function setState(ReportState $state): static
+    public function setState(ReportState $state): static
     {
         $this->enumState = $state;
 
@@ -335,7 +337,7 @@ class Report
     #[ORM\PrePersist]
     public function beforeSave(): void
     {
-        $this->entryDate = new DateTimeImmutable('now');
+        $this->entryDate = new DateTimeImmutable();
         $this->number = $this->entryDate->getTimestamp().'-'.$this->equipment->getShortName();
     }
 
@@ -356,6 +358,19 @@ class Report
         $this->setPriority(Priority::from($this->priority));
         $this->setState(ReportState::from($this->state));
         $this->setAim(Aim::from($this->aim));
+    }
+
+    public function close(): void
+    {
+        if($this->getSolution()){
+            $this->closeDate = new DateTimeImmutable('now');
+            $this->setState(ReportState::Close);
+        }
+    }
+
+    public function isOpen(): bool
+    {
+        return $this->enumState->value === ReportState::Open->value;
     }
 
 }

@@ -85,6 +85,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $this->paginate($query, $page, $amountPerPage);
     }
 
+    public function findBosses(): QueryBuilder | array
+    {
+        $builder = $this->createQueryBuilder('u');
+        $builder->leftJoin('u.roles', 'r');
+        return $builder->andWhere($builder->expr()->in('r.name', ['ROLE_BOSS']));
+    }
+
 
 //    public function findOneBySomeField($value): ?User
 //    {

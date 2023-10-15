@@ -29,6 +29,10 @@ class EquipmentToIdTransformer implements DataTransformerInterface
             return '';
         }
 
+        if(is_int($equipment)){
+            return $equipment;
+        }
+
         return $equipment->getId();
     }
 
