@@ -5,12 +5,13 @@
         <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
             <p class="text-white m-0 fw-bold">Cámara:</p>
             <div class="row">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <a href="{{ path('camera_edit', {'id': camera.id}) }}" class="btn btn-primary" title="Editar cámara">
-                        <i class="fas fa-edit text-white"></i>
-                    </a>
-                </div>
-
+                {% if is_granted('ROLE_BOSS') %}
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                        <a href="{{ path('camera_edit', {'id': camera.id}) }}" class="btn btn-primary" title="Editar cámara">
+                            <i class="fas fa-edit text-white"></i>
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -61,7 +62,7 @@
 
                     {{ component('ConnectionDetailEditInline', {
                         label: 'Puerto:',
-                        data: (camera.modem is defined) ? camera.modem.port.number : camera.port.number,
+                        data: (camera.modem is defined) ? ((camera.modem.masterModem is defined) ? camera.modem.masterModem.port.number : camera.modem.port.number) : camera.port.number,
                         connection: connection,
                         'data-live-id': 'camera-port-'~ camera.id,
                         entity: 'App\\Entity\\Camera',
@@ -83,7 +84,7 @@
 
                     {{ component('ConnectionDetailEditInline', {
                         label: 'Switch:',
-                        data: (camera.modem is defined) ? camera.modem.port.commutator.ip : camera.port.commutator.ip,
+                        data: (camera.modem is defined) ? ((camera.modem.masterModem is defined) ? camera.modem.masterModem.port.commutator.ip : camera.modem.port.commutator.ip) : camera.port.commutator.ip,
                         connection: connection,
                         'data-live-id': 'camera-switch-'~ camera.id,
                         entity: 'App\\Entity\\Camera',

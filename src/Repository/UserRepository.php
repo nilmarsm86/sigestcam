@@ -92,6 +92,13 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
         return $builder->andWhere($builder->expr()->in('r.name', ['ROLE_BOSS']));
     }
 
+    public function findTechnical(): QueryBuilder | array
+    {
+        $builder = $this->createQueryBuilder('u');
+        $builder->leftJoin('u.roles', 'r');
+        return $builder->andWhere($builder->expr()->in('r.name', ['ROLE_TECHNICAL']));
+    }
+
 
 //    public function findOneBySomeField($value): ?User
 //    {

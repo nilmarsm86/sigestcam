@@ -87,8 +87,8 @@ class ConnectionCameraTable
             }
         }
 
-        if($this->connection->name === ConnectionType::Simple->name){
-            if(!is_null($this->modem->getId())){
+        if($this->connection->name === ConnectionType::Simple->name || $this->connection->name === ConnectionType::SlaveModem->name){
+            if(!is_null($this->modem) && !is_null($this->modem->getId())){
                 $data = $this->cameraRepository->findCameraByModem($this->modem, $this->filter, $this->amount, $this->page);
             }else{
                 $data = $this->cameraRepository->findInactiveCamerasWithoutPortAndModem($this->filter, $this->amount, $this->page);
@@ -102,6 +102,14 @@ class ConnectionCameraTable
                 $data = $this->cameraRepository->findInactiveCamerasWithoutPort($this->filter, $this->amount, $this->page);
             }
         }
+
+//        if($this->connection->name === ConnectionType::SlaveModem->name){
+//            if(!is_null($this->modem->getId())){
+//                $data = $this->cameraRepository->findCameraByModem($this->modem, $this->filter, $this->amount, $this->page);
+//            }else{
+//                $data = $this->cameraRepository->findInactiveCamerasWithoutPortAndModem($this->filter, $this->amount, $this->page);
+//            }
+//        }
 
         $this->reloadData($data);
     }

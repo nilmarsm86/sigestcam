@@ -28,7 +28,7 @@
                             <i class="fas fa-bars"></i>
                         </button>
                         {# Formulario de buscar por ip #}
-                        {% if app.request.attributes.get('_route') != 'user_list' %}
+                        {% if app.request.attributes.get('_route') != 'user_list' and is_granted('ROLE_BOSS') %}
                             <form class="d-none d-sm-inline-block me-auto ms-md-3 my-2 my-md-0 mw-100 navbar-search"
                                   action="{{ path('app_search') }}" method="get">
                                 <div class="input-group">
@@ -53,7 +53,7 @@
                                 <div class="dropdown-menu dropdown-menu-end p-3 animated--grow-in"
                                      aria-labelledby="searchDropdown">
                                     {# Formulario de buscar por ip #}
-                                    {% if app.request.attributes.get('_route') != 'user_list' %}
+                                    {% if app.request.attributes.get('_route') != 'user_list' and is_granted('ROLE_BOSS') %}
                                         <form class="me-auto navbar-search w-100" action="{{ path('app_search') }}"
                                               method="get">
                                             <div class="input-group">
@@ -127,7 +127,7 @@
             <footer class="bg-white sticky-footer">
                 <div class="container my-auto">
                     <div class="text-center my-auto copyright">
-                        <span>Copyright © Sisgestcam {{ 'now'|date('Y') }}</span>
+                        <span>Copyright © Sigestcam {{ 'now'|date('Y') }}</span>
                     </div>
                 </div>
             </footer>

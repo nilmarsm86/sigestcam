@@ -9,14 +9,23 @@
 
             {% block card_header_options %}
                 <div>
-                    <button class="btn btn-primary btn-sm"
-                            aria-current="page"
-                            data-action="live#action"
-                            data-action-name="removeModem()"
-                    >
-                        <i class="fas fa-circle"></i>
-                        Modems esclavos Inactivos
-                    </button>
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                            Modems esclavos
+                        </button>
+                        <ul class="dropdown-menu">
+                            <li>
+                                <a class="dropdown-item" href="#" data-action="live#action" data-action-name="prevent|inactiveModems()">
+                                    <i class="fas fa-circle"></i> Inactivos
+                                </a>
+                            </li>
+                            <li>
+                                <a class="dropdown-item" href="#" data-action="live#action" data-action-name="prevent|activeModems()">
+                                    <i class="fas fa-check-circle"></i> Activos
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
 
                     <button class="btn btn-primary btn-sm"
 {#                            {% if port is null %}#}
@@ -38,11 +47,11 @@
             {% block card_body %}
                 {% if port is not null %}
                     <div data-loading="addClass(d-none)">
-                        {{ component('ConnectionSlaveModemTable', {connection:connection, masterModem: masterModem}) }}
+                        {{ component('ConnectionSlaveModemTable', {connection:connection, masterModem: masterModem, inactives: inactives}) }}
                     </div>
 {#                    {% if port.equipment is not null %}#}
                         <div class="row">
-                            {{ component('ConnectionSlaveModemDetail', {connection:connection, port: port}) }}
+                            {{ component('ConnectionSlaveModemDetail', {connection:connection, masterModem: masterModem}) }}
                         </div>
 {#                    {% endif %}#}
                 {% endif %}

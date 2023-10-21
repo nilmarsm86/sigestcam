@@ -45,6 +45,10 @@ class Msam extends Equipment
 
     public function addCard(Card $card): static
     {
+        if($this->cards->count() === $this->slotAmount){
+            throw new Exception('Ha alcanzado el número máximo de slots de targetas permitidos para este Msam.');
+        }
+
         if (!$this->cards->contains($card)) {
             $this->cards->add($card);
             $card->setMsam($this);
@@ -60,6 +64,9 @@ class Msam extends Equipment
             if ($card->getMsam() === $this) {
                 $card->setMsam(null);
             }
+
+            //de la targeta eliminada debo eliminar tambien los puertos
+            //de los puertos eliminados debo desconectar los equipos conectados al mismo
         }
 
         return $this;

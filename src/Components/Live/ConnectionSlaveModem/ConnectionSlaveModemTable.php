@@ -46,16 +46,20 @@ class ConnectionSlaveModemTable extends ConnectionModemTable
     #[LiveProp(updateFromParent: true)]
     public ?Modem $masterModem = null;
 
+    #[LiveProp(updateFromParent: true)]
+    public bool $inactives = false;
+
 //    public function __construct(private readonly ModemRepository $modemRepository, private CameraRepository $cameraRepository)
 //    {
 //    }
 
     //cuando se monta por primera vez el componete
-    public function mount(ConnectionType $connection, Port $port = null, Modem $masterModem = null): void
+    public function mount(ConnectionType $connection, Port $port = null, Modem $masterModem = null, bool $inactives = false): void
     {
         $this->connection = $connection;
         $this->port = $port;
         $this->masterModem = $masterModem;
+        $this->inactives = $inactives;
         $this->filterAndReload();
     }
 
@@ -81,11 +85,23 @@ class ConnectionSlaveModemTable extends ConnectionModemTable
         }
 
         //cambiar la forma en la que se buscan los datos
-        if(!is_null($this->masterModem->getId())){
-            $data = $this->modemRepository->findModemByMaster($this->masterModem, $this->filter, $this->amount, $this->page);
+        if($this->inactives === false){
+            if(!is_null($this->masterModem->getId())){
+                $data = $this->modemRepository->findModemByMaster($this->masterModem, $this->filter, $this->amount, $this->page);
+            }else{
+                //TODO: no deberia utilizar este ip quemado
+                $data = $this->modemRepository->findInactiveModemsWithoutPortAndMasterModem('0.0.0.0', $this->filter, $this->amount, $this->page);
+            }
         }else{
-            $data = $this->modemRepository->findInactiveModemsWithoutPortAndMasterModem($this->filter, $this->amount, $this->page);
+            $data = $this->modemRepository->findInactiveModemsWithoutPortAndMasterModem($this->masterModem->getIp(), $this->filter, $this->amount, $this->page);
         }
+
+//        if(!is_null($this->masterModem->getId())){
+//            $data = $this->modemRepository->findModemByMaster($this->masterModem, $this->filter, $this->amount, $this->page);
+//        }else{
+//            dump($this->masterModem);
+//            $data = $this->modemRepository->findInactiveModemsWithoutPortAndMasterModem($this->masterModem->getIp(), $this->filter, $this->amount, $this->page);
+//        }
         $this->reloadData($data);
         $this->setCamerasAmount();
     }
@@ -98,17 +114,18 @@ class ConnectionSlaveModemTable extends ConnectionModemTable
 //        }
 //    }
 
-//    /**
-//     * When save new commutator table filer by it
-//     * @param Camera $modem
-//     * @return void
-//     */
-//    #[LiveListener(ConnectionModemNew::FORM_SUCCESS.'_Simple')]
-//    public function onConnectionModemNewFormSuccessSimple(#[LiveArg] Modem $modem): void
-//    {
-//        $this->filter = $modem->getIp();
-//        $this->changeFilter();
-//    }
+    /**
+     * When save new modem table filer by it
+     * @param Modem $modem
+     * @return void
+     */
+    #[LiveListener(ConnectionSlaveModemNew::FORM_SUCCESS.'_SlaveModem')]
+    public function onConnectionSlaveModemNewFormSuccessSlaveModem(#[LiveArg] Modem $modem): void
+    {
+        $this->filter = $modem->getIp();
+        $this->inactives = false;
+        $this->changeFilter();
+    }
 
 //    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Simple')]
 //    public function onConnectionCameraNewFormSuccessSimple(#[LiveArg] Camera $camera): void

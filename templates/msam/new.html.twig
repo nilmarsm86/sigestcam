@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}New Msam{% endblock %}
+
+{% block body %}
+    <h1>Create new Msam</h1>
+
+    {{ include('msam/_form.html.twig') }}
+
+    <a href="{{ path('msam_index') }}">back to list</a>
+{% endblock %}

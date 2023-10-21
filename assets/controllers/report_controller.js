@@ -17,12 +17,8 @@ export default class extends Controller {
         }
 
         if(interruptionReasonField.value && interruptionField.selectedIndex === 0){
-            // if(interruptionField.selectedIndex === 0){
-                interruptionField.selectedIndex = 7;
-            // }
+            interruptionField.selectedIndex = 7;
         }
-
-
     }
 
     selectReason(event){

@@ -1,0 +1,146 @@
+{% embed "embeds/async_table.html.twig" %}
+    {% from 'macros/report.html.twig' import report %}
+
+    {% block table_head %}
+        <tr>
+            <th>Switch</th>
+            <th>Puerto</th>
+            <th>Modem</th>
+            <th>Modem esclavo</th>
+            <th>Cámara</th>
+            <th>Provincia</th>
+            <th>Municipio</th>
+            <th></th>
+        </tr>
+    {% endblock %}
+
+    {% block table_body %}
+        {% for camera in paginator.getData() %}
+            <tr>
+                <td>
+                    <a href="{{ path('commutator_state') }}" class="text-decoration-none"
+                       data-action="page#state:prevent"
+                       data-page-id-param="{{ camera.modem.masterModem.port.commutator.id }}"
+                            {% if camera.modem.masterModem.port.commutator.state %}
+                                data-page-state-param="0"
+                            {% else %}
+                                data-page-state-param="1"
+                            {% endif %}
+                    >
+                            <span
+                                    class="badge {% if camera.modem.masterModem.port.commutator.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                            >
+                                {{ camera.modem.masterModem.port.commutator.ip }}
+                            </span>
+                        {% if camera.modem.masterModem.port.commutator.gateway %}({{ camera.modem.masterModem.port.commutator.gateway }}){% endif%}
+                        {% if camera.modem.masterModem.port.commutator.multicast %}[{{ camera.modem.masterModem.port.commutator.multicast }}]{% endif %}
+                    </a>
+                    {{ report(camera.modem.masterModem.port.commutator.state, camera.modem.masterModem.port.commutator.id, 5, 'Reportar switch') }}
+                </td>
+                <td>
+                    <a href="{{ path('port_state') }}"
+                       data-action="page#state:prevent"
+                       data-page-id-param="{{ camera.modem.masterModem.port.id }}"
+                            {% if camera.modem.masterModem.port.state %}
+                                data-page-state-param="0"
+                            {% else %}
+                                data-page-state-param="1"
+                            {% endif %}
+                    >
+                            <span
+                                    class="badge {% if camera.modem.masterModem.port.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                            >
+                                {{ camera.modem.masterModem.port.number }}
+                            </span>
+                    </a>
+                </td>
+                <td>
+                    <a href="{{ path('modem_state') }}" class="text-decoration-none"
+                       data-action="page#state:prevent"
+                       data-page-id-param="{{ camera.modem.masterModem.id }}"
+                            {% if camera.modem.masterModem.state %}
+                                data-page-state-param="0"
+                            {% else %}
+                                data-page-state-param="1"
+                            {% endif %}
+                    >
+                            <span
+                                    class="badge {% if camera.modem.masterModem.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                            >
+                                {% if camera.modem.masterModem.ip %}{{ camera.modem.masterModem.ip }}{% else %}Sin IP{% endif %}
+                            </span>
+                    </a>
+                    {{ report(camera.modem.masterModem.state, camera.modem.masterModem.id, 2, 'Reportar modem') }}
+                </td>
+                <td>
+                    <a href="{{ path('modem_state') }}" class="text-decoration-none"
+                       data-action="page#state:prevent"
+                       data-page-id-param="{{ camera.modem.id }}"
+                            {% if camera.modem.state %}
+                                data-page-state-param="0"
+                            {% else %}
+                                data-page-state-param="1"
+                            {% endif %}
+                    >
+                            <span
+                                    class="badge {% if camera.modem.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                            >
+                                {% if camera.modem.ip %}{{ camera.modem.ip }}{% else %}Sin IP{% endif %}
+                            </span>
+                    </a>
+                    {{ report(camera.modem.state, camera.modem.id, 2, 'Reportar modem esclavo') }}
+                </td>
+                <td>
+                    <a href="{{ path('camera_state') }}" class="text-decoration-none"
+                       data-action="page#state:prevent"
+                       data-page-id-param="{{ camera.id }}"
+                            {% if camera.state %}
+                                data-page-state-param="0"
+                            {% else %}
+                                data-page-state-param="1"
+                            {% endif %}
+                    >
+                            <span
+                                    class="badge {% if camera.state %}text-bg-success{% else %}text-bg-danger{% endif %}"
+                            >
+                                {{ camera.ip }}
+                            </span>
+                    </a>
+                    {{ report(camera.state, camera.id, 1, 'Reportar cámara') }}
+                </td>
+                <td>{{ camera.municipality.province.name }}</td>
+                <td>{{ camera.municipality.name }}</td>
+                <td>
+                    <button title="Detalle de conexión"
+                            type="button"
+                            class="btn btn-primary btn-sm"
+                            aria-current="page"
+                            {#                                {% if entityId is not same as commutator.id %}#}
+                            data-action="live#action"
+                            data-action-name="prevent|detail(entityId={{ camera.id }})"
+                            {#                                {% endif %}#}
+                    >
+                        <i class="fas fa-eye"></i>
+                    </button>
+                    {% if is_granted('ROLE_BOSS') %}
+                        <button title="Eliminar conexión"
+                                type="button"
+                                class="btn btn-primary btn-sm"
+                                aria-current="page"
+                                data-action="connection-list-table#disconnect"
+                                data-connection-list-table-camera-param="{{ camera.id }}"
+                        >
+                            <i class="fas fa-plug"></i>
+                        </button>
+                    {% endif %}
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="7">
+                    No se encontraron registros
+                </td>
+            </tr>
+        {% endfor %}
+    {% endblock %}
+{% endembed %}

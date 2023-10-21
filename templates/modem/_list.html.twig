@@ -24,6 +24,7 @@
                     <th>IP</th>
                     <th>Marca</th>
                     <th>Model</th>
+                    <th>Núm. serie</th>
                     <th>Estado</th>
                     <th>Provincia</th>
                     <th>Municipio</th>
@@ -37,6 +38,7 @@
                         <td>{{ modem.ip }}</td>
                         <td>{{ modem.brand }}</td>
                         <td>{{ modem.model }}</td>
+                        <td>{{ modem.physicalSerial }}</td>
                         <td>
                             {% if modem.isActive() %}
                                 <a href="{{ path('modem_state') }}"

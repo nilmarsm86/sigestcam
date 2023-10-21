@@ -38,10 +38,10 @@ class Modem extends Equipment
     )]
     private Collection $modems;
 
-    public function __construct()
+    public function __construct($ip = null)
     {
         parent::__construct();
-        $this->ip = null;
+        $this->ip = $ip;
         $this->cameras = new ArrayCollection();
         $this->modems = new ArrayCollection();
         $this->enumState = State::Active;

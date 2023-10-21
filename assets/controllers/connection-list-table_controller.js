@@ -20,6 +20,13 @@ export default class extends Controller {
     async initialize() {
         this.component = await getComponent(this.element);
         this.element.addEventListener('page:onChangeState', this.state.bind(this));
+
+        const modalElement = this.element.querySelector('#new-report');
+        modalElement.addEventListener('hidden.bs.modal', event => {
+            modalElement.querySelectorAll('.alert-danger').forEach((alert) => {
+                alert.remove();
+            });
+        });
     }
 
     state(event) {

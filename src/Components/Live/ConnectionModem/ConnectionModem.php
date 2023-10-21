@@ -26,7 +26,7 @@ class ConnectionModem
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-    public function onConnectionCommutatorPortListSelected(?Port $port): void
+    protected function onConnectionCommutatorPortListSelected(?Port $port): void
     {
         $this->commutator = null;
         $this->port = $port;

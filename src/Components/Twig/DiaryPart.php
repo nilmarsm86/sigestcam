@@ -19,6 +19,11 @@ final class DiaryPart
         return $this->reportRepository->findInterruptionAndEquipment(ReportType::Camera, InterruptionReason::Rip);
     }
 
+    public function connectivityCamera()
+    {
+        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Camera, InterruptionReason::Connectivity);
+    }
+
     public function connectivityModem()
     {
         return $this->reportRepository->findInterruptionAndEquipment(ReportType::Modem, InterruptionReason::Connectivity);

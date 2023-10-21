@@ -47,7 +47,9 @@ class ConnectionSlaveModemNew extends ConnectionModemNew
 
     protected function instantiateForm(): FormInterface
     {
-        return $this->createForm(ModemType::class, $this->masterModem);
+        return $this->createForm(ModemType::class, null, [
+            'slave' => true
+        ]);
     }
 
     #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
@@ -66,23 +68,23 @@ class ConnectionSlaveModemNew extends ConnectionModemNew
         $this->submitForm();
 
         if($this->isSubmitAndValid()){
-            /** @var Modem $modem */
-            $modem = $this->getForm()->getData();
+            /** @var Modem $slaveModem */
+            $slaveModem = $this->getForm()->getData();
 //            if(!is_null($this->port)){
 //                $modem->setPort($this->port);
 //                $modem->setMunicipality($this->port->getCommutator()->getMunicipality());
 //            }
 
             if(!is_null($this->masterModem)){
-                $modem->setMasterModem($this->masterModem);
-                $modem->setMunicipality($this->masterModem->getMunicipality());
+                $slaveModem->setMasterModem($this->masterModem);
+                $slaveModem->setMunicipality($this->masterModem->getMunicipality());
             }
 
-            $modemRepository->save($modem, true);
+            $modemRepository->save($slaveModem, true);
 
             $this->dispatchBrowserEvent(static::MODAL_CLOSE);
             $this->emitSuccess([
-                'modem' => $modem->getId()
+                'modem' => $slaveModem->getId()
             ]);
         }
     }

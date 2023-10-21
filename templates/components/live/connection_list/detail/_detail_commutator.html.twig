@@ -14,6 +14,10 @@
     {% endif %}
 {% endif %}
 
+{% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveModem') %}
+        {% set commutator = data[entityId]['modem']['masterModem']['port']['commutator'] %}
+{% endif %}
+
 
 <div class="col-4">
     <h4>Características del switch:</h4>
@@ -22,12 +26,13 @@
         <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
             <p class="text-white m-0 fw-bold">Switch:</p>
             <div class="row">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <a href="{{ path('commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary" title="Editar switch">
-                        <i class="fas fa-edit text-white"></i>
-                    </a>
-                </div>
-
+                {% if is_granted('ROLE_BOSS') %}
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                        <a href="{{ path('commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary" title="Editar switch">
+                            <i class="fas fa-edit text-white"></i>
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
 

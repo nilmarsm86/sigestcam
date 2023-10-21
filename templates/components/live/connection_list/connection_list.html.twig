@@ -8,10 +8,12 @@
 
         {% block card_header_options %}
             <div>
-                <a class="btn btn-primary btn-sm active" href="{{ newHref }}">
-                    <i class="fas fa-plus"></i>
-                    Nueva
-                </a>
+                {% if is_granted('ROLE_BOSS') %}
+                    <a class="btn btn-primary btn-sm active" href="{{ newHref }}">
+                        <i class="fas fa-plus"></i>
+                        Nueva conexión
+                    </a>
+                {% endif %}
             </div>
         {% endblock %}
 

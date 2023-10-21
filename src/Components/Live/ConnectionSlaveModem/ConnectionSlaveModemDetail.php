@@ -37,6 +37,9 @@ class ConnectionSlaveModemDetail extends ConnectionModemDetail
 //    #[LiveProp(updateFromParent: true)]
 //    public ?Port $port = null;
 
+    #[LiveProp(updateFromParent: true)]
+    public ?Modem $masterModem = null;
+
 //    public function __construct(private readonly EntityManagerInterface $entityManager)
 //    {
 //        $this->entity = Modem::class;
@@ -84,19 +87,19 @@ class ConnectionSlaveModemDetail extends ConnectionModemDetail
 //        return static::DISCONNECT.'_'.$this->connection->name;
 //    }
 
-//    #[LiveListener(ConnectionModemTable::DETAIL.'_Simple')]
-//    public function onConnectionModemTableDetailSimple(#[LiveArg] Modem $entity): void
-//    {
-//        if(isset($this->modem['id'])){
-//            if($this->modem['id'] !== $entity->getId()){
-//                $this->modem = $this->details($entity);
-//                $this->active = $this->modem['state'];
-//            }
-//        }else{
-//            $this->modem = $this->details($entity);
-//            $this->active = $this->modem['state'];
-//        }
-//    }
+    #[LiveListener(ConnectionSlaveModemTable::DETAIL.'_SlaveModem')]
+    public function onConnectionSlaveModemTableDetailSlaveModem(#[LiveArg] Modem $entity): void
+    {
+        if(isset($this->modem['id'])){
+            if($this->modem['id'] !== $entity->getId()){
+                $this->modem = $this->details($entity);
+                $this->active = $this->modem['state'];
+            }
+        }else{
+            $this->modem = $this->details($entity);
+            $this->active = $this->modem['state'];
+        }
+    }
 
 //    private function details(Modem $modem): array
 //    {
@@ -115,8 +118,8 @@ class ConnectionSlaveModemDetail extends ConnectionModemDetail
 //        $cam['disconnected'] = $modem->isDisconnected();
 //        $cam['master_modem'] = (string) $modem->getMasterModem();
 ////        $cam['electronicSerial'] = (string) $modem->getElectronicSerial();
-//        $cam['commutator'] = (string) $modem->getPort()?->getCommutator();
-//        $cam['port'] = $modem->getPort()?->getNumber();
+//        $cam['commutator'] = (string) $modem->getMasterModem()->getPort()?->getCommutator();
+//        $cam['port'] = $modem->getMasterModem()->getPort()?->getNumber();
 //
 //        return $cam;
 //    }

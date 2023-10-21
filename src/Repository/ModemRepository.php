@@ -84,6 +84,7 @@ class ModemRepository extends ServiceEntityRepository
             $predicate .= "OR m.ip LIKE :filter ";
             $predicate .= "OR m.model LIKE :filter ";
             $predicate .= "OR m.physicalSerial LIKE :filter ";
+            $predicate .= "OR m.physicalAddress LIKE :filter ";
             if($place){
                 $predicate .= "OR mun.name LIKE :filter ";
                 $predicate .= "OR pro.name LIKE :filter ";
@@ -196,7 +197,7 @@ class ModemRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $amountPerPage);
     }
 
-    public function findInactiveModemsWithoutPortAndMasterModem(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    public function findInactiveModemsWithoutPortAndMasterModem(string $ip, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
         $builder = $this->createQueryBuilder('m')->select(['m', 'mun', 'pro'])
             ->innerJoin('m.municipality', 'mun')
@@ -204,7 +205,9 @@ class ModemRepository extends ServiceEntityRepository
             ->where('m.state = :state')
             ->setParameter(':state', State::Inactive)
             ->andWhere('m.port IS NULL')
-            ->andWhere('m.masterModem IS NULL');
+            ->andWhere('m.masterModem IS NULL')
+            ->andWhere('m.ip <> :ip')
+            ->setParameter(':ip', $ip);
         $this->addFilter($builder, $filter);
         $query = $builder->orderBy('m.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);

@@ -23,7 +23,7 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::Direct'),
             options:  [
-                {label: 'Nueva', href: path('connection_direct_new'), icon: 'fa-plus'},
+                {label: 'Nueva', href: path('connection_direct_new'), icon: 'fa-plus', secure: true},
                 {label: 'Listado', href: path('connection_direct_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Cámara'],
@@ -35,7 +35,7 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::Simple'),
             options:  [
-                {label: 'Nueva', href:path('connection_simple_new'), icon: 'fa-plus'},
+                {label: 'Nueva', href:path('connection_simple_new'), icon: 'fa-plus', secure: true},
                 {label: 'Listado', href: path('connection_simple_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Modem', 'Cámara'],
@@ -47,7 +47,7 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch'),
             options:  [
-                {label: 'Nueva', href:path('connection_slave_switch_new'), icon: 'fa-plus'},
+                {label: 'Nueva', href:path('connection_slave_switch_new'), icon: 'fa-plus', secure: true},
                 {label: 'Listado', href: path('connection_slave_switch_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Switch esclavo', 'Cámara'],
@@ -59,7 +59,7 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::SlaveModem'),
             options:  [
-                {label: 'Nueva', href:path('connection_slave_modem_new'), icon: 'fa-plus'},
+                {label: 'Nueva', href:path('connection_slave_modem_new'), icon: 'fa-plus', secure: true},
                 {label: 'Listado', href: path('connection_slave_modem_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Modem', 'Modem esclavo', 'Cámara'],
@@ -71,7 +71,7 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::Full'),
             options:  [
-                {label: 'Nueva', href:'', icon: 'fa-plus'},
+                {label: 'Nueva', href:'', icon: 'fa-plus', secure: true},
                 {label: 'Listado', href: '', icon: 'fa-list'}
             ],
             components: ['Switch', 'Msam', 'Modem', 'Cámara'],

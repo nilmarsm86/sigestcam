@@ -119,4 +119,39 @@ class ConnectionListDetail
         $this->onConnectionListTableDetail($entity);
     }
 
+    #[LiveListener(ConnectionListTable::DETAIL.'_SlaveModem')]
+    public function onConnectionListTableDetailSlaveModem(#[LiveArg] int $entity): void
+    {
+        $this->onConnectionListTableDetail($entity);
+    }
+
+    public function onConnectionListTableChange(): void
+    {
+        $this->entityId = null;
+    }
+
+    #[LiveListener(ConnectionListTable::CHANGE.'_Direct')]
+    public function onConnectionListTableChangeDirect(): void
+    {
+        $this->onConnectionListTableChange();
+    }
+
+    #[LiveListener(ConnectionListTable::CHANGE.'_Simple')]
+    public function onConnectionListTableChangeSimple(): void
+    {
+        $this->onConnectionListTableChange();
+    }
+
+    #[LiveListener(ConnectionListTable::CHANGE.'_SlaveSwitch')]
+    public function onConnectionListTableChangeSlaveSwitch(): void
+    {
+        $this->onConnectionListTableChange();
+    }
+
+    #[LiveListener(ConnectionListTable::CHANGE.'_SlaveModem')]
+    public function onConnectionListTableChangeSlaveModem(): void
+    {
+        $this->onConnectionListTableChange();
+    }
+
 }

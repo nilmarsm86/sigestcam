@@ -7,6 +7,8 @@ use App\Components\Live\ConnectionModem\ConnectionModemDetail;
 use App\Components\Live\ConnectionModem\ConnectionModemTable;
 use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorPortList;
 use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorTable;
+use App\Components\Live\ConnectionSlaveModem\ConnectionSlaveModemDetail;
+use App\Components\Live\ConnectionSlaveModem\ConnectionSlaveModemTable;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
@@ -61,6 +63,12 @@ class ConnectionCamera
         $this->onConnectionCommutatorPortListSelected($port);
     }
 
+    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_SlaveModem')]
+    public function onConnectionCommutatorPortListSelectedSlaveModem(#[LiveArg] ?Port $port): void
+    {
+        $this->onConnectionCommutatorPortListSelected($port);
+    }
+
     protected function onConnectionCommutatorTableDetail(Commutator $entity): void
     {
         $this->commutator = $entity;
@@ -92,6 +100,14 @@ class ConnectionCamera
         $this->onConnectionCommutatorTableDetail($entity);
     }
 
+    #[LiveListener(ConnectionSlaveCommutatorTable::CHANGE.'_SlaveSwitch')]
+    public function onConnectionSlaveCommutatorTableChangeSlaveSwitch(): void
+    {
+        $this->commutator = null;
+        $this->port = null;
+        $this->modem = null;
+    }
+
     /**
      * Update table from filter, amount or page just in direct connections
      * @return void
@@ -112,18 +128,48 @@ class ConnectionCamera
         $this->commutator = $this->port->getCommutator();
     }
 
-    #[LiveListener(ConnectionModemTable::CHANGE.'_Simple')]
-    public function onConnectionModemTableChangeSimple(): void
+    #[LiveListener(ConnectionSlaveModemTable::DETAIL.'_SlaveModem')]
+    public function onConnectionSlaveModemTableDetailSlaveModem(#[LiveArg] Modem $entity): void
+    {
+        $this->modem = $entity;
+        $this->port = $entity->getMasterModem()->getPort() ?: $this->port;
+        $this->commutator = $this->port->getCommutator();
+    }
+
+    private function onConnectionModemChange(): void
     {
         $this->commutator = null;
         $this->port = null;
         $this->modem = null;
     }
 
+    #[LiveListener(ConnectionModemTable::CHANGE.'_Simple')]
+    public function onConnectionModemTableChangeSimple(): void
+    {
+        $this->onConnectionModemChange();
+    }
+
+    #[LiveListener(ConnectionSlaveModemTable::CHANGE.'_SlaveModem')]
+    public function onConnectionSlaveModemTableChangeSlaveModem(): void
+    {
+        $this->onConnectionModemChange();
+    }
+
+    private function onConnectionModemDetailDeactivate(): void
+    {
+        $this->modem = null;
+    }
+
     #[LiveListener(ConnectionModemDetail::DEACTIVATE.'_Simple')]
     public function onConnectionModemDetailDeactivateSimple(): void
     {
-        $this->modem = null;
+        $this->onConnectionModemDetailDeactivate();
+    }
+
+    #[LiveListener(ConnectionSlaveModemDetail::DEACTIVATE.'_SlaveModem')]
+    public function onConnectionSlaveModemDetailDeactivateSlaveModem(): void
+    {
+        $this->onConnectionModemDetailDeactivate();
     }
 
     #[LiveAction]
@@ -132,12 +178,6 @@ class ConnectionCamera
         $this->modem = new Modem();
     }
 
-    #[LiveListener(ConnectionSlaveCommutatorTable::CHANGE.'_SlaveSwitch')]
-    public function onConnectionSlaveCommutatorTableChangeSlaveSwitch(): void
-    {
-        $this->commutator = null;
-        $this->port = null;
-        $this->modem = null;
-    }
+
 
 }

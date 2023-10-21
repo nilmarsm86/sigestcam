@@ -15,12 +15,23 @@
                         <ul class="dropdown-menu">
                             <li><h6 class="dropdown-header">Opciones:</h6></li>
                             {% for option in options %}
-                            <li>
-                                <a class="dropdown-item" href="{{ option.href }}">
-                                    <i class="fas {{ option.icon }} text-dark"></i>
-                                    {{ option.label }}
-                                </a>
-                            </li>
+                                {% if option.secure is defined and option.secure == true %}
+                                    {% if is_granted('ROLE_BOSS') %}
+                                        <li>
+                                            <a class="dropdown-item" href="{{ option.href }}">
+                                                <i class="fas {{ option.icon }} text-dark"></i>
+                                                {{ option.label }}
+                                            </a>
+                                        </li>
+                                    {% endif %}
+                                {% else %}
+                                    <li>
+                                        <a class="dropdown-item" href="{{ option.href }}">
+                                            <i class="fas {{ option.icon }} text-dark"></i>
+                                            {{ option.label }}
+                                        </a>
+                                    </li>
+                                {% endif %}
                             {% endfor %}
                         </ul>
                     </div>

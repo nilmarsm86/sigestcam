@@ -1,20 +1,29 @@
-{% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') %}
+{% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple')%}
     {% set modem = data[entityId]['modem'] %}
 {% endif %}
 
-<div class="col-8">
-    <h4>Características del modem:</h4>
+{% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveModem')%}
+    {% set modem = data[entityId]['modem']['masterModem'] %}
+{% endif %}
+
+{% if slaveModem == true %}
+    {% set modem = data[entityId]['modem'] %}
+{% endif %}
+
+<div class="{% if slaveModem == true %}col-4{% else %}col-8{% endif %}">
+    <h4>Características del modem {% if slaveModem == true %}esclavo{% endif %}:</h4>
     <hr>
     <div class="card border-primary">
         <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
-            <p class="text-white m-0 fw-bold">Modem:</p>
+            <p class="text-white m-0 fw-bold">Modem {% if slaveModem == true %}esclavo{% endif %}:</p>
             <div class="row">
-                <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                    <a href="{{ path('modem_edit', {'id': modem.id}) }}" class="btn btn-primary" title="Editar modem">
-                        <i class="fas fa-edit text-white"></i>
-                    </a>
-                </div>
-
+                {% if is_granted('ROLE_BOSS') %}
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                        <a href="{{ path('modem_edit', {'id': modem.id}) }}" class="btn btn-primary" title="Editar modem">
+                            <i class="fas fa-edit text-white"></i>
+                        </a>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -32,37 +41,41 @@
                         editable: false,
                     }) }}
 
-                    {{ component('ConnectionDetailEditInline', {
-                        label: 'Puerto:',
-                        data: modem.port.number,
-                        connection: connection,
-                        'data-live-id': 'modem-port-'~ modem.id,
-                        entity: 'App\\Entity\\Modem',
-                        template: 'components/live/connection_camera/edit_inline.html.twig',
-                        editable: false,
-                    }) }}
+                    {% if slaveModem == false %}
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Puerto:',
+                            data: modem.port.number,
+                            connection: connection,
+                            'data-live-id': 'modem-port-'~ modem.id,
+                            entity: 'App\\Entity\\Modem',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
+                    {% endif %}
 
-{#                    {% if modem.masterModem is defined %}#}
-{#                        {{ component('ConnectionDetailEditInline', {#}
-{#                            label: 'Modem:',#}
-{#                            data: camera.modem.ip,#}
-{#                            connection: connection,#}
-{#                            'data-live-id': 'camera-modem-'~ camera.id,#}
-{#                            entity: 'App\\Entity\\Camera',#}
-{#                            template: 'components/live/connection_camera/edit_inline.html.twig',#}
-{#                            editable: false,#}
-{#                        }) }}#}
-{#                    {% endif %}#}
+                    {% if slaveModem == true %}
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Modem maestro:',
+                            data: camera.modem.masterModem.ip,
+                            connection: connection,
+                            'data-live-id': 'camera-modem-'~ camera.id,
+                            entity: 'App\\Entity\\Modem',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
+                    {% endif %}
 
-                    {{ component('ConnectionDetailEditInline', {
-                        label: 'Switch:',
-                        data: modem.port.commutator.ip,
-                        connection: connection,
-                        'data-live-id': 'modem-switch-'~ modem.id,
-                        entity: 'App\\Entity\\Modem',
-                        template: 'components/live/connection_camera/edit_inline.html.twig',
-                        editable: false,
-                    }) }}
+                    {% if slaveModem == false %}
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Switch:',
+                            data: modem.port.commutator.ip,
+                            connection: connection,
+                            'data-live-id': 'modem-switch-'~ modem.id,
+                            entity: 'App\\Entity\\Modem',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
+                    {% endif %}
 
                     {{ component('ConnectionDetailEditInline', {
                         label: 'Modelo:',
@@ -83,9 +96,11 @@
                         template: 'components/live/connection_camera/edit_inline.html.twig',
                         editable: false,
                     }) }}
+                {% if slaveModem == false %}
                 </div>
 
                 <div class="col">
+                {% endif %}
                     {{ component('ConnectionDetailEditInline', {
                         label: 'Número de serie:',
                         data: modem.physicalSerial,

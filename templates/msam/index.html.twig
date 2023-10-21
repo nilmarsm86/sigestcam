@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Msam index{% endblock %}
+
+{% block body %}
+    <h1>Msam index</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>Brand</th>
+                <th>Ip</th>
+                <th>PhysicalAddress</th>
+                <th>PhysicalSerial</th>
+                <th>Model</th>
+                <th>Inventory</th>
+                <th>Contic</th>
+                <th>State</th>
+                <th>SlotAmount</th>
+                <th>actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for msam in msams %}
+            <tr>
+                <td>{{ msam.id }}</td>
+                <td>{{ msam.brand }}</td>
+                <td>{{ msam.ip }}</td>
+                <td>{{ msam.physicalAddress }}</td>
+                <td>{{ msam.physicalSerial }}</td>
+                <td>{{ msam.model }}</td>
+                <td>{{ msam.inventory }}</td>
+                <td>{{ msam.contic }}</td>
+                <td>{{ msam.state }}</td>
+                <td>{{ msam.slotAmount }}</td>
+                <td>
+                    <a href="{{ path('msam_show', {'id': msam.id}) }}">show</a>
+                    <a href="{{ path('msam_edit', {'id': msam.id}) }}">edit</a>
+                </td>
+            </tr>
+        {% else %}
+            <tr>
+                <td colspan="11">no records found</td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+
+    <a href="{{ path('msam_new') }}">Create new</a>
+{% endblock %}

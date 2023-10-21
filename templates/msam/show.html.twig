@@ -1,0 +1,58 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Msam{% endblock %}
+
+{% block body %}
+    <h1>Msam</h1>
+
+    <table class="table">
+        <tbody>
+            <tr>
+                <th>Id</th>
+                <td>{{ msam.id }}</td>
+            </tr>
+            <tr>
+                <th>Brand</th>
+                <td>{{ msam.brand }}</td>
+            </tr>
+            <tr>
+                <th>Ip</th>
+                <td>{{ msam.ip }}</td>
+            </tr>
+            <tr>
+                <th>PhysicalAddress</th>
+                <td>{{ msam.physicalAddress }}</td>
+            </tr>
+            <tr>
+                <th>PhysicalSerial</th>
+                <td>{{ msam.physicalSerial }}</td>
+            </tr>
+            <tr>
+                <th>Model</th>
+                <td>{{ msam.model }}</td>
+            </tr>
+            <tr>
+                <th>Inventory</th>
+                <td>{{ msam.inventory }}</td>
+            </tr>
+            <tr>
+                <th>Contic</th>
+                <td>{{ msam.contic }}</td>
+            </tr>
+            <tr>
+                <th>State</th>
+                <td>{{ msam.state }}</td>
+            </tr>
+            <tr>
+                <th>SlotAmount</th>
+                <td>{{ msam.slotAmount }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a href="{{ path('msam_index') }}">back to list</a>
+
+    <a href="{{ path('msam_edit', {'id': msam.id}) }}">edit</a>
+
+    {{ include('msam/_delete_form.html.twig') }}
+{% endblock %}

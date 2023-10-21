@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Component\Serializer\SerializerInterface;
 
 #[Route('/connection', name: 'connection_')]
@@ -42,6 +43,7 @@ class ConectionController extends AbstractController
     }
 
     #[Route('/direct_new', name: 'direct_new')]
+    #[IsGranted('ROLE_BOSS')]
     public function directNew(
         Request              $request,
         /*#[MapRequestPayload(
@@ -82,6 +84,7 @@ class ConectionController extends AbstractController
     }
 
     #[Route('/simple_new', name: 'simple_new')]
+    #[IsGranted('ROLE_BOSS')]
     public function simpleNew(): Response
     {
         return $this->render('connection/simple_new.html.twig');
@@ -96,6 +99,7 @@ class ConectionController extends AbstractController
     }
 
     #[Route('/slave_switch_new', name: 'slave_switch_new')]
+    #[IsGranted('ROLE_BOSS')]
     public function slaveSwitchNew(): Response
     {
         return $this->render('connection/slave_switch_new.html.twig');
@@ -110,6 +114,7 @@ class ConectionController extends AbstractController
     }
 
     #[Route('/slave_modem_new', name: 'slave_modem_new')]
+    #[IsGranted('ROLE_BOSS')]
     public function slaveModemNew(): Response
     {
         return $this->render('connection/slave_modem_new.html.twig');

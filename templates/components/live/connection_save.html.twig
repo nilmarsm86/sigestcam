@@ -16,8 +16,14 @@
                     {% endif %}
 
                     {% if modem %}
-                        {% if modem.port.getConnectionType() is not null %}
-                            disabled
+                        {% if modem.masterModem is not null %}
+                            {% if modem.masterModem.port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
+                        {% else %}
+                            {% if modem.port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endif %}"
@@ -31,8 +37,14 @@
                     {% endif%}
 
                     {% if modem %}
-                        {% if modem.port.getConnectionType() is not null %}
-                            disabled
+                        {% if modem.masterModem is not null %}
+                            {% if modem.masterModem.port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
+                        {% else %}
+                            {% if modem.port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
                         {% endif %}
                     {% endif %}
                 {% endif %}

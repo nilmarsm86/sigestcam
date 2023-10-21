@@ -110,25 +110,25 @@ class ConnectionModemDetail
 
     protected function details(Modem $modem): array
     {
-        $cam = [];
-        $cam['id'] = $modem->getId();
-        $cam['ip'] = $modem->getIp();
-        $cam['inventory'] = $modem->getInventory();
-        $cam['physical_address'] = $modem->getPhysicalAddress();
-        $cam['brand'] = $modem->getBrand();
-        $cam['model'] = $modem->getModel();
-        $cam['contic'] = $modem->getContic();
-        $cam['serial'] = $modem->getPhysicalSerial();
-        $cam['province'] = (string) $modem->getMunicipality()->getProvince();
-        $cam['municipality'] = (string) $modem->getMunicipality();
-        $cam['state'] = $modem->isActive();
-        $cam['disconnected'] = $modem->isDisconnected();
-        $cam['master_modem'] = (string) $modem->getMasterModem();
-//        $cam['electronicSerial'] = (string) $modem->getElectronicSerial();
-        $cam['commutator'] = (string) $modem->getPort()?->getCommutator();
-        $cam['port'] = $modem->getPort()?->getNumber();
+        $mod = [];
+        $mod['id'] = $modem->getId();
+        $mod['ip'] = $modem->getIp();
+        $mod['inventory'] = $modem->getInventory();
+        $mod['physical_address'] = $modem->getPhysicalAddress();
+        $mod['brand'] = $modem->getBrand();
+        $mod['model'] = $modem->getModel();
+        $mod['contic'] = $modem->getContic();
+        $mod['serial'] = $modem->getPhysicalSerial();
+        $mod['province'] = (string) $modem->getMunicipality()->getProvince();
+        $mod['municipality'] = (string) $modem->getMunicipality();
+        $mod['state'] = $modem->isActive();
+        $mod['disconnected'] = $modem->isDisconnected();
+        $mod['master_modem'] = (string) $modem->getMasterModem();
+//        $mod['electronicSerial'] = (string) $modem->getElectronicSerial();
+        $mod['commutator'] = (string) $modem->getPort()?->getCommutator();
+        $mod['port'] = $modem->getPort()?->getNumber();
 
-        return $cam;
+        return $mod;
     }
 
     /**
@@ -169,6 +169,7 @@ class ConnectionModemDetail
     {
         $entity = $this->entityManager->find($this->entity, $entityId);
         if(is_null($entity->getPort())){
+            //TODO: porque dispara el evento 2 veces?
             $this->dispatchBrowserEvent($this->getActivateEventName(), [
                 'elementId' => $elementId
             ]);

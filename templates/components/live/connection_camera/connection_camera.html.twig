@@ -18,7 +18,7 @@
             {% endif %}
         {% endif %}
 
-        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') and modem is not null %}
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') %}
             {{ include('components/live/connection_camera/_card_table.html.twig') }}
 
             {% if modem is not null and modem.canAddCameraOrModem() %}
@@ -28,6 +28,24 @@
                     vars: {
                         connection:connection,
                         modem: modem
+                    },
+                    type: 'component',
+                    id: 'add-camera'
+                }) }}
+            {% endif %}
+        {% endif %}
+
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveModem') and modem is not null %}
+            {{ include('components/live/connection_camera/_card_table.html.twig') }}
+
+            {% if modem.canAddCameraOrModem() %}
+                {{ component('ModalForm', {
+                    title: 'Agregar Cámara',
+                    src: 'ConnectionCameraNew',
+                    vars: {
+                        connection:connection,
+                        modem: modem,
+                        port: port
                     },
                     type: 'component',
                     id: 'add-camera'

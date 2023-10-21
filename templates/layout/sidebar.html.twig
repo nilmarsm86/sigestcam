@@ -27,40 +27,44 @@
 {#            <span>Crear reporte</span>#}
 {#        </a>#}
 {#    </li>#}
-    <li class="nav-item">
-        <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('commutator_') %}active{% endif %}"
-           href="{{ path('commutator_index') }}"
-        >
-            <i class="fas fa-server"></i>
-            <span>Switchs</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('modem_') %}active{% endif %}"
-           href="{{ path('modem_index') }}"
-        >
-            <i class="fas fa-server"></i>
-            <span>Modems</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('camera_') %}active{% endif %}"
-           href="{{ path('camera_index') }}"
-        >
-            <i class="fas fa-video"></i>
-            <span>Cámaras</span></a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-server"></i>
-            <span>Msams</span>
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="#">
-            <i class="fas fa-server"></i>
-            <span>Servidores</span>
-        </a>
-    </li>
-    {% if is_granted('ROLE_ADMIN')%}
+    {% if is_granted('ROLE_BOSS') %}
+        <li class="nav-item">
+            <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('commutator_') %}active{% endif %}"
+               href="{{ path('commutator_index') }}"
+            >
+                <i class="fas fa-server"></i>
+                <span>Switchs</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('modem_') %}active{% endif %}"
+               href="{{ path('modem_index') }}"
+            >
+                <i class="fas fa-server"></i>
+                <span>Modems</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('camera_') %}active{% endif %}"
+               href="{{ path('camera_index') }}"
+            >
+                <i class="fas fa-video"></i>
+                <span>Cámaras</span></a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('msam_') %}active{% endif %}"
+               href="{{ path('msam_index') }}">
+                <i class="fas fa-server"></i>
+                <span>Msams</span>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('server_') %}active{% endif %}"
+               href="{{ path('server_index') }}">
+                <i class="fas fa-server"></i>
+                <span>Servidores</span>
+            </a>
+        </li>
+    {% endif %}
+    {% if is_granted('ROLE_ADMIN') %}
         <li class="nav-item">
             <a class="nav-link {% if app.request.attributes.get('_route') in ['user_list', 'user_profile'] %}active{% endif %}"
                href="{{ path('user_list') }}"

@@ -78,7 +78,10 @@ class ConnectionSave extends AbstractController
     #[LiveListener(ConnectionCameraTable::DETAIL.'_SlaveModem')]
     public function onConnectionCameraTableDetailSlaveModem(#[LiveArg] Camera $entity): void
     {
+        //$this->onConnectionCameraTableDetail($entity);
+        $this->modem = $entity->getModem();
         $this->onConnectionCameraTableDetail($entity);
+        $this->port = $this->getRealEntity($this->modem?->getMasterModem()?->getPort());
     }
 
     #[LiveListener(ConnectionCameraTable::DETAIL.'_Full')]
@@ -231,6 +234,56 @@ class ConnectionSave extends AbstractController
 
     protected function saveSlaveModem(): string
     {
+        if($this->port){
+            if(is_null($this->modem)){
+                $this->camera->setPort($this->port);
+
+                if($this->port->isFromCommutator()){
+                    $commutator = $this->port->getCommutator();
+                    $this->camera->setMunicipality($commutator->getMunicipality());
+                }
+            }
+        }
+
+        if($this->modem){
+            $this->camera->setModem($this->modem);
+            if(!$this->modem->isActive()){
+                $this->modem->activate();
+            }
+            $this->entityManager->persist($this->modem);
+
+            if($masterModem = $this->modem->getMasterModem()){
+                if(!$masterModem->isActive()){
+                    $masterModem->activate();
+                }
+                $this->entityManager->persist($masterModem);
+            }
+
+            $port = $this->modem->getMasterModem()->getPort();
+            if($port->isFromCommutator()){
+                $commutator = $this->port->getCommutator();
+                $this->modem->getMasterModem()->setMunicipality($commutator->getMunicipality());
+                $this->camera->setMunicipality($commutator->getMunicipality());
+            }
+        }
+        $this->entityManager->persist($this->camera);
+
+        if(!$this->port){
+            $this->port = $this->modem->getMasterModem()->getPort();
+        }
+
+        $this->port->setConnectionType($this->connection);
+        if(!$this->port->isActive()){
+            $this->port->activate();
+        }
+        $this->entityManager->persist($this->port);
+
+        $commutator = $this->port->getCommutator();
+        if(!$commutator->isActive()){
+            $commutator->activate();
+        }
+        $this->entityManager->persist($commutator);
+
         return 'connection_slave_modem_list';
     }
 

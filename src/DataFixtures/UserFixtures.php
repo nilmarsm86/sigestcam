@@ -84,7 +84,7 @@ class UserFixtures extends Fixture
         if(is_null($officerUser)){
             $roles = $manager->getRepository(Role::class)->findAll();
             $roles = array_filter($roles, function ($role){
-                return $role->getName() !== 'ROLE_SUPER_ADMIN' && $role->getName() !== 'ROLE_ADMIN' && $role->getName() !== 'ROLE_BOSS';
+                return $role->getName() !== 'ROLE_SUPER_ADMIN' && $role->getName() !== 'ROLE_ADMIN' && $role->getName() !== 'ROLE_BOSS' && $role->getName() !== 'ROLE_TECHNICAL';
             });
 
             $officer = new User('Officer', 'Officer', 'officer', 'officer');

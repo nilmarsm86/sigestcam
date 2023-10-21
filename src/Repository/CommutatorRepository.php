@@ -59,6 +59,7 @@ class CommutatorRepository extends ServiceEntityRepository
             $predicate .= "OR c.model LIKE :filter ";
             $predicate .= "OR c.inventory LIKE :filter ";
             $predicate .= "OR c.contic LIKE :filter ";
+            $predicate .= "OR c.physicalAddress LIKE :filter ";
             if($place){
                 $predicate .= "OR mun.name LIKE :filter ";
                 $predicate .= "OR pro.name LIKE :filter ";

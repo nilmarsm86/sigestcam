@@ -1,7 +1,7 @@
 {% from 'macros/flashes.html.twig' import flash %}
 
 <div {{ attributes }}>
-    {% if port is null and modem is null %}
+    {% if masterModem is null %}
         {{ flash('danger', 'Para crear un nuevo modem debe seleccionar el puerto o modem que tenga disponibilidad, a donde estará conectado.', false) }}
     {% else %}
         {% if isSuccessful == false %}
@@ -26,7 +26,7 @@
             {{ form_row(form._token) }}
             {{ form_end(form, {render_rest: false}) }}
         {% else %}
-            {{ flash('info', 'Acaba de agregar un modem en el puerto o modem seleccionado.', false) }}
+            {{ flash('info', 'Acaba de agregar un modem esclavo en el modem seleccionado.', false) }}
         {% endif %}
     {% endif %}
 </div>

@@ -63,6 +63,7 @@ class ReportRepository extends ServiceEntityRepository
                 $predicate = "r.number LIKE :filter ";
                 $predicate .= "OR r.interruptionReason LIKE :filter ";
                 $predicate .= "OR e.physicalSerial LIKE :filter ";
+                $predicate .= "OR e.ip LIKE :filter ";
 
                 if($place){
                     $predicate .= "OR mun.name LIKE :filter ";

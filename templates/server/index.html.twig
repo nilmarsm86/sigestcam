@@ -1,0 +1,66 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Gestionar servidores{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Gestionar servidores</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Servidores', href: path('server_index')},
+                {label: 'Lista'},
+            ],
+            current: 'Lista'
+        }) }}
+    </div>
+
+    {{ include('partials/_index_container.html.twig', {
+        list: 'server/_list.html.twig',
+        rest_data_action: 'page:onChangeState->content-loader#refreshContent'
+    }) }}
+
+{#    <table class="table">#}
+{#        <thead>#}
+{#            <tr>#}
+{#                <th>Id</th>#}
+{#                <th>Brand</th>#}
+{#                <th>Ip</th>#}
+{#                <th>PhysicalAddress</th>#}
+{#                <th>PhysicalSerial</th>#}
+{#                <th>Model</th>#}
+{#                <th>Inventory</th>#}
+{#                <th>Contic</th>#}
+{#                <th>State</th>#}
+{#                <th>actions</th>#}
+{#            </tr>#}
+{#        </thead>#}
+{#        <tbody>#}
+{#        {% for server in servers %}#}
+{#            <tr>#}
+{#                <td>{{ server.id }}</td>#}
+{#                <td>{{ server.brand }}</td>#}
+{#                <td>{{ server.ip }}</td>#}
+{#                <td>{{ server.physicalAddress }}</td>#}
+{#                <td>{{ server.physicalSerial }}</td>#}
+{#                <td>{{ server.model }}</td>#}
+{#                <td>{{ server.inventory }}</td>#}
+{#                <td>{{ server.contic }}</td>#}
+{#                <td>{{ server.state }}</td>#}
+{#                <td>#}
+{#                    <a href="{{ path('app_server_show', {'id': server.id}) }}">show</a>#}
+{#                    <a href="{{ path('app_server_edit', {'id': server.id}) }}">edit</a>#}
+{#                </td>#}
+{#            </tr>#}
+{#        {% else %}#}
+{#            <tr>#}
+{#                <td colspan="10">no records found</td>#}
+{#            </tr>#}
+{#        {% endfor %}#}
+{#        </tbody>#}
+{#    </table>#}
+
+{#    <a href="{{ path('app_server_new') }}">Create new</a>#}
+{% endblock %}

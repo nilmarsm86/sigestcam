@@ -84,12 +84,17 @@ class Report
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\Valid]
-    private User $boss;
+    private ?User $boss = null;
 
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(nullable: false)]
     #[Assert\Valid]
-    private User $managementOfficer;
+    private ?User $managementOfficer = null;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(nullable: true)]
+    #[Assert\Valid]
+    private ?User $technical = null;
 
     #[ORM\Column(length: 255)]
     private string $state;
@@ -264,24 +269,24 @@ class Report
         return $this;
     }
 
-    public function getBoss(): User
+    public function getBoss(): ?User
     {
         return $this->boss;
     }
 
-    public function setBoss(User $boss): static
+    public function setBoss(?User $boss): static
     {
         $this->boss = $boss;
 
         return $this;
     }
 
-    public function getManagementOfficer(): User
+    public function getManagementOfficer(): ?User
     {
         return $this->managementOfficer;
     }
 
-    public function setManagementOfficer(User $managementOfficer): static
+    public function setManagementOfficer(?User $managementOfficer): static
     {
         $this->managementOfficer = $managementOfficer;
 
@@ -371,6 +376,18 @@ class Report
     public function isOpen(): bool
     {
         return $this->enumState->value === ReportState::Open->value;
+    }
+
+    public function getTechnical(): ?User
+    {
+        return $this->technical;
+    }
+
+    public function setTechnical(?User $technical): static
+    {
+        $this->technical = $technical;
+
+        return $this;
     }
 
 }

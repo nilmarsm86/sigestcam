@@ -63,7 +63,13 @@
                     <tr>
                         <th>Equipo:</th>
                         <td>
-                            <a href="{{ path('camera_show', {'id': report.equipment.id }) }}">{{ report.equipment }}</a>
+                            {% if is_granted('ROLE_BOSS') %}
+                            <a href="{{ path('camera_show', {'id': report.equipment.id }) }}">
+                                {{ report.equipment }}
+                            </a>
+                            {% else %}
+                                {{ report.equipment }}
+                            {% endif %}
                         </td>
                     </tr>
                     <tr>
@@ -120,6 +126,20 @@
                         <th>Provincia:</th>
                         <td>{{ report.equipment.municipality.province }}</td>
                     </tr>
+                    <tr>
+                        <th>Jefe:</th>
+                        <td>{{ report.boss }}</td>
+                    </tr>
+                    <tr>
+                        <th>Oficial de guardia:</th>
+                        <td>{{ report.managementOfficer }}</td>
+                    </tr>
+                    {% if report.state is same as constant('App\\Entity\\Enums\\ReportState::Close') %}
+                        <tr>
+                            <th>Técnico:</th>
+                            <td>{{ report.technical }}</td>
+                        </tr>
+                    {% endif %}
                 </tbody>
             </table>
         </div>

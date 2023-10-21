@@ -13,7 +13,19 @@
                 <div class="bg-success status-indicator"></div>
             </div>
             <div class="fw-bold">
-                <div><span>Pendientes por rotura</span></div>
+                <div><span>Pendiente por sustitutcion o rotura</span></div>
+                <p class="small text-gray-500 mb-0">Cámaras</p>
+            </div>
+        </a>
+        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Conectividad', type: '1'}) }}">
+            <div class="bg-info icon-circle dropdown-list-image me-3">
+                <span class="fw-bold fa-3x font-monospace">{{ this.connectivityCamera() }}</span>
+                <div class="bg-success status-indicator"></div>
+            </div>
+            <div class="fw-bold">
+                <div class="">
+                    <span>Pendientes por conectividad</span>
+                </div>
                 <p class="small text-gray-500 mb-0">Cámaras</p>
             </div>
         </a>
@@ -41,18 +53,18 @@
                 <p class="small text-gray-500 mb-0">Cámaras</p>
             </div>
         </a>
-        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Sustitución', type: '1'}) }}">
-            <div class="bg-info icon-circle dropdown-list-image me-3">
-                <span class="fw-bold fa-3x font-monospace">{{ this.sustitutionCamera() }}</span>
-                <div class="bg-success status-indicator"></div>
-            </div>
-            <div class="fw-bold">
-                <div class="">
-                    <span>Pendiente por sustitutcion</span>
-                </div>
-                <p class="small text-gray-500 mb-0">Cámaras</p>
-            </div>
-        </a>
+{#        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Sustitución', type: '1'}) }}">#}
+{#            <div class="bg-info icon-circle dropdown-list-image me-3">#}
+{#                <span class="fw-bold fa-3x font-monospace">{{ this.sustitutionCamera() }}</span>#}
+{#                <div class="bg-success status-indicator"></div>#}
+{#            </div>#}
+{#            <div class="fw-bold">#}
+{#                <div class="">#}
+{#                    <span>Pendiente por sustitutcion o rotura</span>#}
+{#                </div>#}
+{#                <p class="small text-gray-500 mb-0">Cámaras</p>#}
+{#            </div>#}
+{#        </a>#}
         <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Modem', type: '1'}) }}">
             <div class="bg-info icon-circle dropdown-list-image me-3">
                 <span class="fw-bold fa-3x font-monospace">{{ this.modemCamera() }}</span>

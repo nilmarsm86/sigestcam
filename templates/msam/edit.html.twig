@@ -1,0 +1,13 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Edit Msam{% endblock %}
+
+{% block body %}
+    <h1>Edit Msam</h1>
+
+    {{ include('msam/_form.html.twig', {'button_label': 'Update'}) }}
+
+    <a href="{{ path('msam_index') }}">back to list</a>
+
+    {{ include('msam/_delete_form.html.twig') }}
+{% endblock %}

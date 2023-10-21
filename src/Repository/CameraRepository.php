@@ -63,6 +63,7 @@ class CameraRepository extends ServiceEntityRepository
             $predicate .= "OR c.model LIKE :filter ";
             $predicate .= "OR c.physicalSerial LIKE :filter ";
             $predicate .= "OR c.user LIKE :filter ";
+            $predicate .= "OR c.physicalAddress LIKE :filter ";
             if($place){
                 $predicate .= "OR mun.name LIKE :filter ";
                 $predicate .= "OR pro.name LIKE :filter ";
@@ -327,6 +328,40 @@ class CameraRepository extends ServiceEntityRepository
             $predicate .= "OR c.user LIKE :filter ";
             $predicate .= "OR slaveCommutator.ip LIKE :filter ";
             $predicate .= "OR masterCommutator.ip LIKE :filter ";
+            $predicate .= "OR mun.name LIKE :filter ";
+            $predicate .= "OR pro.name LIKE :filter ";
+
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
+        }
+        $query = $builder->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findBySlaveModemConnection(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'slaveModem', 'modem', 'port', 'commutator', 'mun', 'pro']);
+        $builder->innerJoin('c.modem', 'slaveModem')
+            ->innerJoin('slaveModem.masterModem', 'modem')
+            ->innerJoin('modem.port', 'port')
+            ->innerJoin('port.commutator', 'commutator')
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro')
+            ->where('port.connectionType = :connectionType')
+            ->setParameter(':connectionType', ConnectionType::SlaveModem);
+
+        if($filter){
+            $predicate = "c.brand LIKE :filter ";
+            $predicate .= "OR c.contic LIKE :filter ";
+            $predicate .= "OR c.electronicSerial LIKE :filter ";
+            $predicate .= "OR c.inventory LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR c.model LIKE :filter ";
+            $predicate .= "OR c.physicalSerial LIKE :filter ";
+            $predicate .= "OR c.user LIKE :filter ";
+            $predicate .= "OR slaveModem.ip LIKE :filter ";
+            $predicate .= "OR modem.ip LIKE :filter ";
+            $predicate .= "OR commutator.ip LIKE :filter ";
             $predicate .= "OR mun.name LIKE :filter ";
             $predicate .= "OR pro.name LIKE :filter ";
 

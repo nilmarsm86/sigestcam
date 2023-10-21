@@ -16,7 +16,7 @@ class ModemType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $physicalAddress = [];
-        if($options['crud'] === false){
+        if($options['crud'] === false && $options['slave'] === false){
             $physicalAddress = [
                 new NotBlank(message: 'La dirección física no debe estar vacía.'),
             ];
@@ -67,11 +67,13 @@ class ModemType extends AbstractType
             ],
             'province' => 0,
             'municipality' => 0,
-            'crud' => false
+            'crud' => false,
+            'slave' => false,
         ]);
 
         $resolver->setAllowedTypes('province', 'int');
         $resolver->setAllowedTypes('municipality', 'int');
         $resolver->setAllowedTypes('crud', 'bool');
+        $resolver->setAllowedTypes('slave', 'bool');
     }
 }

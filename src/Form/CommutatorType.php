@@ -20,7 +20,7 @@ class CommutatorType extends AbstractType
         $ipConstrains = [];
         $gatewayConstrains = [];
         $physicalAddress = [];
-        if($options['crud'] === false){
+        if($options['crud'] === false && $options['slave'] === false){
             $ipConstrains = [
                 new NotBlank(message: 'Establezca el IP del switch.'),
                 new Ip(message:'Establezca un IP válido.')
@@ -121,6 +121,7 @@ class CommutatorType extends AbstractType
         $resolver->setAllowedTypes('province', 'int');
         $resolver->setAllowedTypes('municipality', 'int');
         $resolver->setAllowedTypes('crud', 'bool');
+        $resolver->setAllowedTypes('slave', 'bool');
     }
 
 }

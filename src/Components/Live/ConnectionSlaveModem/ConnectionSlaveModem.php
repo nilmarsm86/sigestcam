@@ -34,6 +34,9 @@ class ConnectionSlaveModem extends ConnectionModem
     #[LiveProp]
     public ?Modem $masterModem = null;
 
+    #[LiveProp]
+    public bool $inactives = false;
+
     #[LiveListener(ConnectionModemTable::DETAIL.'_SlaveModem')]
     public function onConnectionModemTableDetailSlaveModem(#[LiveArg] Modem $entity): void
     {
@@ -52,14 +55,12 @@ class ConnectionSlaveModem extends ConnectionModem
         $this->masterModem = null;
     }
 
-
-//    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_SlaveModem')]
-//    public function onConnectionCommutatorPortListSelectedSlaveModem(#[LiveArg] ?Port $port): void
-//    {
-//        $this->commutator = null;
-//        $this->port = $port;
-//        $this->commutator = $port?->getCommutator();
-//    }
+    #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_SlaveModem')]
+    public function onConnectionCommutatorPortListSelectedSlaveModem(#[LiveArg] ?Port $port): void
+    {
+        $this->onConnectionCommutatorPortListSelected($port);
+        $this->masterModem = null;
+    }
 
 //    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Simple')]
 //    public function onConnectionCommutatorTableDetailSimple(#[LiveArg] Commutator $entity): void
@@ -80,9 +81,15 @@ class ConnectionSlaveModem extends ConnectionModem
 //    }
 
     #[LiveAction]
-    public function removeModem(): void
+    public function inactiveModems(): void
     {
-        $this->masterModem = new Modem();
+        $this->inactives = true;
+    }
+
+    #[LiveAction]
+    public function activeModems(): void
+    {
+        $this->inactives = false;
     }
 
 }

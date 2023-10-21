@@ -12,12 +12,16 @@
     {{ form_row(form.aim) }}
     {{ form_row(form.boss) }}
     {{ form_row(form.equipment) }}
-    {% if form.observation is defined or form.solution is defined %}
+    {% if form.observation is defined or form.solution is defined or form.technical is defined %}
         <hr>
     {% endif %}
 
     {% if form.observation is defined %}
         {{ form_row(form.observation) }}
+    {% endif %}
+
+    {% if form.technical is defined %}
+        {{ form_row(form.technical) }}
     {% endif %}
 
     {% if form.solution is defined %}
@@ -35,10 +39,12 @@
             </button>
 
             {% if form.observation is defined or form.solution is defined %}
+                {% if is_granted('ROLE_OFFICER') %}
                 <button class="btn btn-danger" type="button" data-action="report#closeReport">
                     <i class="fas fa-clipboard-check"></i>
                     Cerrar reporte
                 </button>
+                {% endif %}
             {% endif %}
         </div>
     </div>

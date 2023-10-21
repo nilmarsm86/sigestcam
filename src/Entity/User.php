@@ -286,4 +286,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         return in_array('ROLE_OFFICER', $this->getRoles());
     }
+
+    public function isBooss(): bool
+    {
+        return in_array('ROLE_BOSS', $this->getRoles());
+    }
+
+    public function justTechnical()
+    {
+        return $this->getRoles() === ['ROLE_USER', 'ROLE_TECHNICAL'];
+    }
 }

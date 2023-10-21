@@ -63,7 +63,7 @@ trait PortTrait
     public function createPorts(int $amount, ?ConnectionType $connectionType = null): static
     {
         if($this->ports->count() === $this->maximumPortsAmount){
-            throw new Exception('Ha alcanzado el número máximo de puertos permitidos para este puerto.');
+            throw new Exception('Ha alcanzado el número máximo de puertos permitidos para este equipo.');
         }
 
         for ($i = 0; $i < $amount; $i++) {

@@ -28,6 +28,7 @@
                     <th>IP</th>
                     <th>Puerta de enlace</th>
                     <th>Multicast</th>
+                    <th>Núm. serie</th>
                     <th>Estado</th>
 {#                    <th>PortsAmount</th>#}
                     <th>Provincia</th>
@@ -48,6 +49,7 @@
                         <td>{{ commutator.ip }}</td>
                         <td>{{ commutator.gateway }}</td>
                         <td>{{ commutator.multicast }}</td>
+                        <td>{{ commutator.physicalSerial }}</td>
                         <td>
                             {% if commutator.isActive() %}
                                 <a href="{{ path('commutator_state') }}"

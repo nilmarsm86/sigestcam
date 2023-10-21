@@ -1,0 +1,68 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Server{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Datos del servidor</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Servidor', href: path('server_index')},
+                {label: 'Detalle'},
+            ],
+            current: 'Detalle'
+        }) }}
+    </div>
+
+    {{ include('camera/_detail.html.twig', {'showButton': true, 'title': title}) }}
+
+{#    <table class="table">#}
+{#        <tbody>#}
+{#            <tr>#}
+{#                <th>Id</th>#}
+{#                <td>{{ server.id }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Brand</th>#}
+{#                <td>{{ server.brand }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Ip</th>#}
+{#                <td>{{ server.ip }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>PhysicalAddress</th>#}
+{#                <td>{{ server.physicalAddress }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>PhysicalSerial</th>#}
+{#                <td>{{ server.physicalSerial }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Model</th>#}
+{#                <td>{{ server.model }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Inventory</th>#}
+{#                <td>{{ server.inventory }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>Contic</th>#}
+{#                <td>{{ server.contic }}</td>#}
+{#            </tr>#}
+{#            <tr>#}
+{#                <th>State</th>#}
+{#                <td>{{ server.state }}</td>#}
+{#            </tr>#}
+{#        </tbody>#}
+{#    </table>#}
+
+{#    <a href="{{ path('app_server_index') }}">back to list</a>#}
+
+{#    <a href="{{ path('app_server_edit', {'id': server.id}) }}">edit</a>#}
+
+{#    {{ include('server/_delete_form.html.twig') }}#}
+{% endblock %}

@@ -12,6 +12,7 @@ use App\Form\Types\ReportTypeEnumType;
 use Doctrine\ORM\EntityRepository;
 use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
@@ -19,29 +20,36 @@ use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\NegativeOrZero;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ReportType extends AbstractType
 {
-    public function __construct(private EquipmentToIdTransformer $equipmentToIdTransformer) {
+    public function __construct(private EquipmentToIdTransformer $equipmentToIdTransformer, private Security $security) {
     }
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
+        $readOnly = [];
+        if($this->security->getUser()->justTechnical()){
+            $readOnly = [
+                /*'attr' => [
+                    'readonly' => true,
+                    'disabled' => true
+                ]*/
+            ];
+        }
+
         $builder
-            //->add('number')
-            //->add('specialty')
-            //->add('entryDate')
-            //->add('closeDate')
             ->add('type', ReportTypeEnumType::class, [
                 'label' => 'Tipo:',
-            ])
+            ]+$readOnly)
             ->add('interruption', InterruptionReasonEnumType::class, [
                 'mapped' => false,
-                'label' => 'Interrupción:',
+                'label' => 'Motivo de Interrupción:',
                 'attr' => [
                     'data-action' => 'report#selectReason'
-                ]
+                ]/*+['readonly' => $this->security->getUser()->justTechnical(),'disabled' => $this->security->getUser()->justTechnical()]*/
             ])
             ->add('equipment', HiddenType::class, [
                 'data' => $options['equipment'],
@@ -49,50 +57,49 @@ class ReportType extends AbstractType
                     new \App\Validator\Report(null, null, null, $options['existReport']),
                 ]
             ])
-            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options, $builder): void {
+            ->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options, $builder, $readOnly): void {
                 $report = $event->getData();
                 $form = $event->getForm();
 
                 if (!$report || null === $report->getId()) {
                     $form->add('interruptionReason', null, [
-                        'label' => 'Razón de interrupción:',
+                        'label' => 'Detalle:',
                         'row_attr' => ['style' => 'display:none'],
-                    ]);
+                    ]+$readOnly);
                 }else{
                     $form->add('interruptionReason', null, [
-                        'label' => 'Razón de interrupción:',
-                    ])
+                        'label' => 'Detalle:',
+                    ]+$readOnly)
                     ->add('observation', null, [
                         'label' => 'Observaciones:'
                     ])
-                    ->add('solution', HiddenType::class, [
-//                        'label' => 'Solución:',
-//                        'constraints' => [new NotBlank(['message'=>'Para poder cerrar un reporte debe darle solución primero.'])]
-                    ]);
+                    ->add('technical', EntityType::class, [
+                        'label' => 'Técnico:',
+                        'class' => User::class,
+                        'query_builder' => function (EntityRepository $er) use ($options) {
+                            return $er->findTechnical();
+                        }
+                    ]+$readOnly)
+                    ->add('solution', HiddenType::class);
                 }
             })
             ->add('priority', PriorityEnumType::class, [
                 'label' => 'Prioridad:'
-            ])
+            ]+$readOnly)
             ->add('flaw', null, [
-                'label' => 'Motivo de interrupción:'
-            ])
-
-            //->add('unit')
-            //->add('state')
+                'label' => 'Desperfecto:'
+            ]+$readOnly)
             ->add('aim', AimEnumType::class, [
                 'label' => 'Función:'
-            ])
+            ]+$readOnly)
 
             ->add('boss', EntityType::class, [
-                'label' => 'Jefe:',
+                'label' => 'Responsable:',
                 'class' => User::class,
                 'query_builder' => function (EntityRepository $er) use ($options) {
                     return $er->findBosses();
                 }
-            ])
-            //->add('managementOfficer')
-            //->add('organ')
+            ]+$readOnly)
         ;
 
         $builder->get('equipment')->addModelTransformer($this->equipmentToIdTransformer);

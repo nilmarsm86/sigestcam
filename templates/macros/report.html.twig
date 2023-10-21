@@ -1,0 +1,13 @@
+{% macro report(state, id, type, title) %}
+    {% if state and app.user.isOfficer() %}
+        <a
+                href="#"
+                class="ms-1"
+                data-action="connection-list-table#report"
+                data-connection-list-table-equipment-param="{{ id }}"
+                data-connection-list-table-type-param="{{ type }}"
+        >
+            <i class="fas fa-clipboard" title="{{ title }}"></i>
+        </a>
+    {% endif %}
+{% endmacro %}
