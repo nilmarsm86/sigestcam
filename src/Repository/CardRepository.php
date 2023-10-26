@@ -4,6 +4,8 @@ namespace App\Repository;
 
 use App\Entity\Card;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\NonUniqueResultException;
+use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -37,6 +39,20 @@ class CardRepository extends ServiceEntityRepository
         if ($flush) {
             $this->getEntityManager()->flush();
         }
+    }
+
+    /**
+     * @throws NonUniqueResultException
+     * @throws NoResultException
+     */
+    public function findAmountCardsByMsamId($msamId): array|int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c) as total')
+            ->leftJoin('c.msam', 'msam')
+            ->where('msam.id = '.$msamId)
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 //    /**

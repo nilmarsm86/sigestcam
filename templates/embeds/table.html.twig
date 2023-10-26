@@ -3,39 +3,43 @@
         <div class="col-md-6 text-nowrap">
             {# Show amount #}
             <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-                <label class="form-label">Mostrar:&nbsp;
-                    <select
-                            class="d-inline-block form-select form-select-sm"
-                            {{ stimulus_controller('select-navigate-querystring', {'queryName':'amount'}) }}
-                    >
-                        {% for item in [2, 10, 25, 50, 100] %}
-                            <option value="{{ item }}" {% if paginator.amount == item %}selected{% endif %}>
-                                {{ item }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </label>
+                {% if paginator is not null %}
+                    <label class="form-label">Mostrar:&nbsp;
+                        <select
+                                class="d-inline-block form-select form-select-sm"
+                                {{ stimulus_controller('select-navigate-querystring', {'queryName':'amount'}) }}
+                        >
+                            {% for item in [2, 10, 25, 50, 100] %}
+                                <option value="{{ item }}" {% if paginator.amount == item %}selected{% endif %}>
+                                    {{ item }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </label>
+                {% endif %}
             </div>
             {# Show amount #}
         </div>
 
         <div class="col-md-6">
-            {% block table_filter %}
-                <div class="text-md-end dataTables_filter" id="dataTable_filter">
-                    <form method="get" data-action="table#filter">
-                        <label class="form-label">
-                            <input type="search"
-                                   class="form-control form-control-sm"
-                                   aria-controls="dataTable"
-                                   placeholder="Buscar..."
-                                   name="filter"
-                                   value="{{ filter }}"
-                                   data-action="blur->table#filterSearch"
-                            >
-                        </label>
-                    </form>
-                </div>
-            {% endblock %}
+            {% if paginator is not null %}
+                {% block table_filter %}
+                    <div class="text-md-end dataTables_filter" id="dataTable_filter">
+                        <form method="get" data-action="table#filter">
+                            <label class="form-label">
+                                <input type="search"
+                                       class="form-control form-control-sm"
+                                       aria-controls="dataTable"
+                                       placeholder="Buscar..."
+                                       name="filter"
+                                       value="{{ filter }}"
+                                       data-action="blur->table#filterSearch"
+                                >
+                            </label>
+                        </form>
+                    </div>
+                {% endblock %}
+            {% endif %}
         </div>
     </div>
 
@@ -53,42 +57,44 @@
         </table>
     </div>
 
-    <div class="row">
-        <div class="col-md-6 align-self-center">
-            <p class="dataTables_info" role="status" aria-live="polite">
-                Mostrar <strong>{{ paginator.from }}</strong> al <strong>{{ paginator.to }}</strong> de
-                <strong>{{ paginator.total }}</strong>
-            </p>
-        </div>
+    {% if paginator is not null %}
+        <div class="row">
+            <div class="col-md-6 align-self-center">
+                <p class="dataTables_info" role="status" aria-live="polite">
+                    Mostrar <strong>{{ paginator.from }}</strong> al <strong>{{ paginator.to }}</strong> de
+                    <strong>{{ paginator.total }}</strong>
+                </p>
+            </div>
 
-        <div class="col-md-6">
-            <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
-                {% if paginator.maxPage > 1 %}
-                    <ul class="pagination">
-                        <li class="page-item {% if paginator.currentPage == 1 %}disabled{% endif %}">
-                            <a class="page-link" aria-label="Previous"
-                               href="{{ path(app.request.attributes.get('_route'),{'page':1, 'filter':filter, 'amount':paginator.amount}) }}">
-                                <span aria-hidden="true">«</span>
-                            </a>
-                        </li>
-                        {% for item in 1..paginator.maxPage %}
-                            <li class="page-item {% if paginator.currentPage == item %}active{% endif %}">
-                                <a class="page-link"
-                                   href="{{ path(app.request.attributes.get('_route'), {'page':item, 'filter':filter, 'amount':paginator.amount}) }}">
-                                    {{ item }}
+            <div class="col-md-6">
+                <nav class="d-lg-flex justify-content-lg-end dataTables_paginate paging_simple_numbers">
+                    {% if paginator.maxPage > 1 %}
+                        <ul class="pagination">
+                            <li class="page-item {% if paginator.currentPage == 1 %}disabled{% endif %}">
+                                <a class="page-link" aria-label="Previous"
+                                   href="{{ path(app.request.attributes.get('_route'),{'page':1, 'filter':filter, 'amount':paginator.amount}) }}">
+                                    <span aria-hidden="true">«</span>
                                 </a>
                             </li>
-                        {% endfor %}
-                        <li class="page-item {% if paginator.currentPage == paginator.maxPage %}disabled{% endif %}">
-                            <a class="page-link" aria-label="Next"
-                               href="{{ path(app.request.attributes.get('_route'), {'page':paginator.maxPage, 'filter':filter, 'amount':paginator.amount}) }}">
-                                <span aria-hidden="true">»</span>
-                            </a>
-                        </li>
-                    </ul>
-                {% endif %}
-            </nav>
+                            {% for item in 1..paginator.maxPage %}
+                                <li class="page-item {% if paginator.currentPage == item %}active{% endif %}">
+                                    <a class="page-link"
+                                       href="{{ path(app.request.attributes.get('_route'), {'page':item, 'filter':filter, 'amount':paginator.amount}) }}">
+                                        {{ item }}
+                                    </a>
+                                </li>
+                            {% endfor %}
+                            <li class="page-item {% if paginator.currentPage == paginator.maxPage %}disabled{% endif %}">
+                                <a class="page-link" aria-label="Next"
+                                   href="{{ path(app.request.attributes.get('_route'), {'page':paginator.maxPage, 'filter':filter, 'amount':paginator.amount}) }}">
+                                    <span aria-hidden="true">»</span>
+                                </a>
+                            </li>
+                        </ul>
+                    {% endif %}
+                </nav>
+            </div>
         </div>
-    </div>
+    {% endif %}
     <backdrop-component class="card-backdrop" data-table-target="backdropComponent"></backdrop-component>
 </div>

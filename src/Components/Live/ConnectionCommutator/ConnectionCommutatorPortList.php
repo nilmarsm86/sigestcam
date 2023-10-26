@@ -329,6 +329,7 @@ class ConnectionCommutatorPortList
         $this->editingType = null;
     }
 
+    //TODO: porque solamente esta en la conexion directa
     #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Direct')]
     public function onConnectionCameraNewFormSuccessDirect(#[LiveArg] Camera $camera): void
     {

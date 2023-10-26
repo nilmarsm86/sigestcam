@@ -1,0 +1,25 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Nueva targeta{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Crear nueva targeta</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Targetas', href: path('card_index', {'msam':msam.id})},
+                {label: 'Nuevo'},
+            ],
+            current: 'Nuevo'
+        }) }}
+    </div>
+
+    {{ include('card/_form.html.twig', {'showButton': true, 'title': title}) }}
+
+{#    {{ include('card/_form.html.twig') }}#}
+
+{#    <a href="{{ path('card_index', {'msam':msam.id}) }}">back to list</a>#}
+{% endblock %}

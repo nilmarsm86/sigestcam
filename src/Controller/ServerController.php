@@ -16,12 +16,12 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
 #[Route('/server')]
-#[IsGranted('ROLE_BOSS')]
 class ServerController extends AbstractController
 {
     use MunicipalityTrait;
 
     #[Route('/', name: 'server_index', methods: ['GET'])]
+    #[IsGranted('ROLE_OFFICER')]
     public function index(Request $request, ServerRepository $serverRepository, CrudActionService $crudActionService): Response
     {
         $template = $crudActionService->indexAction($request, $serverRepository, 'findServers', 'server');
@@ -29,6 +29,7 @@ class ServerController extends AbstractController
     }
 
     #[Route('/new', name: 'server_new', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $server = new Server();
@@ -72,6 +73,7 @@ class ServerController extends AbstractController
     }
 
     #[Route('/{id}', name: 'server_show', methods: ['GET'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function show(Request $request,Server $server, CrudActionService $crudActionService): Response
     {
         $template = $crudActionService->showAction($request, $server, 'server', 'server', 'Detalles del servidor');
@@ -79,6 +81,7 @@ class ServerController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'server_edit', methods: ['GET', 'POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function edit(Request $request, Server $server, EntityManagerInterface $entityManager): Response
     {
         $postData = $request->request->all();
@@ -135,6 +138,7 @@ class ServerController extends AbstractController
     }*/
 
     #[Route('/state', name: 'server_state', methods: ['POST'])]
+    #[IsGranted('ROLE_ADMIN')]
     public function state(Request $request, ServerRepository $serverRepository, CrudActionService $crudActionService): Response
     {
         $template = $crudActionService->stateAction($request, $serverRepository, 'Se ha desactivado el servidor.', 'Se ha activado el servidor.');

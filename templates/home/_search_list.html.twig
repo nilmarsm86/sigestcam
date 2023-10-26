@@ -62,7 +62,29 @@
                         {% endif %}
                         <td>{{ equipment.municipality.province }}</td>
                         <td>{{ equipment.municipality }}</td>
-                        <td></td>
+                        <td>
+                            {% if equipment.class is same as 'Commutator' %}
+                                {% set route = path('commutator_show', {'id': equipment.id}) %}
+                            {% endif %}
+                            {% if equipment.class is same as 'Camera' %}
+                                {% set route = path('camera_show', {'id': equipment.id}) %}
+                            {% endif %}
+                            {% if equipment.class is same as 'Modem' %}
+                                {% set route = path('modem_show', {'id': equipment.id}) %}
+                            {% endif %}
+                            {% if equipment.class is same as 'Msam' %}
+                                {% set route = path('msam_show', {'id': equipment.id}) %}
+                            {% endif %}
+                            {% if equipment.class is same as 'Server' %}
+                                {% set route = path('server_show', {'id': equipment.id}) %}
+                            {% endif %}
+                            <a class="btn btn-sm btn-primary" title="Detalle del equipo"
+                               href="{{ route }}"
+                               data-action="page#showFormContent"
+                            >
+                                <i class="fas fa-eye"></i>
+                            </a>
+                        </td>
                     </tr>
                 {% else %}
                     <tr>

@@ -1,0 +1,40 @@
+{% extends 'content.html.twig' %}
+
+{% block title %}Conexión completa{% endblock %}
+
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Nueva conexión completa</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Conexiones', href: path('connection_index')},
+                {label: 'Conexion completa', href: '#'},
+                {label: 'Nueva'},
+            ],
+            current: 'Nueva'
+        }) }}
+    </div>
+
+    {{ component('ConnectionCommutator', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::Full')
+    }) }}
+
+    {{ component('ConnectionMsam', {
+        connection: constant('App\\Entity\\Enums\\ConnectionType::Full')
+    }) }}
+
+{#    {{ component('ConnectionModem', {#}
+{#        connection: constant('App\\Entity\\Enums\\ConnectionType::Simple')#}
+{#    }) }}#}
+
+{#    {{ component('ConnectionCamera', {#}
+{#        connection: constant('App\\Entity\\Enums\\ConnectionType::Simple')#}
+{#    }) }}#}
+
+{#    {{ component('ConnectionSave', {#}
+{#        connection: constant('App\\Entity\\Enums\\ConnectionType::Simple')#}
+{#    }) }}#}
+{% endblock %}

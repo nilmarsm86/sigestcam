@@ -18,7 +18,12 @@ export default class extends Controller {
     }
 
     async initialize() {
-        this.component = await getComponent(this.element);
+        try{
+            this.component = await getComponent(this.element);
+        }catch (e){
+
+        }
+
         this.element.addEventListener('page:onChangeState', this.state.bind(this));
 
         const modalElement = this.element.querySelector('#new-report');

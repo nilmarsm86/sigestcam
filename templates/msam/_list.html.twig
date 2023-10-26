@@ -25,8 +25,8 @@
 
             {% block table_head %}
                 <tr>
-                    <th>IP</th>
-                    <th>Multicast</th>
+{#                    <th>IP</th>#}
+{#                    <th>Multicast</th>#}
                     <th>Núm. serie</th>
                     <th>Estado</th>
 {#                    <th>PortsAmount</th>#}
@@ -45,8 +45,8 @@
             {% block table_body %}
                 {% for msam in paginator.getData() %}
                     <tr>
-                        <td>{{ msam.ip }}</td>
-                        <td>{{ msam.multicast }}</td>
+{#                        <td>{{ msam.ip }}</td>#}
+{#                        <td>{{ msam.multicast }}</td>#}
                         <td>{{ msam.physicalSerial }}</td>
                         <td>
                             {% if msam.isActive() %}
@@ -88,26 +88,26 @@
 {#                        <td>{{ commutator.inventory }}</td>#}
 {#                        <td>{{ commutator.contic }}</td>                        #}
                         <td>
-                            <a class="btn btn-sm btn-primary" title="Detalle del switch"
+                            <a class="btn btn-sm btn-primary" title="Detalle del msam"
                                href="{{ path('msam_show', {'id': msam.id}) }}"
                                data-action="page#showFormContent"
                             >
                                 <i class="fas fa-eye"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary" title="Editar switch"
+                            <a class="btn btn-sm btn-primary" title="Editar msam"
                                href="{{ path('msam_edit', {'id': msam.id}) }}"
                                data-action="page#showFormContent"
                             >
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <a class="btn btn-sm btn-primary position-relative" title="Puertos del switch"
-                               href="{{ path('msam_port', {'id': msam.id}) }}"
+                            <a class="btn btn-sm btn-primary position-relative" title="Cantidad de slots del msam"
+                               href="{{ path('card_index', {'msam': msam.id}) }}"
                                data-action="page#showFormContent"
                             >
                                 <i class="fas fa-server"></i>
                                 <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                                    {{ msam.portsAmount }}
-                                    <span class="visually-hidden">cantidad de slots de targeta</span>
+                                    {{ msam.slotAmount }}
+                                    <span class="visually-hidden">cantidad de slots del msam</span>
                               </span>
                             </a>
                         </td>

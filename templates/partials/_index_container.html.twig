@@ -1,5 +1,5 @@
 <div class="row"
-     data-controller="content-loader visibility page"
+     data-controller="content-loader visibility page" data-page-list-container-url-value="{{ list_container_url| default }}"
      data-action="
             page:onShowFormContent->visibility#show
             page:onShowFormContent->content-loader#refreshContent

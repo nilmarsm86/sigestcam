@@ -97,7 +97,8 @@ class CommutatorType extends AbstractType
                             'min' => 1,
                             'max' => 36,
                             'list' => 'ports_amount'
-                        ]
+                        ],
+                        'data' => 1
                     ]);
                 }
             })

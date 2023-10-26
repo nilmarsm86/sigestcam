@@ -12,6 +12,9 @@ import {useProcessResponse} from "../behaviors/use-process-response.js";
  */
 export default class extends Controller {
     static targets = ['formContainer', 'listContainer'];
+    static values = {
+        listContainerUrl: String
+    };
 
     connect() {
         useProcessResponse(this);
@@ -28,7 +31,8 @@ export default class extends Controller {
         const response = event.detail.response;
         await this.processResponseToast(response);
 
-        super.dispatch('onSendFormSuccess',{detail:{container:this.listContainerTarget, url: document.location}});
+        let url = (this.listContainerUrlValue.length === 0) ? document.location : this.listContainerUrlValue;
+        super.dispatch('onSendFormSuccess',{detail:{container:this.listContainerTarget, url: url}});
     }
 
     /**

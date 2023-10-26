@@ -1,0 +1,206 @@
+<div
+        class="col-4"
+        {% if msam is not null %}
+            {{ attributes.defaults(stimulus_controller('connection-msam-detail', { msam: msam.id })) }}
+        {% else %}
+            {{ attributes }}
+        {% endif %}
+>
+    {% if msam is not null %}
+        <h4>Características del Msam:</h4>
+        <hr>
+        <div class="card text-bg-info border-primary">
+            <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
+                <p class="text-white m-0 fw-bold">Detalles:</p>
+                <div class="row">
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+{#                        <!-- BOTON DE DESCONETAR -->#}
+{#                        <input#}
+{#                                type="checkbox"#}
+{#                                class="btn-check btn-primary"#}
+{#                                id="modem_connect{{ modem.id }}"#}
+{#                                autocomplete="off"#}
+{#                                {% if msam.disconnected == false %}checked{% endif %}#}
+{#                                data-action="change->live#action"#}
+{#                                {% if msam.disconnected == false %}#}
+{#                                    data-action-name="disconnect(modem={{ msam.id }})"#}
+{#                                {% else %}#}
+{#                                    data-action-name="connect(modem={{ msam.id }})"#}
+{#                                {% endif %}#}
+{#                        >#}
+{#                        <label class="btn btn-primary" for="modem_connect{{ modem.id }}" title="Conectar / Desconectar">#}
+{#                            <i class="fas fa-plug text-white"></i>#}
+{#                        </label>#}
+{#                        <!-- BOTON DE DESCONETAR -->#}
+
+                        <!-- BOTON DE DESACTIVAR -->
+                        <input
+                                type="checkbox"
+                                class="btn-check btn-primary"
+                                id="switch{{ msam.id }}"
+                                autocomplete="off"
+                                {% if active %}checked{% endif %}
+                                {% if active %}
+                                    data-action="change->connection-msam-detail#deactivate"
+                                {% else %}
+                                    data-action="change->live#action"
+                                    data-action-name="activate(entityId={{ msam.id }})"
+                                {% endif %}
+                        >
+                        <label class="btn btn-primary" for="switch{{ msam.id }}" title="Estado">
+                            <i class="fas {% if active %}fa-check-circle text-white{% else %}fa-circle text-white-50{% endif %} "></i>
+                        </label>
+                        <!-- BOTON DE DESACTIVAR -->
+                        <a href="{{ path('msam_edit', {'id': msam.id}) }}" class="btn btn-primary" title="Editar msam">
+                            <i class="fas fa-edit text-white"></i>
+                        </a>
+                    </div>
+
+                </div>
+            </div>
+
+            {# no es necesario usar updateFromParent, en el data, pues se pasa el data-live-id y esto lleva a que el componente se construya completo #}
+{#            {{ component('ConnectionDetailEditInline', {#}
+{#                label: 'IP:',#}
+{#                data: commutator.ip,#}
+{#                id: commutator.id,#}
+{#                setter: 'setIp',#}
+{#                connection: connection,#}
+{#                constraints: [#}
+{#                    {'class': 'NotBlank', 'options': {message:'Establezca el IP del equipo.'}},#}
+{#                    {'class': 'Ip', 'options': {message:'Establezca un IP válido.'}}#}
+{#                ],#}
+{#                'data-live-id': 'commutator-ip-'~ commutator.id,#}
+{#                entity: 'App\\Entity\\Commutator',#}
+{#                template: 'components/live/connection_commutator/edit_inline.html.twig'#}
+{#            }) }}#}
+
+{#            {{ component('ConnectionDetailEditInline', {#}
+{#                label: 'Puerta de enlace:',#}
+{#                data: commutator.gateway,#}
+{#                id: commutator.id,#}
+{#                setter: 'setGateway',#}
+{#                connection: connection,#}
+{#                constraints: [#}
+{#                    {'class': 'NotBlank', 'options': {message:'Establezca el IP gateway del equipo.'}},#}
+{#                    {'class': 'Ip', 'options': {message:'Establezca un IP gateway válido.'}}#}
+{#                ],#}
+{#                'data-live-id': 'commutator-gateway-'~ commutator.id,#}
+{#                entity: 'App\\Entity\\Commutator',#}
+{#                template: 'components/live/connection_commutator/edit_inline.html.twig'#}
+{#            }) }}#}
+
+{#            {{ component('ConnectionDetailEditInline', {#}
+{#                label: 'Dirección multicast:',#}
+{#                data: commutator.multicast,#}
+{#                id: commutator.id,#}
+{#                setter: 'setMulticast',#}
+{#                connection: connection,#}
+{#                'data-live-id': 'commutator-multicast-'~ commutator.id,#}
+{#                entity: 'App\\Entity\\Commutator',#}
+{#                template: 'components/live/connection_commutator/edit_inline.html.twig'#}
+{#            }) }}#}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Inventario:',
+                data: msam.inventary,
+                id: msam.id,
+                setter: 'setInventory',
+                connection: connection,
+                'data-live-id': 'msam-inventory-'~ msam.id,
+                entity: 'App\\Entity\\Msam',
+                template: 'components/live/connection_msam/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Marca:',
+                data: msam.brand,
+                id: msam.id,
+                setter: 'setBrand',
+                connection: connection,
+                'data-live-id': 'msam-brand-'~ msam.id,
+                entity: 'App\\Entity\\Msam',
+                template: 'components/live/connection_msam/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Modelo:',
+                data: msam.model,
+                id: msam.id,
+                setter: 'setModel',
+                connection: connection,
+                'data-live-id': 'msam-model-'~ msam.id,
+                entity: 'App\\Entity\\Msam',
+                template: 'components/live/connection_msam/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Contic:',
+                data: msam.contic,
+                id: msam.id,
+                setter: 'setContic',
+                connection: connection,
+                'data-live-id': 'msam-contic-'~ msam.id,
+                entity: 'App\\Entity\\Msam',
+                template: 'components/live/connection_msam/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Serie:',
+                data: msam.serial,
+                id: msam.id,
+                setter: 'setPhysicalSerial',
+                connection: connection,
+                'data-live-id': 'msam-serial-'~ msam.id,
+                entity: 'App\\Entity\\Msam',
+                template: 'components/live/connection_msam/edit_inline.html.twig',
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Dirección física:',
+                data: msam.physical_address,
+                id: msam.id,
+                setter: 'setPhysicalAddress',
+                connection: connection,
+                constraints: [
+                    {'class': 'NotBlank', 'options': {message:'La dirección física no debe estar vacía.'}}
+                ],
+                'data-live-id': 'msamphysical_address-'~ msam.id,
+                entity: 'App\\Entity\\Msam',
+                template: 'components/live/connection_msam/edit_inline.html.twig',
+                textarea: true,
+                refreshTable: false
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Municipio:',
+                data: msam.municipality,
+                id: msam.id,
+                editable: false,
+                connection: connection,
+                'data-live-id': 'msam-municipality-'~ msam.id,
+                entity: 'App\\Entity\\Msam',
+                template: 'components/live/connection_msam/edit_inline.html.twig'
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Provincia:',
+                data: msam.province,
+                id: msam.id,
+                editable: false,
+                connection: connection,
+                'data-live-id': 'msam-province-'~ msam.id,
+                entity: 'App\\Entity\\Msam',
+                template: 'components/live/connection_msam/edit_inline.html.twig',
+                last: true,
+            }) }}
+            <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
+        </div>
+    {% endif %}
+</div>
+

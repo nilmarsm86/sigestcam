@@ -128,4 +128,19 @@ class ConectionController extends AbstractController
         ]);
     }
 
+    #[Route('/full_new', name: 'full_new')]
+    #[IsGranted('ROLE_BOSS')]
+    public function fullNew(): Response
+    {
+        return $this->render('connection/full_new.html.twig');
+    }
+
+    #[Route('/full_list', name: 'full_list')]
+    public function fullList(Request $request): Response
+    {
+        return $this->render('connection/slave_modem_list.html.twig', [
+            'filter' => $request->query->get('filter', '')
+        ]);
+    }
+
 }

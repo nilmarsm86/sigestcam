@@ -56,6 +56,8 @@
                 <span>Msams</span>
             </a>
         </li>
+    {% endif %}
+    {% if is_granted('ROLE_OFFICER') %}
         <li class="nav-item">
             <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('server_') %}active{% endif %}"
                href="{{ path('server_index') }}">

@@ -1,11 +1,21 @@
-{% extends 'base.html.twig' %}
+{% extends 'content.html.twig' %}
 
-{% block title %}New Msam{% endblock %}
+{% block title %}Nuevo Msam{% endblock %}
 
-{% block body %}
-    <h1>Create new Msam</h1>
+{% block content %}
+    <div class="row">
+        <div class="col-8">
+            <h3 class="text-dark mb-4">Crear nuevo Msam</h3>
+        </div>
+        {{ component('Breadcrumb', {
+            options: [
+                {label: 'Inicio', href: path('app_home')},
+                {label: 'Msam', href: path('msam_index')},
+                {label: 'Nuevo'},
+            ],
+            current: 'Nuevo'
+        }) }}
+    </div>
 
-    {{ include('msam/_form.html.twig') }}
-
-    <a href="{{ path('msam_index') }}">back to list</a>
+    {{ include('msam/_form.html.twig', {'showButton': true, 'title': title}) }}
 {% endblock %}

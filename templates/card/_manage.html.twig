@@ -1,0 +1,5 @@
+{{ include('partials/_index_container.html.twig', {
+    list: 'card/_list.html.twig',
+    rest_data_action: 'page:onChangeState->content-loader#refreshContent',
+    list_container_url: path('card_index', {'msam':msam.id})
+}) }}

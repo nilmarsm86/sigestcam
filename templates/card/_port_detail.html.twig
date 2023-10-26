@@ -1,0 +1,96 @@
+{% embed "embeds/card.html.twig" %}
+    {% block card_css_class %}mb-4{% endblock %}
+
+    {% block card_extra %}{% endblock %}
+
+    {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+    {% block card_title %}{{ title }}{% endblock %}
+
+    {% block card_header_options %}{% endblock %}
+
+    {% block card_body %}
+        <div class="row" style="position: relative">
+            {% for port in card.ports %}
+                <div class="col-3 mb-4" {{ stimulus_controller('port', {
+                    stateHref: path('port_state'),
+                    speedHref: path('port_speed'),
+                    listHref: path('card_port', {'id':card.id}),
+                    typeHref: path('port_type'),
+                }) }}
+                     data-action="port:onChangeState->content-loader#refreshContent">
+                    <div class="card text-white bg-gradient-secondary">
+                        <div class="card-body" style="padding: 0.5rem">
+                            <div class="row align-items-center no-gutters">
+                                <div class="col-auto">
+                                    <i class="fas {% if port.equipment %}fa-check-circle{% else %}fa-circle{% endif %} fa-2x text-gray-300"></i>
+                                    {% if port.state %}<span>{% endif %}
+                                    <div class="form-check form-switch">
+                                        <input
+                                                class="form-check-input"
+                                                type="checkbox"
+                                                role="switch"
+                                                {% if port.isActive() %}checked{% endif %}
+                                                data-action="change->port#state:prevent"
+                                                data-port-id-param="{{ port.id }}"
+                                                {% if port.isActive() %}
+                                                    data-port-state-param="0"
+                                                {% else %}
+                                                    data-port-state-param="1"
+                                                {% endif %}
+                                        >
+                                    </div>
+                                    {% if port.state %}</span>{% endif %}
+                                </div>
+                                <div class="col me-2">
+                                    <div class="text-uppercase text-white fw-bold text-xs mb-1">
+                                        <input
+                                                type="text"
+                                                value="{{ port.speed }}"
+                                                class="w-25"
+                                                data-action="blur->port#speed"
+                                                data-port-id-param="{{ port.id }}"
+                                        >
+                                        <span>{{ constant('App\\Entity\\Port::SPEED_TYPE') }} -</span>
+                                        <br>
+                                        <span class="">
+                                            {{ port.equipment }}
+                                        </span>
+                                    </div>
+                                    <h5 class="card-title">Puerto: <span class="fw-bold">{{ port.number }}</span></h5>
+                                    <select style="font-size: 11.5px"
+                                            data-action="change->port#type"
+                                            data-port-id-param="{{ port.id }}"
+                                    >
+                                        {% for label, value in forSelect %}
+                                            {% if value is not same as "" %}
+                                                <option value="{{ value }}" {% if port.typeValue == value %}selected{% endif %}>
+                                                    {{ label }}
+                                                </option>
+                                            {% endif %}
+                                        {% endfor %}
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endblock %}
+
+    {% block card_footer %}
+        {% if showButton is defined and showButton == true %}
+            <div class="card-footer text-body-secondary">
+                <div class="row">
+                    <div class="col-6">
+                        <a href="" class="btn btn-primary">
+                            <i class="fas fa-arrow-left"></i>
+                            Listado de Switchs
+                        </a>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+    {% endblock %}
+{% endembed %}

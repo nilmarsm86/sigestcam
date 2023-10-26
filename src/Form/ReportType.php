@@ -33,10 +33,11 @@ class ReportType extends AbstractType
         $readOnly = [];
         if($this->security->getUser()->justTechnical()){
             $readOnly = [
-                /*'attr' => [
+                'attr' => [
                     'readonly' => true,
-                    'disabled' => true
-                ]*/
+                    //'disabled' => true,
+                    'style' => 'background-color: #eaecf4;'
+                ]
             ];
         }
 
@@ -49,7 +50,7 @@ class ReportType extends AbstractType
                 'label' => 'Motivo de Interrupción:',
                 'attr' => [
                     'data-action' => 'report#selectReason'
-                ]/*+['readonly' => $this->security->getUser()->justTechnical(),'disabled' => $this->security->getUser()->justTechnical()]*/
+                ]+['readonly' => $this->security->getUser()->justTechnical(),'disabled' => $this->security->getUser()->justTechnical()]
             ])
             ->add('equipment', HiddenType::class, [
                 'data' => $options['equipment'],

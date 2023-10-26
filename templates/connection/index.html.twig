@@ -71,8 +71,8 @@
             totalAmount: total_amount_connections,
             connection: constant('App\\Entity\\Enums\\ConnectionType::Full'),
             options:  [
-                {label: 'Nueva', href:'', icon: 'fa-plus', secure: true},
-                {label: 'Listado', href: '', icon: 'fa-list'}
+                {label: 'Nueva', href:path('connection_full_new'), icon: 'fa-plus', secure: true},
+                {label: 'Listado', href: path('connection_full_list'), icon: 'fa-list'}
             ],
             components: ['Switch', 'Msam', 'Modem', 'Cámara'],
             amount: full_connections

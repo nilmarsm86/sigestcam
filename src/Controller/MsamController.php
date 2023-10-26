@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Controller\Traits\MunicipalityTrait;
 use App\Entity\Msam;
 use App\Form\MsamType;
-use App\Repository\CameraRepository;
 use App\Repository\MsamRepository;
 use App\Service\CrudActionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -115,7 +114,9 @@ class MsamController extends AbstractController
             return $this->redirectToRoute('msam_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('msam/edit.html.twig', [
+        $template = ($request->isXmlHttpRequest()) ? '_form.html.twig' : 'edit.html.twig';
+
+        return $this->render("msam/$template", [
             'msam' => $msam,
             'form' => $form,
             'title' => 'Editar msam'
@@ -134,9 +135,21 @@ class MsamController extends AbstractController
     }*/
 
     #[Route('/state', name: 'msam_state', methods: ['POST'])]
-    public function state(Request $request, CameraRepository $cameraRepository, CrudActionService $crudActionService): Response
+    public function state(Request $request, MsamRepository $msamRepository, CrudActionService $crudActionService): Response
     {
-        $template = $crudActionService->stateAction($request, $cameraRepository, 'Se ha desactivado el Msam.', 'Se ha activado el Msam.');
+        $template = $crudActionService->stateAction($request, $msamRepository, 'Se ha desactivado el Msam.', 'Se ha activado el Msam.');
         return new Response($template);
+    }
+
+    #[Route('/card/{id}', name: 'msam_card', requirements: ['id' => '\d+'], methods: ['GET'])]
+    public function port(Request $request, Msam $msam): Response
+    {
+        $template = ($request->isXmlHttpRequest()) ? '_port_detail.html.twig' : 'port.html.twig';
+
+        return $this->render("commutator/$template", [
+            'msam' => $msam,
+            'title' => 'Targetas del msam',
+            //'forSelect' => PortType::forSelect(),
+        ]);
     }
 }

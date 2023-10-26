@@ -16,14 +16,8 @@ class MsamType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $ipConstrains = [];
-        $gatewayConstrains = [];
         $physicalAddress = [];
         if($options['crud'] === false){
-            $ipConstrains = [
-                new NotBlank(message: 'Establezca el IP del msam.'),
-                new Ip(message:'Establezca un IP válido.')
-            ];
 
             $physicalAddress = [
                 new NotBlank(message: 'La dirección física no debe estar vacía.'),
@@ -31,12 +25,9 @@ class MsamType extends AbstractType
         }
 
         $builder
-            ->add('ip', null, [
-                'label' => 'IP:',
-                'constraints' => $ipConstrains
-            ])
             ->add('physicalAddress', null, [
                 'label' => 'Dirección física:',
+                'constraints' => $physicalAddress
             ])
             ->add('physicalSerial', null, [
                 'label' => 'Número de serie:',
@@ -75,7 +66,8 @@ class MsamType extends AbstractType
                         'min' => 1,
                         'max' => 20,
                         'list' => 'slots_amount'
-                    ]
+                    ],
+                    'data' => 1
                 ]);
             }
         })

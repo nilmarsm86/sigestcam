@@ -15,10 +15,10 @@ class Msam extends Equipment
 {
     #[ORM\OneToMany(mappedBy: 'msam', targetEntity: Card::class)]
     #[ORM\OrderBy(['slot' => 'ASC'])]
-    #[Assert\Count(
-        min: 1,
-        minMessage: 'Debe establecer al menos 1 targeta para este Msam.',
-    )]
+//    #[Assert\Count(
+//        min: 1,
+//        minMessage: 'Debe establecer al menos 1 targeta para este Msam.',
+//    )]
     private Collection $cards;
 
     #[ORM\Column]
@@ -111,6 +111,27 @@ class Msam extends Equipment
             $card->deactivate();
         }
         return parent::deactivate();
+    }
+
+    public function __toString(): string
+    {
+        $namespace = explode('\\', static::class);
+        $data = $namespace[count($namespace) - 1];
+        if(!is_null($this->getPhysicalSerial())){
+            $data .= ': ('.$this->getPhysicalSerial().')';
+        }
+
+        return $data;
+    }
+
+    public function canAddTarget(): bool
+    {
+        return $this->getCards()->count() < $this->slotAmount;
+    }
+
+    public function connectedCards()
+    {
+        return $this->getCards()->count();
     }
 
 }

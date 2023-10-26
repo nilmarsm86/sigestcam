@@ -1,0 +1,58 @@
+<div {{ attributes }} style="position: relative">
+    {% if port is not null or modem is not null %}
+        {% embed "embeds/async_table.html.twig" %}
+            {% block table_head %}
+                <tr>
+    {#                <th>IP</th>#}
+    {#                <th>Puerta de enlace</th>#}
+    {#                <th>Dirección multicast</th>#}
+                    <th>Número de serie</th>
+                    <th>Estado</th>
+                    <th>Provincia</th>
+                    <th>Municipio</th>
+                    <th></th>
+                </tr>
+            {% endblock %}
+
+            {% block table_body %}
+                {% for msam in paginator.getData() %}
+                    <tr>
+    {#                    <td><a href="{{ path('commutator_index', {'filter':commutator.ip}) }}">{{ commutator.ip }}</a></td>#}
+    {#                    <td>{{ commutator.gateway }}</td>#}
+    {#                    <td>{{ commutator.multicast }}</td>#}
+                        <td><a href="{{ path('msam_index', {'filter':msam.physicalSerial}) }}">{{ msam.physicalSerial }}</a></td>
+                        <td>
+                            {% if msam.state == "1"  %}
+                                <span class="badge text-bg-success">Activo</span>
+                            {% else %}
+                                <span class="badge text-bg-danger">Inactivo</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ msam.municipality.province.name }}</td>
+                        <td>{{ msam.municipality.name }}</td>
+                        <td>
+                            <button title="Detalle del Msam"
+                                    type="button"
+                                    class="btn btn-primary btn-sm"
+                                    aria-current="page"
+    {#                                {% if entityId is not same as commutator.id %}#}
+                                        data-action="live#action"
+                                        data-action-name="prevent|detail(entityId={{ msam.id }})"
+    {#                                {% endif %}#}
+                            >
+                                <i class="fas fa-eye"></i>
+                            </button>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="7">
+                            No se encontraron registros
+                        </td>
+                    </tr>
+                {% endfor %}
+            {% endblock %}
+        {% endembed %}
+        <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
+    {% endif %}
+</div>

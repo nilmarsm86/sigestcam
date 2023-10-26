@@ -14,6 +14,7 @@ use App\Entity\Traits\PortTrait as PortTrait;
 use Symfony\Component\Validator\Constraints as Assert;
 
 #[ORM\Entity(repositoryClass: CardRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Card implements HarborInterface
 {
     use PortTrait;
@@ -28,16 +29,11 @@ class Card implements HarborInterface
 
     #[ORM\OneToMany(mappedBy: 'card', targetEntity:PortEntity::class, cascade: ['persist'])]
     #[ORM\OrderBy(['number' => 'ASC'])]
-    #[Assert\Count(
-        min: 1,
-        minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
-    )]
+//    #[Assert\Count(
+//        min: 1,
+//        minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
+//    )]
     private Collection $ports;
-
-    /*#[ORM\Column(length: 255)]
-    #[Assert\NotBlank(message: 'El nombre no debe estar vacío.')]
-    #[Assert\NotNull(message: 'El nombre no debe ser nulo.')]
-    private string $name;*/
 
     #[ORM\ManyToOne(inversedBy: 'cards')]
     #[ORM\JoinColumn(nullable: false)]
@@ -50,14 +46,24 @@ class Card implements HarborInterface
     #[Assert\Positive]
     private ?int $slot = null;
 
+    #[ORM\Column]
+    #[Assert\NotBlank(message: 'Establezca la cantidad de puertos.')]
+//    #[Assert\NotNull(message: 'La cantidad de puertos no debe ser nula.')]
+    #[Assert\Positive]
+    private ?int $portsAmount;
+
+
     /**
      * @throws Exception
      */
-    public function __construct()
+    public function __construct(?int $portsAmount = null)
     {
         $this->ports = new ArrayCollection();
+        $this->portsAmount = $portsAmount;
         $this->maximumPortsAmount = self::MAXIMUM_PORTS_NUMBER;
-        $this->createPorts(self::MAXIMUM_PORTS_NUMBER, null);
+        if(!is_null($portsAmount)) {
+            $this->createPorts(self::MAXIMUM_PORTS_NUMBER, null);
+        }
     }
 
     public function getId(): ?int
@@ -105,7 +111,7 @@ class Card implements HarborInterface
      * No se pone en trait debido a la validación
      * @return int
      */
-    #[Assert\LessThanOrEqual(16)]
+//    #[Assert\LessThanOrEqual(16)]
     public function maxPorts(): int
     {
         return $this->maximumPortsAmount;
@@ -116,6 +122,26 @@ class Card implements HarborInterface
         $this->deactivatePorts();
 
         return $this;
+    }
+
+    public function getPortsAmount(): ?int
+    {
+        return $this->portsAmount;
+    }
+
+    public function setPortsAmount(int $portsAmount): static
+    {
+        $this->portsAmount = $portsAmount;
+        $this->maximumPortsAmount = $portsAmount;
+        return $this;
+    }
+
+    #[ORM\PrePersist]
+    public function onCreatePort(): void
+    {
+        if(!is_null($this->getPortsAmount()) && $this->ports->count() === 0){
+            $this->createPorts($this->portsAmount);
+        }
     }
 
 }

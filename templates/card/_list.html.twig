@@ -1,0 +1,75 @@
+{% embed "embeds/card.html.twig" %}
+    {% block card_css_class %}mb-4{% endblock %}
+
+    {% block card_header_css_class %}d-flex justify-content-between align-items-center{% endblock %}
+
+    {% block card_title %}Targetas del msam: {{ msam }}{% endblock %}
+
+    {% block card_header_options %}
+        {% if msam.canAddTarget() %}
+            <div>
+                <a class="btn btn-primary btn-sm active"
+                   data-action="page#showFormContent"
+                   href="{{ path('card_new', {'msam':msam.id}) }}"
+                >
+                    <i class="fas fa-plus"></i>
+                    Nueva targeta
+                </a>
+            </div>
+        {% endif %}
+    {% endblock %}
+
+    {% block card_body %}
+        {% embed "embeds/table.html.twig" %}
+            {% block table_container %}
+                {# se puede poner el data-action #}
+            {% endblock %}
+
+            {% block table_head %}
+                <tr>
+                    <th>Name</th>
+                    <th>Slot</th>
+                    <th>PortsAmount</th>
+                    <th></th>
+                </tr>
+            {% endblock %}
+
+            {% block table_body %}
+                {% for card in cards %}
+                    <tr>
+                        <td>{{ card.name }}</td>
+                        <td>{{ card.slot }}</td>
+                        <td>{{ card.portsAmount }}</td>
+                        <td>
+                            <a class="btn btn-sm btn-primary" title="Editar targeta"
+                               href="{{ path('card_edit', {'id': card.id, 'msam': msam.id}) }}"
+                               data-action="page#showFormContent"
+                            >
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <a class="btn btn-sm btn-primary position-relative" title="Puertos de la targeta"
+                               href="{{ path('card_port', {'id':card.id}) }}"
+                               data-action="page#showFormContent"
+                            >
+                                <i class="fas fa-server"></i>
+                                <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                                    {{ card.portsAmount }}
+                                    <span class="visually-hidden">cantidad de puertos</span>
+                              </span>
+                            </a>
+                        </td>
+                    </tr>
+                {% else %}
+                    <tr>
+                        <td colspan="13">No se encontraron targetas</td>
+                    </tr>
+                {% endfor %}
+            {% endblock %}
+        {% endembed %}
+
+
+    {% endblock %}
+{% endembed %}
+
+
+
