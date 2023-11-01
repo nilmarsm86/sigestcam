@@ -8,16 +8,16 @@ import { Controller } from '@hotwired/stimulus';
 export default class extends Controller {
 
     initialize() {
-        let interruptionReasonField = this.element.querySelector('#report_interruptionReason');
-        let interruptionField = this.element.querySelector('#report_interruption');
-        for(let option in interruptionField.options){
-            if(interruptionReasonField.value === interruptionField.options[option].text){
-                interruptionField.selectedIndex = option;
+        let flawField = this.element.querySelector('#report_flaw');
+        let detailField = this.element.querySelector('#report_detail');
+        for(let option in flawField.options){
+            if(detailField.value === flawField.options[option].text){
+                flawField.selectedIndex = option;
             }
         }
 
-        if(interruptionReasonField.value && interruptionField.selectedIndex === 0){
-            interruptionField.selectedIndex = 7;
+        if(detailField.value && flawField.selectedIndex === 0){
+            flawField.selectedIndex = -1;
         }
     }
 
@@ -33,6 +33,21 @@ export default class extends Controller {
         }else{
             interruptionReasonRow.style.display = 'none';
             interruptionReasonField.value = event.currentTarget.options[event.currentTarget.selectedIndex].text;
+        }
+    }
+
+    selectFlaw(event){
+        event.preventDefault();
+
+        let detailField = this.element.querySelector('#report_detail');
+        // let flawField = this.element.querySelector('#report_flaw');
+        let detailRow = detailField.parentElement.parentElement;
+        if(event.currentTarget.value === "-1"){
+            detailRow.style.display = 'flex';
+            detailField.value = '';
+        }else{
+            detailRow.style.display = 'none';
+            detailField.value = event.currentTarget.options[event.currentTarget.selectedIndex].text;
         }
     }
 

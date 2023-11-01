@@ -4,9 +4,12 @@ namespace App\Form;
 
 use App\Entity\Modem;
 use App\Form\Types\AddressType;
+use App\Validator\IpEquipment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Ip;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -23,9 +26,6 @@ class ModemType extends AbstractType
         }
 
         $builder
-            ->add('ip', null, [
-                'label' => 'IP:',
-            ])
             ->add('physicalAddress', TextareaType::class, [
                 'label' => 'Dirección física:',
                 'constraints' => $physicalAddress
@@ -55,6 +55,10 @@ class ModemType extends AbstractType
                 'crud' => $options['crud']
             ]);
         }
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
+            $this->onPreSetData($event);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -75,5 +79,27 @@ class ModemType extends AbstractType
         $resolver->setAllowedTypes('municipality', 'int');
         $resolver->setAllowedTypes('crud', 'bool');
         $resolver->setAllowedTypes('slave', 'bool');
+    }
+
+    private function onPreSetData(FormEvent $event)
+    {
+        $modem = $event->getData();
+        $form = $event->getForm();
+
+        $constraintIpEquipment = new IpEquipment();
+        $constraintIpEquipment->equipment = $modem;
+
+        $ipConstrains = [$constraintIpEquipment];
+
+        $form->add('ip', null, [
+            'label' => 'IP:',
+            'constraints' => $ipConstrains
+        ]);
+
+        if ($modem && null !== $modem->getId()) {
+            $form->add('observation', TextareaType::class, [
+                'label' => 'Observaciones:',
+            ]);
+        }
     }
 }

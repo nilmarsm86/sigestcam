@@ -1,5 +1,5 @@
 <div {{ attributes }}>
-    {% if commutator and port %}
+    {% if (commutator and port) or (card and msam and port) %}
 
         {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Direct') or connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}
             {{ include('components/live/connection_camera/_card_table.html.twig') }}
@@ -18,7 +18,7 @@
             {% endif %}
         {% endif %}
 
-        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') %}
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') or connection is same as constant('App\\Entity\\Enums\\ConnectionType::Full') %}
             {{ include('components/live/connection_camera/_card_table.html.twig') }}
 
             {% if modem is not null and modem.canAddCameraOrModem() %}

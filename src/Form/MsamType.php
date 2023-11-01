@@ -4,12 +4,13 @@ namespace App\Form;
 
 use App\Entity\Msam;
 use App\Form\Types\AddressType;
+use App\Validator\IpEquipment;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Ip;
 use Symfony\Component\Validator\Constraints\NotBlank;
 
 class MsamType extends AbstractType
@@ -18,7 +19,6 @@ class MsamType extends AbstractType
     {
         $physicalAddress = [];
         if($options['crud'] === false){
-
             $physicalAddress = [
                 new NotBlank(message: 'La dirección física no debe estar vacía.'),
             ];
@@ -44,7 +44,6 @@ class MsamType extends AbstractType
             ->add('contic', null, [
                 'label' => 'Contic:',
             ]);
-            //->add('slotAmount');
 
         if($options['crud']) {
             $builder->add('address', AddressType::class, [
@@ -56,23 +55,8 @@ class MsamType extends AbstractType
         }
 
         $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
-            $msam = $event->getData();
-            $form = $event->getForm();
-
-            if (!$msam || null === $msam->getId()) {
-                $form->add('slotAmount', null, [
-                    'label' => 'Cantidad de slots de targeta:',
-                    'attr' => [
-                        'min' => 1,
-                        'max' => 20,
-                        'list' => 'slots_amount'
-                    ],
-                    'data' => 1
-                ]);
-            }
-        })
-        ;
-
+            $this->onPreSetData($event);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -91,5 +75,40 @@ class MsamType extends AbstractType
         $resolver->setAllowedTypes('province', 'int');
         $resolver->setAllowedTypes('municipality', 'int');
         $resolver->setAllowedTypes('crud', 'bool');
+    }
+
+    /**
+     * @param FormEvent $event
+     * @return void
+     */
+    private function onPreSetData(FormEvent $event): void
+    {
+        $msam = $event->getData();
+        $form = $event->getForm();
+
+        $constraintIpEquipment = new IpEquipment();
+        $constraintIpEquipment->equipment = $msam;
+        $ipConstrains = [$constraintIpEquipment];
+
+        $form->add('ip', null, [
+            'label' => 'IP:',
+            'constraints' => $ipConstrains
+        ]);
+
+        if (!$msam || null === $msam->getId()) {
+            $form->add('slotAmount', null, [
+                'label' => 'Cantidad de slots de targeta:',
+                'attr' => [
+                    'min' => 1,
+                    'max' => 20,
+                    'list' => 'slots_amount'
+                ],
+                'data' => 1
+            ]);
+        } else {
+            $form->add('observation', TextareaType::class, [
+                'label' => 'Observaciones:',
+            ]);
+        }
     }
 }

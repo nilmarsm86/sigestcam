@@ -67,7 +67,6 @@ class ConnectionCameraNew extends AbstractController
         if($this->isSubmitAndValid()){
             /** @var Camera $camera */
             $camera = $this->getForm()->getData();
-            dump($this->port);
 
             if($this->connection === ConnectionType::Direct || $this->connection === ConnectionType::SlaveSwitch){
                 if(!is_null($this->port)){
@@ -93,6 +92,28 @@ class ConnectionCameraNew extends AbstractController
                             $this->modem->setPort($this->port);
                         }
                         $camera->setMunicipality($this->modem->getPort()->getCommutator()->getMunicipality());
+                    }else{
+                        if(is_null($this->modem->getMasterModem()->getPort())){
+                            $this->modem->getMasterModem()->setPort($this->port);
+                        }
+                        $camera->setMunicipality($this->modem->getMasterModem()->getPort()->getCommutator()->getMunicipality());
+                    }
+                }
+            }
+
+            if($this->connection === ConnectionType::Full){
+                if(!is_null($this->modem)){
+                    $camera->setModem($this->modem);
+                    if(is_null($this->modem->getMasterModem())){
+                        if(is_null($this->modem->getPort())){
+                            $this->modem->setPort($this->port);
+                        }
+
+                        if($this->connection->value === ConnectionType::Full->value){
+                            $camera->setMunicipality($this->modem->getPort()->getCard()->getMsam()->getPort()->getCommutator()->getMunicipality());
+                        }else{
+                            $camera->setMunicipality($this->modem->getPort()->getCommutator()->getMunicipality());
+                        }
                     }else{
                         if(is_null($this->modem->getMasterModem()->getPort())){
                             $this->modem->getMasterModem()->setPort($this->port);

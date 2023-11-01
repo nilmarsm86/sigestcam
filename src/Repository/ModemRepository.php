@@ -205,9 +205,9 @@ class ModemRepository extends ServiceEntityRepository
             ->where('m.state = :state')
             ->setParameter(':state', State::Inactive)
             ->andWhere('m.port IS NULL')
-            ->andWhere('m.masterModem IS NULL')
-            ->andWhere('m.ip <> :ip')
-            ->setParameter(':ip', $ip);
+            ->andWhere('m.masterModem IS NULL');
+//            ->andWhere('m.ip <> :ip')
+//            ->setParameter(':ip', $ip);
         $this->addFilter($builder, $filter);
         $query = $builder->orderBy('m.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);

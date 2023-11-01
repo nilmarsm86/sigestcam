@@ -11,7 +11,10 @@ enum Aim: string
 
     case Null = '';
     case Objective = '1';
-    case NoObjective = '0';
+    case Via = '0';
+    case Confrontation = '2';
+    case Border = '3';
+    case Tuition = '4';
 
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
@@ -21,7 +24,10 @@ enum Aim: string
 
         return match ($enum) {
             self::Objective => 'Objetivo',
-            self::NoObjective => 'Vía',
+            self::Via => 'Vía',
+            self::Confrontation => 'Enfrentamiento',
+            self::Border => 'Frontera',
+            self::Tuition => 'Matrícula',
             default => '-Seleccione-'
         };
     }

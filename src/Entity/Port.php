@@ -156,9 +156,13 @@ class Port
      */
     public function setEquipment(?Equipment $equipment): static
     {
-        if (!is_null($equipment) && $this->isFromCard() && !$this->hasConnectedModem()) {
+        if(!$equipment instanceof Modem){
             throw new Exception('Only modems can be connected directly to the card ports.');
         }
+
+//        if (!is_null($equipment) && $this->isFromCard() && !$this->hasConnectedModem()) {
+//
+//        }
 
         $this->equipment = $equipment;
 

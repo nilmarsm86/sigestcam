@@ -31,14 +31,14 @@ class CrudActionService
         ]+$vars);
     }
 
-    public function showAction(Request $request, object $entity, string $templateDir, string $type, string $title): string
+    public function showAction(Request $request, object $entity, string $templateDir, string $type, string $title, array $vars = []): string
     {
         $template = ($request->isXmlHttpRequest()) ? '_detail.html.twig' : 'show.html.twig';
 
         return $this->environment->render("$templateDir/$template", [
             $type => $entity,
             'title' => $title
-        ]);
+        ]+$vars);
     }
 
     public function stateAction(Request $request, ServiceEntityRepository $repository, string $deactivateMessage, string $activateMessage): string

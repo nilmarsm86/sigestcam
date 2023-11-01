@@ -5,6 +5,7 @@ namespace App\Components\Live\ConnectionMsam;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentNewForm;
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Modem;
 use App\Entity\Msam;
 use App\Entity\Port;
 use App\Form\MsamType;
@@ -66,12 +67,29 @@ class ConnectionMsamNew extends AbstractController
     #[LiveAction]
     public function save(MsamRepository $msamRepository, MunicipalityRepository $municipalityRepository)
     {
+//        $this->submitForm();
+//
+//        if($this->isSubmitAndValid()){
+//            //lanzar evento a JS
+//            $this->dispatchBrowserEvent(static::MODAL_CLOSE);
+//            $msam = $this->mapped($municipalityRepository, $this->getForm()->getData());
+//            $msamRepository->save($msam, true);
+//
+//            $this->emitSuccess([
+//                'msam' => $msam->getId(),
+//            ]);
+//        }
+
         $this->submitForm();
 
         if($this->isSubmitAndValid()){
-            //lanzar evento a JS
+            /** @var Msam $msam */
             $this->dispatchBrowserEvent(static::MODAL_CLOSE);
-            $msam = $this->mapped($municipalityRepository, $this->getForm()->getData());
+            $msam = $this->getForm()->getData();
+            if(!is_null($this->port)){
+                $msam->setPort($this->port);
+                $msam->setMunicipality($this->port->getCommutator()->getMunicipality());
+            }
             $msamRepository->save($msam, true);
 
             $this->emitSuccess([

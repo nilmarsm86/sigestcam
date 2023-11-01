@@ -74,7 +74,27 @@
                     </tr>
                     <tr>
                         <th>Razón de interrupción:</th>
-                        <td>{{ report.interruptionReason }}</td>
+                        <td>
+                            {% if report.interruptionReason == '1' %}
+                                Pendiente por Revisión
+                            {% endif %}
+
+                            {% if report.interruptionReason == '2' %}
+                                Pendiente por Conectividad
+                            {% endif %}
+
+                            {% if report.interruptionReason == '3' %}
+                                Pendiente por Fluido eléctrico
+                            {% endif %}
+
+                            {% if report.interruptionReason == '4' %}
+                                Pendiente por Cámara
+                            {% endif %}
+
+                            {% if report.interruptionReason == '5' %}
+                                Pendiente por Modem
+                            {% endif %}
+                        </td>
                     </tr>
                     <tr>
                         <th>Prioridad:</th>
@@ -94,12 +114,24 @@
                             </span>
                         </td>
                     </tr>
-                    {% if report.flaw and report.type is same as constant('App\\Entity\\Enums\\ReportType::Camera') %}
+{#                    {% if report.flaw and report.type is same as constant('App\\Entity\\Enums\\ReportType::Camera') %}#}
                         <tr>
                             <th>Desperfecto:</th>
-                            <td>{{ report.flaw }}</td>
+                            <td>
+                                {% if report.flaw == '1' %}
+                                    Sin enlace
+                                {% endif %}
+
+                                {% if report.flaw == '-1' %}
+                                    Otra
+                                {% endif %}
+                            </td>
                         </tr>
-                    {% endif %}
+{#                    {% endif %}#}
+                    <tr>
+                        <th>Detalle:</th>
+                        <td>{{ report.detail }}</td>
+                    </tr>
                     <tr>
                         <th>Observaciones:</th>
                         <td>{{ report.observation }}</td>
@@ -110,7 +142,7 @@
                     </tr>
                     {% if report.unit %}
                         <tr>
-                            <th>Unidad:</th>
+                            <th>Centro de gestión:</th>
                             <td>{{ report.unit }}</td>
                         </tr>
                     {% endif %}

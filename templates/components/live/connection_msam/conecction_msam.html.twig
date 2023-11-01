@@ -33,25 +33,30 @@
                     <div class="row">
                         {{ component('ConnectionMsamDetail', {connection: connection, port: port}) }}
                         {# {{ component('ConnectionMsamPortList', {connection: connection}) }}#}
+                         {{ component('ConnectionMsamSlotList', {connection: connection}) }}
+                    </div>
+                    <div class="row">
+                        <br>
+                        {{ component('ConnectionMsamCardTable', {connection: connection}) }}
                     </div>
                 {% endif %}
             {% endblock %}
         {% endembed %}
 
-{#        {% if port is not null and port.equipment is null %}#}
-{#            <!-- Modal -->#}
-{#            {{ component('ModalForm', {#}
-{#                title: 'Agregar Msam',#}
-{#                src: 'ConnectionMsamNew',#}
-{#                vars: {#}
-{#                    connection: connection,#}
-{#                    port: port#}
-{#                },#}
-{#                type: 'component',#}
-{#                id: 'add-msam'#}
-{#            }) }}#}
-{#            <!-- Modal -->#}
-{#        {% endif %}    #}
+        {% if port is not null and port.equipment is null %}
+            <!-- Modal -->
+            {{ component('ModalForm', {
+                title: 'Agregar Msam',
+                src: 'ConnectionMsamNew',
+                vars: {
+                    connection: connection,
+                    port: port
+                },
+                type: 'component',
+                id: 'add-msam'
+            }) }}
+            <!-- Modal -->
+        {% endif %}
     {% endif %}
 </div>
 

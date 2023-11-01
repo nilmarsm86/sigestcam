@@ -119,19 +119,21 @@ class PortRepository extends ServiceEntityRepository
         return $this->findAmountByConnectionType(ConnectionType::Full);
     }
 
-//    public function findByConnectionType(ConnectionType $connectionType, string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
-//    {
-//        $builder = $this->createQueryBuilder('p')->addSelect('c')->addSelect('e')->addSelect('cam');
-//        $builder->where('p.connectionType = :connectionType')
-//            ->setParameter('connectionType', $connectionType)
-//            ->innerJoin('p.commutator', 'c')
-//            ->innerJoin('p.equipment', 'e')
+    public function findByCard(int $cardId, string $filter = '', int $amountPerPage = 20, int $page = 1): Array
+    {
+        $builder = $this->createQueryBuilder('p')->addSelect(['p']);
+        $builder//->where('p.connectionType = :connectionType')
+            //->setParameter('connectionType', ConnectionType::Full)
+            ->innerJoin('p.card', 'c')
+            ->andWhere('c.id = :cardId')
+            ->setParameter(':cardId', $cardId);
+
 //            ->join('App\\Entity\\Camera', 'cam', 'with', 'e.id = cam.id');
-//
-////        $this->addFiter($builder, $filter);
-//        $query = $builder->getQuery();
-//        return $this->paginate($query, $page, $amountPerPage);
-//    }
+
+//        $this->addFiter($builder, $filter);
+        $query = $builder->getQuery();
+        return $query->getResult(AbstractQuery::HYDRATE_ARRAY);
+    }
 
 //    /**
 //     * @return PortTrait[] Returns an array of PortTrait objects

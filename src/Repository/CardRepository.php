@@ -3,9 +3,14 @@
 namespace App\Repository;
 
 use App\Entity\Card;
+use App\Entity\Msam;
+use App\Entity\Port;
+use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
+use Doctrine\ORM\QueryBuilder;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -18,6 +23,8 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class CardRepository extends ServiceEntityRepository
 {
+    use PaginateTarit;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Card::class);
@@ -41,6 +48,15 @@ class CardRepository extends ServiceEntityRepository
         }
     }
 
+    private function addFilter(QueryBuilder $builder, string $filter, bool $place = true): void
+    {
+        if($filter){
+            $predicate = "c.name LIKE :filter ";
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
+        }
+    }
+
     /**
      * @throws NonUniqueResultException
      * @throws NoResultException
@@ -53,6 +69,26 @@ class CardRepository extends ServiceEntityRepository
             ->where('msam.id = '.$msamId)
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    public function findCardBySlotAndMsam(Msam $msam, int $slot, string $filter = '', int $amountPerPage = 20, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c']);
+        $builder->andWhere("c.msam = :msam AND c.slot = :slot ")
+                ->setParameter(':msam',$msam)
+                ->setParameter(':slot',$slot);
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findCardWithoutSlotAndMsam(string $filter = '', int $amountPerPage = 20, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c']);
+        $builder->andWhere("c.msam IS NULL AND c.slot IS NULL ");
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
     }
 
 //    /**

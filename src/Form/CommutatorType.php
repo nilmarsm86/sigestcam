@@ -4,6 +4,7 @@ namespace App\Form;
 
 use App\Entity\Commutator;
 use App\Form\Types\AddressType;
+use App\Validator\IpEquipment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
@@ -17,15 +18,9 @@ class CommutatorType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $ipConstrains = [];
         $gatewayConstrains = [];
         $physicalAddress = [];
         if($options['crud'] === false && $options['slave'] === false){
-            $ipConstrains = [
-                new NotBlank(message: 'Establezca el IP del switch.'),
-                new Ip(message:'Establezca un IP válido.')
-            ];
-
             $physicalAddress = [
                 new NotBlank(message: 'La dirección física no debe estar vacía.'),
             ];
@@ -39,10 +34,6 @@ class CommutatorType extends AbstractType
         }
 
         $builder
-            ->add('ip', null, [
-                'label' => 'IP:',
-                'constraints' => $ipConstrains
-            ])
             ->add('gateway', null, [
                 'label' => 'Puerta de enlace:',
                 'constraints' => $gatewayConstrains
@@ -68,7 +59,9 @@ class CommutatorType extends AbstractType
             ])
             ->add('contic', null, [
                 'label' => 'Contic:',
-            ]);
+            ])
+        ;
+
         if($options['crud']) {
             $builder->add('address', AddressType::class, [
                 'province' => $options['province'],
@@ -86,23 +79,9 @@ class CommutatorType extends AbstractType
                 ]);
             }
         }
-        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event): void {
-                $commutator = $event->getData();
-                $form = $event->getForm();
-
-                if (!$commutator || null === $commutator->getId()) {
-                    $form->add('portsAmount', null, [
-                        'label' => 'Cantidad de puertos:',
-                        'attr' => [
-                            'min' => 1,
-                            'max' => 36,
-                            'list' => 'ports_amount'
-                        ],
-                        'data' => 1
-                    ]);
-                }
-            })
-        ;
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options): void {
+            $this->onPreSetData($event, $options);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -123,6 +102,50 @@ class CommutatorType extends AbstractType
         $resolver->setAllowedTypes('municipality', 'int');
         $resolver->setAllowedTypes('crud', 'bool');
         $resolver->setAllowedTypes('slave', 'bool');
+    }
+
+    /**
+     * @param FormEvent $event
+     * @param array $options
+     * @return void
+     */
+    private function onPreSetData(FormEvent $event, array $options): void
+    {
+        $commutator = $event->getData();
+        $form = $event->getForm();
+
+        $constraintIpEquipment = new IpEquipment();
+        $constraintIpEquipment->equipment = $commutator;
+
+        $ipConstrains = [$constraintIpEquipment];
+        if($options['crud'] === false && $options['slave'] === false){
+            array_push(
+                $ipConstrains,
+                new NotBlank(message: 'Establezca el IP del switch.'),
+                new Ip(message:'Establezca un IP válido.')
+            );
+        }
+
+        $form->add('ip', null, [
+            'label' => 'IP:',
+            'constraints' => $ipConstrains
+        ]);
+
+        if (!$commutator || null === $commutator->getId()) {
+            $form->add('portsAmount', null, [
+                'label' => 'Cantidad de puertos:',
+                'attr' => [
+                    'min' => 1,
+                    'max' => 36,
+                    'list' => 'ports_amount'
+                ],
+                'data' => 1
+            ]);
+        }else{
+            $form->add('observation', TextareaType::class, [
+                'label' => 'Observaciones:',
+            ]);
+        }
     }
 
 }

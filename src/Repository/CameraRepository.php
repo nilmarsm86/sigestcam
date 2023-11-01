@@ -372,6 +372,43 @@ class CameraRepository extends ServiceEntityRepository
         return $this->paginate($query, $page, $amountPerPage);
     }
 
+    public function findByFullConnection(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'modem', 'port_card', 'card', 'msam', 'p', 'comm', 'mun', 'pro']);
+        $builder->innerJoin('c.modem', 'modem')
+            ->innerJoin('modem.port', 'port_card')
+            ->innerJoin('port_card.card', 'card')
+            ->innerJoin('card.msam', 'msam')
+            ->innerJoin('msam.port', 'p')
+            ->where('p.connectionType = :connectionType')
+            ->setParameter(':connectionType', ConnectionType::Full)
+            ->innerJoin('p.commutator', 'comm')
+            ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
+
+        if($filter){
+            $predicate = "c.brand LIKE :filter ";
+            $predicate .= "OR c.contic LIKE :filter ";
+            $predicate .= "OR c.electronicSerial LIKE :filter ";
+            $predicate .= "OR c.inventory LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR c.model LIKE :filter ";
+            $predicate .= "OR c.physicalSerial LIKE :filter ";
+            $predicate .= "OR c.user LIKE :filter ";
+            $predicate .= "OR modem.ip LIKE :filter ";
+            $predicate .= "OR card.name LIKE :filter ";
+            $predicate .= "OR msam.ip LIKE :filter ";
+            $predicate .= "OR comm.ip LIKE :filter ";
+            $predicate .= "OR mun.name LIKE :filter ";
+            $predicate .= "OR pro.name LIKE :filter ";
+
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
+        }
+        $query = $builder->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
     /**
      * @throws NonUniqueResultException
      * @throws NoResultException

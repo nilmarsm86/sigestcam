@@ -91,6 +91,9 @@ class Equipment
     #[Assert\Valid]
     protected ?Port $port = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    protected ?string $observation = null;
+
     public function __construct()
     {
         //$this->enumState = StateEnum::Active;
@@ -289,6 +292,18 @@ class Equipment
         $this->state = null;
         $this->setState(StateEnum::Inactive);
         $this->ip = null;
+
+        return $this;
+    }
+
+    public function getObservation(): ?string
+    {
+        return $this->observation;
+    }
+
+    public function setObservation(?string $observation): static
+    {
+        $this->observation = $observation;
 
         return $this;
     }

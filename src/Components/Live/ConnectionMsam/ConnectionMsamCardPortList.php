@@ -8,6 +8,7 @@ use App\Components\Live\ConnectionCommutator\ConnectionCommutatorDetail;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentActiveInactive;
 use App\Entity\Camera;
+use App\Entity\Card;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Enums\PortType;
@@ -22,8 +23,8 @@ use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
 
-#[AsLiveComponent(template: 'components/live/connection_msam/port_list.html.twig')]
-class ConnectionMsamPortList
+#[AsLiveComponent(template: 'components/live/connection_msam/card_port_list.html.twig')]
+class ConnectionMsamCardPortList
 {
     use DefaultActionTrait;
     use ComponentActiveInactive;
@@ -55,7 +56,7 @@ class ConnectionMsamPortList
     public ?string $type = null;
 
     #[LiveProp]
-    public ?array $commutator = null;
+    public ?Card $card = null;
 
     #[LiveProp]
     public ?ConnectionType $connection = null;
@@ -128,11 +129,11 @@ class ConnectionMsamPortList
      * @param Commutator $commutator
      * @return array
      */
-    protected function portsInfo(Commutator $commutator): array
+    protected function portsInfo(Card $card): array
     {
         $this->forSelect = PortType::forSelect();
         $ports = [];
-        foreach($commutator->getPorts() as $port){
+        foreach($card->getPorts() as $port){
             $ports[$port->getId()] = $this->portData($port);
         }
 
@@ -175,120 +176,19 @@ class ConnectionMsamPortList
         return $data;
     }
 
-    protected function onConnectionCommutatorTableDetail(Commutator $entity): void
+    #[LiveListener(ConnectionMsamCardTable::DETAIL.'_Full')]
+    public function onConnectionMsamCardTableDetailFull(#[LiveArg] Card $entity): void
     {
         $this->ports = $this->portsInfo($entity);
         $this->selected = null;
         $this->editingSpeed = null;
         $this->editingType = null;
-        //$this->select(null);//ya ConnectionCameraNew escucha ConnectionCameraTable::SHOW_DETAIL
     }
 
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
-    public function onConnectionCommutatorTableDetailDirect(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorTableDetail($entity);
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Simple')]
-    public function onConnectionCommutatorTableDetailSimple(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorTableDetail($entity);
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_SlaveSwitch')]
-    public function onConnectionCommutatorTableDetailSlaveSwitch(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorTableDetail($entity);
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_SlaveModem')]
-    public function onConnectionCommutatorTableDetailSlaveModem(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorTableDetail($entity);
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Full')]
-    public function onConnectionCommutatorTableDetailFull(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorTableDetail($entity);
-    }
-
-    /**
-     * Update table from filter, amount or page
-     * @return void
-     */
-    protected function onConnectionCommutatorTableChange(): void
+    #[LiveListener(ConnectionMsamCardTable::CHANGE.'_Full')]
+    public function onConnectionMsamCardTableChangeFull(): void
     {
         $this->ports = null;
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Direct')]
-    public function onConnectionCommutatorTableChangeDirect(): void
-    {
-        $this->onConnectionCommutatorTableChange();
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Simple')]
-    public function onConnectionCommutatorTableChangeSimple(): void
-    {
-        $this->onConnectionCommutatorTableChange();
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_SlaveSwitch')]
-    public function onConnectionCommutatorTableChangeSlaveSwitch(): void
-    {
-        $this->onConnectionCommutatorTableChange();
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_SlaveModem')]
-    public function onConnectionCommutatorTableChangeSlaveModem(): void
-    {
-        $this->onConnectionCommutatorTableChange();
-    }
-
-    #[LiveListener(ConnectionCommutatorTable::CHANGE.'_Full')]
-    public function onConnectionCommutatorTableChangeFull(): void
-    {
-        $this->onConnectionCommutatorTableChange();
-    }
-
-    protected function onConnectionCommutatorDetailDeactivate(Commutator $entity): void
-    {
-        $this->select(null);
-        foreach($this->ports as $key=>$value){
-            $this->deactivatePort($key);
-        }
-    }
-
-    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_Direct')]
-    public function onConnectionCommutatorDetailDeactivateDirect(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorDetailDeactivate($entity);
-    }
-
-    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_Simple')]
-    public function onConnectionCommutatorDetailDeactivateSimple(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorDetailDeactivate($entity);
-    }
-
-    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_SlaveSwitch')]
-    public function onConnectionCommutatorDetailDeactivateSlaveSwitch(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorDetailDeactivate($entity);
-    }
-
-    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_SlaveModem')]
-    public function onConnectionCommutatorDetailDeactivateSlaveModem(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorDetailDeactivate($entity);
-    }
-
-    #[LiveListener(ConnectionCommutatorDetail::DEACTIVATE.'_Full')]
-    public function onConnectionCommutatorDetailDeactivateFull(#[LiveArg] Commutator $entity): void
-    {
-        $this->onConnectionCommutatorDetailDeactivate($entity);
     }
 
     #[LiveAction]
@@ -305,7 +205,6 @@ class ConnectionMsamPortList
         $this->deactivate($portId);
         if($this->selected === $portId){
             $this->select($portId);
-//            $this->selected = null;
         }
     }
 
@@ -331,19 +230,12 @@ class ConnectionMsamPortList
         $this->editingType = null;
     }
 
-    //TODO: porque solamente esta en la conexion directa
-    #[LiveListener(ConnectionCameraNew::FORM_SUCCESS.'_Direct')]
-    public function onConnectionCameraNewFormSuccessDirect(#[LiveArg] Camera $camera): void
+    /*//TODO: porque solamente esta en la conexion directa
+    #[LiveListener(ConnectionMsamCardNew::FORM_SUCCESS.'_Full')]
+    public function onConnectionCameraNewFormSuccessDirect(#[LiveArg] Card $card): void
     {
         $this->ports[$camera->getPort()->getId()]['equipment'] = $camera->getShortName();
         $this->ports[$camera->getPort()->getId()]['isSelectable'] = false;
-    }
-
-    #[LiveListener(ConnectionCameraDetail::DISCONNECT.'_Direct')]
-    public function onConnectionCameraDetailDisconnectDirect(#[LiveArg] Port $port): void
-    {
-        $this->ports[$port->getId()]['equipment'] = null;
-        $this->ports[$port->getId()]['connection'] = 'bg-gradient-danger';
-    }
+    }*/
 
 }

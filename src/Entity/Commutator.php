@@ -124,7 +124,7 @@ class Commutator extends Equipment implements HarborInterface
         return $this->multicast;
     }
 
-    public function setMulticast(string $multicast): static
+    public function setMulticast(?string $multicast): static
     {
         $this->multicast = $multicast;
         return $this;

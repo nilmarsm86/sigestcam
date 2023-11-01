@@ -99,7 +99,15 @@ class ReportRepository extends ServiceEntityRepository
         }
     }
 
-    private function findReportByConditions($state, $priority, $type, $filter): QueryBuilder
+    private function addInterruption(QueryBuilder $builder, $interruption)
+    {
+        if($interruption !== ''){
+            $interruption = InterruptionReason::from($interruption);
+            $builder->andWhere("r.interruptionReason = :interruption ")->setParameter(':interruption',$interruption);
+        }
+    }
+
+    private function findReportByConditions($state, $priority, $type, $filter, $interruption): QueryBuilder
     {
         $builder = $this->createQueryBuilder('r')->select(['r', 'e', 'mun', 'pro'])
             ->innerJoin('r.equipment', 'e')
@@ -108,6 +116,7 @@ class ReportRepository extends ServiceEntityRepository
         $this->addState($builder, $state);
         $this->addPriority($builder, $priority);
         $this->addType($builder, $type);
+        $this->addInterruption($builder, $interruption);
         $this->addFilter($builder, $filter);
 
         return $builder;
@@ -121,18 +130,12 @@ class ReportRepository extends ServiceEntityRepository
      * @param string $state
      * @return Paginator Returns an array of User objects
      */
-    public function findReports(string $filter = '', int $amountPerPage = 10, int $page = 1, $priority = '', $state = '', $type = ''): Paginator
+    public function findReports(string $filter = '', int $amountPerPage = 10, int $page = 1, $priority = '', $state = '', $type = '', $interruption = ''): Paginator
     {
-//        $builder = $this->createQueryBuilder('r')->select(['r', 'e', 'mun', 'pro'])
-//                        ->innerJoin('r.equipment', 'e')
-//                        ->leftJoin('e.municipality', 'mun')
-//                        ->leftJoin('mun.province', 'pro');
-//        $this->addState($builder, $state);
-//        $this->addPriority($builder, $priority);
-//        $this->addType($builder, $type);
-//        $this->addFilter($builder, $filter);
-        $builder = $this->findReportByConditions($state, $priority, $type, $filter);
-        $query = $builder->orderBy('r.priority', 'DESC')->getQuery();
+        $builder = $this->findReportByConditions($state, $priority, $type, $filter, $interruption);
+        $query = $builder->orderBy('r.priority', 'DESC')
+                         ->addOrderBy('r.state', 'DESC')
+                         ->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
     }
 
@@ -150,32 +153,44 @@ class ReportRepository extends ServiceEntityRepository
         return $builder->getQuery()->getSingleScalarResult();
     }
 
-    public function findInterruptionAndEquipment($type, $interruption)
+    public function findInterruptionAndEquipment($interruption, $type=null)
     {
         $builder = $this->createQueryBuilder('r')->select('COUNT(r) as total');
         $this->addState($builder, ReportState::Open->value);
 //        $this->addPriority($builder, '');
-        $this->addType($builder, $type->value);
+        if(!is_null($type)){
+            $this->addType($builder, $type->value);
+        }
         $this->addFilter($builder, (new \DateTime('now'))->format('d/m/Y'));
-        $builder->andWhere("r.interruptionReason LIKE :reason ")->setParameter(':reason','%'.InterruptionReason::getLabelFrom($interruption).'%');
+        $builder->andWhere("r.interruptionReason = :reason ")
+                ->setParameter(':reason',$interruption);
         return $builder->getQuery()->getSingleScalarResult();
     }
 
-    public function findInterruption()
-    {
-        $clasicalReasons = [
-            InterruptionReason::getLabelFrom(InterruptionReason::Rip),
-            InterruptionReason::getLabelFrom(InterruptionReason::Connectivity),
-            InterruptionReason::getLabelFrom(InterruptionReason::ElectricFluid),
-            InterruptionReason::getLabelFrom(InterruptionReason::Substitution),
-            InterruptionReason::getLabelFrom(InterruptionReason::Modem),
-            InterruptionReason::getLabelFrom(InterruptionReason::WithoutLink),
-        ];
+//    public function findInterruption()
+//    {
+//        $clasicalReasons = [
+//            InterruptionReason::getLabelFrom(InterruptionReason::Review),
+//            InterruptionReason::getLabelFrom(InterruptionReason::Connectivity),
+//            InterruptionReason::getLabelFrom(InterruptionReason::ElectricFluid),
+//            InterruptionReason::getLabelFrom(InterruptionReason::Camera),
+//            InterruptionReason::getLabelFrom(InterruptionReason::Modem),
+//            //InterruptionReason::getLabelFrom(InterruptionReason::WithoutLink),
+//        ];
+//
+//        $builder = $this->createQueryBuilder('r')->select('COUNT(r) as total');
+//        $this->addState($builder, ReportState::Open->value);
+//        $this->addFilter($builder, (new \DateTime('now'))->format('d/m/Y'));
+//        $builder->andWhere($builder->expr()->notIn('r.interruptionReason', $clasicalReasons));
+//        return $builder->getQuery()->getSingleScalarResult();
+//    }
 
+    public function findResolvedInterruption()
+    {
         $builder = $this->createQueryBuilder('r')->select('COUNT(r) as total');
-        $this->addState($builder, ReportState::Open->value);
-        $this->addFilter($builder, (new \DateTime('now'))->format('d/m/Y'));
-        $builder->andWhere($builder->expr()->notIn('r.interruptionReason', $clasicalReasons));
+        $this->addState($builder, ReportState::Close->value);
+        $builder->andWhere("r.closeDate LIKE :filter ")
+                ->setParameter(':filter',(new \DateTime('now'))->format('Y-m-d').'%');
         return $builder->getQuery()->getSingleScalarResult();
     }
 

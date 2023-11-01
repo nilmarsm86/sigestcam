@@ -9,9 +9,11 @@ use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorPortL
 use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorTable;
 use App\Components\Live\ConnectionSlaveModem\ConnectionSlaveModemDetail;
 use App\Components\Live\ConnectionSlaveModem\ConnectionSlaveModemTable;
+use App\Entity\Card;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
+use App\Entity\Msam;
 use App\Entity\Port;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -36,6 +38,12 @@ class ConnectionCamera
 
     #[LiveProp]
     public ?ConnectionType $connection = null;
+
+    #[LiveProp]
+    public ?Card $card = null;
+
+    #[LiveProp]
+    public ?Msam $msam = null;
 
     public function onConnectionCommutatorPortListSelected(?Port $port): void
     {
@@ -128,11 +136,21 @@ class ConnectionCamera
         $this->commutator = $this->port->getCommutator();
     }
 
+    #[LiveListener(ConnectionModemTable::DETAIL.'_Full')]
+    public function onConnectionModemTableDetailFull(#[LiveArg] Modem $entity): void
+    {
+        $this->modem = $entity;
+        $this->port = $entity->getPort() ?: $this->port;
+        //$this->commutator = $this->port->getCommutator();
+        $this->card = $entity->getPort()->getCard();
+        $this->msam = $entity->getPort()->getCard()->getMsam();
+    }
+
     #[LiveListener(ConnectionSlaveModemTable::DETAIL.'_SlaveModem')]
     public function onConnectionSlaveModemTableDetailSlaveModem(#[LiveArg] Modem $entity): void
     {
         $this->modem = $entity;
-        $this->port = $entity->getMasterModem()->getPort() ?: $this->port;
+        $this->port = $entity->getMasterModem()?->getPort() ?: $this->port;
         $this->commutator = $this->port->getCommutator();
     }
 

@@ -94,6 +94,7 @@ class ConnectionSlaveModemTable extends ConnectionModemTable
             }
         }else{
             $data = $this->modemRepository->findInactiveModemsWithoutPortAndMasterModem($this->masterModem->getIp(), $this->filter, $this->amount, $this->page);
+            //TODO si el masterModem no tiene slaveModems entonces muestro todos los inactivos
         }
 
 //        if(!is_null($this->masterModem->getId())){

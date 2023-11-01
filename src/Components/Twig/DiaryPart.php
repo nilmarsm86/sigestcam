@@ -16,37 +16,42 @@ final class DiaryPart
 
     public function ripCamera()
     {
-        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Camera, InterruptionReason::Rip);
+        return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::Review);
     }
 
     public function connectivityCamera()
     {
-        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Camera, InterruptionReason::Connectivity);
+        return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::Connectivity);
     }
 
-    public function connectivityModem()
-    {
-        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Modem, InterruptionReason::Connectivity);
-    }
+//    public function connectivityModem()
+//    {
+//        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Modem, InterruptionReason::Connectivity);
+//    }
 
     public function electricFluidCamera()
     {
-        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Camera, InterruptionReason::ElectricFluid);
+        return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::ElectricFluid);
     }
 
     public function sustitutionCamera()
     {
-        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Camera, InterruptionReason::Substitution);
+        return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::Camera, ReportType::Camera);
     }
 
-    public function modemCamera()
+    public function sustitutionModem()
     {
-        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Camera, InterruptionReason::Modem);
+        return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::Modem, ReportType::Modem);
     }
 
-    public function others()
+//    public function others()
+//    {
+//        return $this->reportRepository->findInterruption();
+//    }
+
+    public function resolvedInterruption()
     {
-        return $this->reportRepository->findInterruption();
+        return $this->reportRepository->findResolvedInterruption();
     }
 
 }

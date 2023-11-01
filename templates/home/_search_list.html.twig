@@ -32,7 +32,6 @@
 
             {% block table_body %}
                 {% for equipment in paginator.getData() %}
-{#                    {{ dump(equipment) }}#}
                     <tr>
                         <td>{{ equipment.ip }}</td>
                         {% if equipment.class is same as 'Commutator' %}

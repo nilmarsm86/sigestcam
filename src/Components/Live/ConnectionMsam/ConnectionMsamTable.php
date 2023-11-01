@@ -58,16 +58,9 @@ class ConnectionMsamTable
     protected function filterAndReload(): void
     {
         $this->entityId = null;
-        $this->filter = ($this->port->hasConnectedMsam()) ? $this->port->getEquipment()->getPhysicalSerial() : '';
+        $this->filter = ($this->port->hasConnectedMsam()) ? $this->port->getEquipment()->getIp() : '';
         $this->reload();
     }
-
-//    protected function reload()
-//    {
-//        $this->entityId = null;
-//        $data = $this->msamRepository->findMsams($this->filter, $this->amount, $this->page);
-//        $this->reloadData($data);
-//    }
 
     protected function reload(): void
     {

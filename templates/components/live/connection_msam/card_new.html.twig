@@ -1,0 +1,32 @@
+{% from 'macros/flashes.html.twig' import flash %}
+
+<div {{ attributes }}>
+    {% if slot is null and msam is null %}
+        {{ flash('danger', 'Para crear una nueva targeta debe seleccionar el slot que tenga disponibilidad.', false) }}
+    {% else %}
+        {% if isSuccessful == false %}
+            {% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}
+
+            {{ form_start(form, {
+                attr: {
+                    'data-action': 'live#action',
+                    'data-action-name': 'prevent|save',
+                }
+            }) }}
+            {{ include('card/_form_fields.html.twig') }}
+
+            <div class="row mb-3">
+                <div class="col-sm-10 offset-sm-2">
+                    <button type="submit" class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}">
+                        <i class="fas fa-save"></i>
+                        Salvar
+                    </button>
+                </div>
+            </div>
+            {{ form_row(form._token) }}
+            {{ form_end(form, {render_rest: false}) }}
+        {% else %}
+            {{ flash('info', 'Acaba de agregar una targeta en el slot seleccionado.', false) }}
+        {% endif %}
+    {% endif %}
+</div>

@@ -4,9 +4,12 @@ namespace App\Form;
 
 use App\Entity\Camera;
 use App\Form\Types\AddressType;
+use App\Validator\IpEquipment;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
+use Symfony\Component\Form\FormEvent;
+use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Validator\Constraints\Ip;
 use Symfony\Component\Validator\Constraints\NotBlank;
@@ -15,24 +18,14 @@ class CameraType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-        $ipConstrains = [];
         $physicalAddress = [];
         if($options['crud'] === false){
-            $ipConstrains = [
-                new NotBlank(message: 'Establezca el IP de la cámara.'),
-                new Ip(message:'Establezca un IP válido.')
-            ];
-
             $physicalAddress = [
                 new NotBlank(message: 'La dirección física no debe estar vacía.'),
             ];
         }
 
         $builder
-            ->add('ip', null, [
-                'label' => 'IP:',
-                'constraints' => $ipConstrains
-            ])
             ->add('physicalAddress', TextareaType::class, [
                 'label' => 'Dirección física:',
                 'constraints' => $physicalAddress
@@ -70,6 +63,10 @@ class CameraType extends AbstractType
                 'crud' => $options['crud']
             ]);
         }
+
+        $builder->addEventListener(FormEvents::PRE_SET_DATA, function (FormEvent $event) use ($options): void {
+            $this->onPreSetData($event, $options);
+        });
     }
 
     public function configureOptions(OptionsResolver $resolver): void
@@ -88,5 +85,39 @@ class CameraType extends AbstractType
         $resolver->setAllowedTypes('province', 'int');
         $resolver->setAllowedTypes('municipality', 'int');
         $resolver->setAllowedTypes('crud', 'bool');
+    }
+
+    /**
+     * @param FormEvent $event
+     * @param array $options
+     * @return void
+     */
+    private function onPreSetData(FormEvent $event, array $options)
+    {
+        $camera = $event->getData();
+        $form = $event->getForm();
+
+        $constraintIpEquipment = new IpEquipment();
+        $constraintIpEquipment->equipment = $camera;
+
+        $ipConstrains = [$constraintIpEquipment];
+        if($options['crud'] === false){
+            array_push(
+                $ipConstrains,
+                new NotBlank(message: 'Establezca el IP de la cámara.'),
+                new Ip(message:'Establezca un IP válido.')
+            );
+        }
+
+        $form->add('ip', null, [
+            'label' => 'IP:',
+            'constraints' => $ipConstrains
+        ]);
+
+        if ($camera && null !== $camera->getId()) {
+            $form->add('observation', TextareaType::class, [
+                'label' => 'Observaciones:',
+            ]);
+        }
     }
 }

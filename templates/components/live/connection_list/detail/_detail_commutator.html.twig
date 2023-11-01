@@ -18,17 +18,27 @@
         {% set commutator = data[entityId]['modem']['masterModem']['port']['commutator'] %}
 {% endif %}
 
+{% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Full') %}
+    {% set commutator = data[entityId]['modem']['port']['card']['msam']['port']['commutator'] %}
+{% endif %}
 
-<div class="col-4">
-    <h4>Características del switch:</h4>
+<div class="
+{#{% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}#}
+{#    {% if slaveCommutator == false %}col-12{% else %}col-4{% endif %}#}
+{#{% else %}#}
+    col-4
+{#{% endif %}#}
+">
+    {% if slaveCommutator == true %}<br><br>{% endif %}
+    <h4>Características del switch {% if slaveCommutator == true %}esclavo{% endif %}:</h4>
     <hr>
     <div class="card text-bg-info border-primary">
         <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
-            <p class="text-white m-0 fw-bold">Switch:</p>
+            <p class="text-white m-0 fw-bold">Switch {% if slaveCommutator == true %}esclavo{% endif %}:</p>
             <div class="row">
                 {% if is_granted('ROLE_BOSS') %}
                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-                        <a href="{{ path('commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary" title="Editar switch">
+                        <a href="{{ path('commutator_edit', {'id': commutator.id}) }}" class="btn btn-primary" title="Editar switch {% if slaveCommutator == true %}esclavo{% endif %}">
                             <i class="fas fa-edit text-white"></i>
                         </a>
                     </div>
@@ -126,6 +136,30 @@
             template: 'components/live/connection_commutator/edit_inline.html.twig',
             editable: false,
         }) }}
+
+        {% if slaveCommutator == true %}
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Puerto:',
+                data: commutator.port.number,
+                editable: false,
+                connection: connection,
+                'data-live-id': 'commutator-port-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
+                last: true,
+            }) }}
+
+            {{ component('ConnectionDetailEditInline', {
+                label: 'Switch:',
+                data: commutator.port.commutator.ip,
+                editable: false,
+                connection: connection,
+                'data-live-id': 'commutator-commutator-'~ commutator.id,
+                entity: 'App\\Entity\\Commutator',
+                template: 'components/live/connection_commutator/edit_inline.html.twig',
+                last: true,
+            }) }}
+        {% endif %}
 
         {{ component('ConnectionDetailEditInline', {
             label: 'Municipio:',

@@ -1,4 +1,11 @@
-<div class="col-8">
+<div class="
+{% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') or connection is same as constant('App\\Entity\\Enums\\ConnectionType::Full') %}
+    col-12
+{% else %}
+    col-8
+{% endif %}
+">
+    {% if connection is not same as constant('App\\Entity\\Enums\\ConnectionType::Direct') %}<br><br>{% endif %}
     <h4>Características de la cámara:</h4>
     <hr>
     <div class="card border-primary">
@@ -82,15 +89,27 @@
                         }) }}
                     {% endif %}
 
-                    {{ component('ConnectionDetailEditInline', {
-                        label: 'Switch:',
-                        data: (camera.modem is defined) ? ((camera.modem.masterModem is defined) ? camera.modem.masterModem.port.commutator.ip : camera.modem.port.commutator.ip) : camera.port.commutator.ip,
-                        connection: connection,
-                        'data-live-id': 'camera-switch-'~ camera.id,
-                        entity: 'App\\Entity\\Camera',
-                        template: 'components/live/connection_camera/edit_inline.html.twig',
-                        editable: false,
-                    }) }}
+                    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Full')%}
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Switch:',
+                            data: (camera.modem is defined) ? ((camera.modem.masterModem is defined) ? camera.modem.masterModem.port.commutator.ip : camera.modem.port.card.msam.port.commutator.ip) : camera.port.commutator.ip,
+                            connection: connection,
+                            'data-live-id': 'camera-switch-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
+                    {% else %}
+                        {{ component('ConnectionDetailEditInline', {
+                            label: 'Switch:',
+                            data: (camera.modem is defined) ? ((camera.modem.masterModem is defined) ? camera.modem.masterModem.port.commutator.ip : camera.modem.port.commutator.ip) : camera.port.commutator.ip,
+                            connection: connection,
+                            'data-live-id': 'camera-switch-'~ camera.id,
+                            entity: 'App\\Entity\\Camera',
+                            template: 'components/live/connection_camera/edit_inline.html.twig',
+                            editable: false,
+                        }) }}
+                    {% endif %}
                 </div>
 
                 <div class="col">
@@ -176,6 +195,5 @@
                 </div>
             </div>
         </div>
-        <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
     </div>
 </div>

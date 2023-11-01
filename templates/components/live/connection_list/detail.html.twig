@@ -2,11 +2,16 @@
     {% if entityId is not null %}
         {{ include('components/live/connection_list/detail/_detail_commutator.html.twig', {'slaveCommutator':false}) }}
 
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Full')%}
+            {{ include('components/live/connection_list/detail/_detail_msam.html.twig') }}
+            {{ include('components/live/connection_list/detail/_detail_card.html.twig') }}
+        {% endif %}
+
         {% set camera = data[entityId] %}
         {% if camera.modem is defined %}
             {{ include('components/live/connection_list/detail/_detail_modem.html.twig', {'slaveModem':false}) }}
-            {% if connection is not same as constant('App\\Entity\\Enums\\ConnectionType::SlaveModem') %}
-                <div class="col-4"></div>
+            {% if connection is not same as constant('App\\Entity\\Enums\\ConnectionType::SlaveModem') or connection is not same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}
+{#                <div class="col-4"></div>#}
             {% endif %}
         {% endif %}
 

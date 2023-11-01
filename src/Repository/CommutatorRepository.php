@@ -80,9 +80,37 @@ class CommutatorRepository extends ServiceEntityRepository
     {
         $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
             ->innerJoin('c.municipality', 'mun')
+            ->leftJoin('mun.province', 'pro');
+            //->andWhere('c.gateway IS NOT NULL');
+            //->andWhere('c.multicast IS NOT NULL');
+        /*if($filter){
+            $predicate = "c.multicast LIKE :filter ";
+            $predicate .= "OR c.gateway LIKE :filter ";
+            $predicate .= "OR c.ip LIKE :filter ";
+            $predicate .= "OR m.name LIKE :filter ";
+            $predicate .= "OR p.name LIKE :filter ";
+
+            $builder->andWhere($predicate)
+                ->setParameter(':filter','%'.$filter.'%');
+        }*/
+        $this->addFilter($builder, $filter);
+        $query = $builder->orderBy('c.id', 'ASC')->getQuery();
+        return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    /**
+     * @param string $filter
+     * @param int $amountPerPage
+     * @param int $page
+     * @return Paginator Returns an array of User objects
+     */
+    public function findMasterCommutator(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
+    {
+        $builder = $this->createQueryBuilder('c')->select(['c', 'mun', 'pro'])
+            ->innerJoin('c.municipality', 'mun')
             ->leftJoin('mun.province', 'pro')
             ->andWhere('c.gateway IS NOT NULL');
-            //->andWhere('c.multicast IS NOT NULL');
+        //->andWhere('c.multicast IS NOT NULL');
         /*if($filter){
             $predicate = "c.multicast LIKE :filter ";
             $predicate .= "OR c.gateway LIKE :filter ";

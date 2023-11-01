@@ -3,9 +3,37 @@
 
     </div>
     <div class="col-4">
-        <button
-                type="button"
-                class="btn btn-primary btn-lg
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Full') %}
+            <button
+                    type="button"
+                    class="btn btn-primary btn-lg
+                    {% if camera is null %}
+                        disabled
+                    {% else %}
+                        {% if port %}
+                            {% if port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}"
+
+                    {% if camera is null %}
+                        disabled
+                    {% else %}
+                        {% if port %}
+                            {% if port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
+                        {% endif%}
+                    {% endif %}
+                    data-action="live#action"
+                    data-action-name="prevent|save()"
+            >Crear conexion
+            </button>
+        {% else %}
+            <button
+                    type="button"
+                    class="btn btn-primary btn-lg
                 {% if camera is null %}
                     disabled
                 {% else %}
@@ -27,30 +55,31 @@
                         {% endif %}
                     {% endif %}
                 {% endif %}"
-                {% if camera is null %}
-                    disabled
-                {% else %}
-                    {% if port %}
-                        {% if port.getConnectionType() is not null %}
-                            disabled
-                        {% endif %}
-                    {% endif%}
-
-                    {% if modem %}
-                        {% if modem.masterModem is not null %}
-                            {% if modem.masterModem.port.getConnectionType() is not null %}
+                    {% if camera is null %}
+                        disabled
+                    {% else %}
+                        {% if port %}
+                            {% if port.getConnectionType() is not null %}
                                 disabled
                             {% endif %}
-                        {% else %}
-                            {% if modem.port.getConnectionType() is not null %}
-                                disabled
+                        {% endif%}
+
+                        {% if modem %}
+                            {% if modem.masterModem is not null %}
+                                {% if modem.masterModem.port.getConnectionType() is not null %}
+                                    disabled
+                                {% endif %}
+                            {% else %}
+                                {% if modem.port.getConnectionType() is not null %}
+                                    disabled
+                                {% endif %}
                             {% endif %}
                         {% endif %}
                     {% endif %}
-                {% endif %}
-                data-action="live#action"
-                data-action-name="prevent|save()"
-        >Crear conexion
-        </button>
+                    data-action="live#action"
+                    data-action-name="prevent|save()"
+            >Crear conexion
+            </button>
+        {% endif %}
     </div>
 </div>

@@ -42,6 +42,9 @@ class ConnectionModemTable
     #[LiveProp(updateFromParent: true)]
     public ?Commutator $commutator = null;
 
+//    #[LiveProp(updateFromParent: true)]
+//    public bool $inactives = false;
+
     public function __construct(protected readonly ModemRepository $modemRepository, protected CameraRepository $cameraRepository)
     {
     }
@@ -74,22 +77,26 @@ class ConnectionModemTable
             $this->filter = '';
         }
 
-        //cambiar la forma en la que se buscan los datos
-        if($this->port->hasConnectedModem()){
-//            if($this->port->isActive()){
-//                $data = $this->modemRepository->findActiveModemsWithPort($this->filter, $this->amount, $this->page);
+//        if($this->inactives === false){
+            //cambiar la forma en la que se buscan los datos
+            if($this->port->hasConnectedModem()){
+                $data = $this->modemRepository->findModemByPort($this->port, $this->filter, $this->amount, $this->page);
+            }else{
+                $data = $this->modemRepository->findInactiveModemsWithoutPort($this->filter, $this->amount, $this->page);
+            }
+//        }else{
+//            if($this->port->hasConnectedModem()){
+//                $data = $this->modemRepository->findModemByPort($this->port, $this->filter, $this->amount, $this->page);
 //            }else{
-//                $data = $this->modemRepository->findInactiveModemsWithPort($this->filter, $this->amount, $this->page);
+//                $data = $this->modemRepository->findInactiveModemsWithoutPort($this->filter, $this->amount, $this->page);
 //            }
-            $data = $this->modemRepository->findModemByPort($this->port, $this->filter, $this->amount, $this->page);
-        }else{
-            $data = $this->modemRepository->findInactiveModemsWithoutPort($this->filter, $this->amount, $this->page);
-        }
+//        }
         $this->reloadData($data);
         $this->setCamerasAmount();
         if($this->connection->name === ConnectionType::SlaveModem->name){
             $this->setModemsAmount();
         }
+
     }
 
     //mejorar
@@ -127,6 +134,12 @@ class ConnectionModemTable
 
     #[LiveListener(ConnectionModemNew::FORM_SUCCESS.'_SlaveModem')]
     public function onConnectionModemNewFormSuccessSlaveModem(#[LiveArg] Modem $modem): void
+    {
+        $this->onConnectionModemNewFormSuccess($modem);
+    }
+
+    #[LiveListener(ConnectionModemNew::FORM_SUCCESS.'_Full')]
+    public function onConnectionModemNewFormSuccessFull(#[LiveArg] Modem $modem): void
     {
         $this->onConnectionModemNewFormSuccess($modem);
     }

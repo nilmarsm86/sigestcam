@@ -7,12 +7,31 @@
 
     {% block card_header_options %}
         <div>
-            <div class="dropdown d-inline-block">
-                <a href="{{ path('report_index') }}" class="btn btn-primary btn-sm">
-                    <i class="fas fa-clipboard-list"></i>
-                    Todos los reportes
-                </a>
+            <a href="{{ path('report_index') }}" class="btn btn-primary btn-sm">
+                <i class="fas fa-clipboard-list"></i>
+                Todos los reportes
+            </a>
 
+            <div class="dropdown d-inline-block">
+                <button type="button" class="btn btn-primary btn-sm dropdown-toggle show dropdown-sm {% if app.request.query.get('interruption') %}active{% endif %}" data-bs-toggle="dropdown" aria-expanded="false">
+                    <i class="fas fa-plug"></i>
+                    Motivo interrupción
+                </button>
+                <ul class="dropdown-menu">
+                    {% for interruption in interruptions %}
+                        {% if interruption.value != '' %}
+                            <li>
+                                <a class="dropdown-item" href="{{ path('report_index', {'interruption':interruption.value}+app.request.query.all) }}">
+                                    <i class="fas {% if interruption.value == app.request.query.get('interruption') %}fa-check-square{% else %}fa-square-full{% endif %} text-gray-700"></i>
+                                    {{ interruption.getLabelFrom(interruption) }}
+                                </a>
+                            </li>
+                        {% endif %}
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="dropdown d-inline-block">
                 <button type="button" class="btn btn-primary btn-sm dropdown-toggle show dropdown-sm {% if app.request.query.get('type') %}active{% endif %}" data-bs-toggle="dropdown" aria-expanded="false">
                     <i class="fas fa-server"></i>
                     Tipo
@@ -104,7 +123,6 @@
 
             {% block table_body %}
                 {% for report in paginator.getData() %}
-{#                    {% dump(report) %}#}
                         <tr>
 {#                            <td>{{ report.id }}</td>#}
                             <td>{{ report.number }}</td>

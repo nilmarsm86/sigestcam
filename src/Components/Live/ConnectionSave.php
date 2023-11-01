@@ -9,8 +9,10 @@ use App\Components\Live\ConnectionModem\ConnectionModemTable;
 use App\Components\Live\ConnectionSlaveCommutator\ConnectionSlaveCommutatorPortList;
 use App\Components\Live\Traits\ComponentActiveInactive;
 use App\Entity\Camera;
+use App\Entity\Card;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
+use App\Entity\Msam;
 use App\Entity\Port;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -45,6 +47,12 @@ class ConnectionSave extends AbstractController
 
     #[LiveProp]
     public ?Port $slavePort = null;
+
+    #[LiveProp]
+    public ?Card $card = null;
+
+    #[LiveProp]
+    public ?Msam $msam = null;
 
     public function __construct(private readonly EntityManagerInterface $entityManager)
     {
@@ -88,6 +96,11 @@ class ConnectionSave extends AbstractController
     public function onConnectionCameraTableDetailFull(#[LiveArg] Camera $entity): void
     {
         $this->onConnectionCameraTableDetail($entity);
+        $this->modem = $entity->getModem();
+        $cardPort = $this->getRealEntity($this->modem?->getPort());
+        $this->card = $cardPort->getCard();
+        $this->msam = $this->card->getMsam();
+        $this->port = $this->msam->getPort();
     }
 
     public function onConnectionCameraTableChange(): void
@@ -289,6 +302,52 @@ class ConnectionSave extends AbstractController
 
     protected function saveFull(): string
     {
+//        if($this->port){
+//            if(is_null($this->modem)){
+//                $this->camera->setPort($this->port);
+//
+//                if($this->port->isFromCommutator()){
+//                    $commutator = $this->port->getCommutator();
+//                    $this->camera->setMunicipality($commutator->getMunicipality());
+//                }
+//            }
+//        }
+
+        if($this->modem){
+            $this->camera->setModem($this->modem);
+            if(!$this->modem->isActive()){
+                $this->modem->activate();
+            }
+            $this->entityManager->persist($this->modem);
+        }
+
+        $port = $this->modem->getPort();
+        if($port->isFromCard()){
+            $msam = $port->getCard()->getMsam();
+            if(!$msam->isActive()){
+                $msam->activate();
+            }
+            $this->entityManager->persist($msam);
+        }
+
+        $this->entityManager->persist($this->camera);
+
+//        if(!$this->port){
+//            $this->port = $this->modem->getPort();
+//        }
+
+        $this->port->setConnectionType($this->connection);
+        if(!$this->port->isActive()){
+            $this->port->activate();
+        }
+        $this->entityManager->persist($this->port);
+
+        $commutator = $this->port->getCommutator();
+        if(!$commutator->isActive()){
+            $commutator->activate();
+        }
+        $this->entityManager->persist($commutator);
+
         return 'connection_full_list';
     }
 

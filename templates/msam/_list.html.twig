@@ -25,7 +25,7 @@
 
             {% block table_head %}
                 <tr>
-{#                    <th>IP</th>#}
+                    <th>IP</th>
 {#                    <th>Multicast</th>#}
                     <th>Núm. serie</th>
                     <th>Estado</th>
@@ -45,7 +45,7 @@
             {% block table_body %}
                 {% for msam in paginator.getData() %}
                     <tr>
-{#                        <td>{{ msam.ip }}</td>#}
+                        <td>{{ msam.ip }}</td>
 {#                        <td>{{ msam.multicast }}</td>#}
                         <td>{{ msam.physicalSerial }}</td>
                         <td>

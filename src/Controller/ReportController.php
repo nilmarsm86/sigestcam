@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\DTO\Paginator;
+use App\Entity\Enums\InterruptionReason;
 use App\Entity\Enums\Priority;
 use App\Entity\Enums\ReportState;
 use App\Entity\Report;
@@ -30,8 +31,9 @@ class ReportController extends AbstractController
         $priority = $request->query->get('priority', '');
         $state = $request->query->get('state', '');
         $type = $request->query->get('type', '');
+        $interruption = $request->query->get('interruption', '');
 
-        $data = $reportRepository->findReports($filter, $amountPerPage, $pageNumber, $priority, $state, $type);
+        $data = $reportRepository->findReports($filter, $amountPerPage, $pageNumber, $priority, $state, $type, $interruption);
 
         $template = ($request->isXmlHttpRequest()) ? '_list.html.twig' : 'index.html.twig';
 
@@ -40,7 +42,8 @@ class ReportController extends AbstractController
             'paginator' => new Paginator($data, $amountPerPage, $pageNumber),
             'priorities' => Priority::cases(),
             'states' => ReportState::cases(),
-            'types' => Type::cases()
+            'types' => Type::cases(),
+            'interruptions' => InterruptionReason::cases()
         ]);
     }
 
@@ -92,7 +95,9 @@ class ReportController extends AbstractController
     #[Route('/{id}', name: 'report_show', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function show(Request $request, Report $report, CrudActionService $crudActionService): Response
     {
-        $template = $crudActionService->showAction($request, $report, 'report', 'report', 'Detalles del reporte');
+        $template = $crudActionService->showAction($request, $report, 'report', 'report', 'Detalles del reporte', [
+
+        ]);
         return new Response($template);
     }
 

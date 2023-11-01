@@ -125,6 +125,12 @@ class ConnectionListDetail
         $this->onConnectionListTableDetail($entity);
     }
 
+    #[LiveListener(ConnectionListTable::DETAIL.'_Full')]
+    public function onConnectionListTableDetailFull(#[LiveArg] int $entity): void
+    {
+        $this->onConnectionListTableDetail($entity);
+    }
+
     public function onConnectionListTableChange(): void
     {
         $this->entityId = null;

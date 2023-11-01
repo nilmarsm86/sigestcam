@@ -54,7 +54,7 @@ class ConnectionListTable
             ConnectionType::Simple => $this->cameraRepository->findBySimpleConnection($this->filter, $this->amount, $this->page),
             ConnectionType::SlaveSwitch => $this->cameraRepository->findBySlaveSwitchConnection($this->filter, $this->amount, $this->page),
             ConnectionType::SlaveModem => $this->cameraRepository->findBySlaveModemConnection($this->filter, $this->amount, $this->page),
-//            ConnectionType::Full => $this->cameraRepository->findCommutator($this->filter, $this->amount, $this->page),
+            ConnectionType::Full => $this->cameraRepository->findByFullConnection($this->filter, $this->amount, $this->page),
         };
 
         $this->reloadData($data);

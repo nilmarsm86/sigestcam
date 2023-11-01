@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Entity\Enums\Aim;
+use App\Entity\Enums\Flaw;
+use App\Entity\Enums\InterruptionReason;
 use App\Entity\Enums\Priority;
 use App\Entity\Enums\ReportState;
 use App\Entity\Enums\ReportType;
@@ -31,7 +33,7 @@ class Report
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El reporte debe de tener una especialidad.')]
 //    #[Assert\NotNull(message: 'La especialidad del reporte no puede ser nulo.')]
-    private string $specialty = 'video_vigilancia';
+    private string $specialty = 'videoproteccion';
 
     #[ORM\Column]
 //    #[Assert\DateTime]
@@ -105,12 +107,15 @@ class Report
     #[ORM\Column(length: 255)]
     private string $aim;
 
-    #[Assert\Choice(choices: [Aim::NoObjective, Aim::Objective], message: 'Seleccione una función válida.')]
+    #[Assert\Choice(choices: [Aim::Via, Aim::Objective, Aim::Border, Aim::Confrontation, Aim::Tuition], message: 'Seleccione una función válida.')]
     private Aim $enumAim;
 
     #[ORM\ManyToOne]
     #[Assert\Valid]
     private ?Organ $organ = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $detail = null;
 
     public function __construct()
     {
@@ -190,9 +195,13 @@ class Report
         return $this->interruptionReason;
     }
 
-    public function setInterruptionReason(?string $interruptionReason): static
+    public function setInterruptionReason(InterruptionReason|string|null $interruptionReason): static
     {
-        $this->interruptionReason = $interruptionReason;
+        if(is_string($interruptionReason)){
+            $this->interruptionReason = $interruptionReason;
+        }else{
+            $this->interruptionReason = $interruptionReason->value;
+        }
 
         return $this;
     }
@@ -226,9 +235,13 @@ class Report
         return $this->flaw;
     }
 
-    public function setFlaw(?string $flaw): static
+    public function setFlaw(Flaw|string|null $flaw): static
     {
-        $this->flaw = $flaw;
+        if(is_string($flaw)){
+            $this->flaw = $flaw;
+        }else{
+            $this->flaw = $flaw->value;
+        }
 
         return $this;
     }
@@ -386,6 +399,18 @@ class Report
     public function setTechnical(?User $technical): static
     {
         $this->technical = $technical;
+
+        return $this;
+    }
+
+    public function getDetail(): ?string
+    {
+        return $this->detail;
+    }
+
+    public function setDetail(?string $detail): static
+    {
+        $this->detail = $detail;
 
         return $this;
     }

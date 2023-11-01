@@ -16,4 +16,6 @@
     </div>
 {% endif %}
 
-
+{% if form.observation is defined %}
+    {{ form_row(form.observation) }}
+{% endif %}

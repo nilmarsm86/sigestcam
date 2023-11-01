@@ -1,0 +1,7 @@
+{{ form_row(form.name) }}
+{% if form.slot is defined %}
+    {{ form_row(form.slot) }}
+{% endif %}
+{% if form.portsAmount is defined %}
+    {{ form_row(form.portsAmount) }}
+{% endif %}

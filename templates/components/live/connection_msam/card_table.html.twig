@@ -1,0 +1,91 @@
+<div {{ attributes }} style="position: relative">
+    {% if slot is not null and msam is not null %}
+        <br>
+        <h4>Targetas del msam:</h4>
+        <hr>
+        <div class="card border-primary">
+            <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
+                <p class="text-white m-0 fw-bold">Targetas:</p>
+                <div>
+                    <button class="btn btn-primary btn-sm
+                            {% if msam.canAddTarget() == false  %}
+                                disabled
+{#                            {% else %}#}
+{#                                {% if port.equipment is not null %}disabled{% endif %}#}
+                            {% endif %}"
+                            aria-current="page"
+                            data-bs-toggle="modal"
+                            data-bs-target="#add-card"
+                    >
+                        <i class="fas fa-plus"></i>
+                        Nueva targeta
+                    </button>
+                </div>
+            </div>
+            <div class="card-body">
+                {% embed "embeds/async_table.html.twig" %}
+                    {% block table_show_amount %}{% endblock %}
+                    {% block table_show_filter %}{% endblock %}
+                    {% block table_head %}
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Slot</th>
+                            <th>Cantidad de puertos</th>
+                            <th></th>
+                        </tr>
+                    {% endblock %}
+
+                    {% block table_body %}
+                        {% for card in paginator.getData() %}
+                            <tr>
+                                <td><a href="{{ path('card_index', {'msam':msam.id}) }}">{{ card.name }}</a></td>
+                                <td>{{ card.slot }}</td>
+                                <td>{{ card.portsAmount }}</td>
+                                <td>
+                                    <button title="Detalle de la targeta"
+                                            type="button"
+                                            class="btn btn-primary btn-sm"
+                                            aria-current="page"
+                                            {#                                {% if entityId is not same as commutator.id %}#}
+                                            data-action="live#action"
+                                            data-action-name="prevent|detail(entityId={{ card.id }})"
+                                            {#                                {% endif %}#}
+                                    >
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                </td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7">
+                                    No se encontraron registros
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    {% endblock %}
+                {% endembed %}
+
+                <div class="row">
+                    {{ component('ConnectionMsamCardPortList', {connection: connection, card: card}) }}
+                </div>
+
+                {% if msam.canAddTarget() %}
+                    <!-- Modal -->
+                    {{ component('ModalForm', {
+                        title: 'Agregar Targeta',
+                        src: 'ConnectionMsamCardNew',
+                        vars: {
+                            connection: connection,
+                            slot: slot,
+                            msam: msam
+                        },
+                        type: 'component',
+                        id: 'add-card'
+                    }) }}
+                    <!-- Modal -->
+                {% endif %}
+            </div>
+        </div>
+        <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>
+    {% endif %}
+</div>

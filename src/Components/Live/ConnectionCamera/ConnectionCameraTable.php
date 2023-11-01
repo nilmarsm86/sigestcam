@@ -103,13 +103,13 @@ class ConnectionCameraTable
             }
         }
 
-//        if($this->connection->name === ConnectionType::SlaveModem->name){
-//            if(!is_null($this->modem->getId())){
-//                $data = $this->cameraRepository->findCameraByModem($this->modem, $this->filter, $this->amount, $this->page);
-//            }else{
-//                $data = $this->cameraRepository->findInactiveCamerasWithoutPortAndModem($this->filter, $this->amount, $this->page);
-//            }
-//        }
+        if($this->connection->name === ConnectionType::Full->name){
+            if(!is_null($this->modem->getId())){
+                $data = $this->cameraRepository->findCameraByModem($this->modem, $this->filter, $this->amount, $this->page);
+            }else{
+                $data = $this->cameraRepository->findInactiveCamerasWithoutPortAndModem($this->filter, $this->amount, $this->page);
+            }
+        }
 
         $this->reloadData($data);
     }

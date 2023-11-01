@@ -1,0 +1,58 @@
+{% set card = data[entityId]['modem']['port']['card'] %}
+{% set msam = data[entityId]['modem']['port']['card']['msam'] %}
+
+<div class="col-4">
+    <br><br>
+    <h4>Características de la targeta:</h4>
+    <hr>
+    <div class="card border-primary">
+        <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
+            <p class="text-white m-0 fw-bold">Targeta:</p>
+            <div class="row">
+                {% if is_granted('ROLE_BOSS') %}
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                        <a href="{{ path('card_edit', {'id': card.id, 'msam':msam.id}) }}" class="btn btn-primary" title="Editar targeta">
+                            <i class="fas fa-edit text-white"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+                <div class="col">
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Nombre:',
+                        data: card.name,
+                        connection: connection,
+                        'data-live-id': 'card-name-'~ card.id,
+                        entity: 'App\\Entity\\card',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Slot:',
+                        data: card.slot,
+                        connection: connection,
+                        'data-live-id': 'card-slot-'~ card.id,
+                        entity: 'App\\Entity\\Card',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Puerto:',
+                        data: data[entityId]['modem']['port']['number'],
+                        connection: connection,
+                        'data-live-id': 'card-port-'~ card.id,
+                        entity: 'App\\Entity\\Card',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

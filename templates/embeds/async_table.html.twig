@@ -1,20 +1,22 @@
 <div class="row">
     <div class="col-md-6 text-nowrap">
-        {# Show amount #}
-        <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
-            <label class="form-label">Mostrar:&nbsp;
-                <select class="d-inline-block form-select form-select-sm" data-action="live#action"
-                        data-action-name="changeAmount()" data-model="amount">
-                    {% for item in [2, 10, 25, 50, 100] %}
-                        <option value="{{ item }}">{{ item }}</option>
-                    {% endfor %}
-                </select>
-            </label>
-        </div>
-        {# Show amount #}
-
+        {% block table_show_amount %}
+            {# Show amount #}
+            <div id="dataTable_length" class="dataTables_length" aria-controls="dataTable">
+                <label class="form-label">Mostrar:&nbsp;
+                    <select class="d-inline-block form-select form-select-sm" data-action="live#action"
+                            data-action-name="changeAmount()" data-model="amount">
+                        {% for item in [2, 10, 25, 50, 100] %}
+                            <option value="{{ item }}">{{ item }}</option>
+                        {% endfor %}
+                    </select>
+                </label>
+            </div>
+            {# Show amount #}
+        {% endblock %}
     </div>
     <div class="col-md-6">
+        {% block table_show_filter %}
         {# filter #}
         <div class="text-md-end dataTables_filter" id="dataTable_filter">
             <form method="get">
@@ -34,6 +36,7 @@
             </form>
         </div>
         {# filter #}
+        {% endblock %}
     </div>
 </div>
 

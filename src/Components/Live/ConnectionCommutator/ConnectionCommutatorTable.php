@@ -34,7 +34,7 @@ class ConnectionCommutatorTable
     protected function reload()
     {
         $this->entityId = null;
-        $data = $this->commutatorRepository->findCommutator($this->filter, $this->amount, $this->page);
+        $data = $this->commutatorRepository->findMasterCommutator($this->filter, $this->amount, $this->page);
         $this->reloadData($data);
     }
 

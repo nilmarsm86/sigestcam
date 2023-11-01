@@ -69,7 +69,14 @@ class ConnectionModemNew extends AbstractController
             $modem = $this->getForm()->getData();
             if(!is_null($this->port)){
                 $modem->setPort($this->port);
-                $modem->setMunicipality($this->port->getCommutator()->getMunicipality());
+
+                if($this->port->getCommutator()){
+                    $modem->setMunicipality($this->port->getCommutator()->getMunicipality());
+                }
+
+                if($this->port->getCard()){
+                    $modem->setMunicipality($this->port->getCard()->getMsam()->getMunicipality());
+                }
             }
 
             $modemRepository->save($modem, true);

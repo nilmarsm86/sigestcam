@@ -1,5 +1,5 @@
 <div {{ attributes }}>
-    {% if commutator and port %}
+    {% if (commutator and port) or (card and msam and port) %}
         {% embed "embeds/card.html.twig" %}
             {% block card_css_class %}mb-4{% endblock %}
 
@@ -9,6 +9,25 @@
 
             {% block card_header_options %}
                 <div>
+{#                    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Full')%}#}
+{#                        <div class="btn-group">#}
+{#                            <button type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">#}
+{#                                Estados de modems#}
+{#                            </button>#}
+{#                            <ul class="dropdown-menu">#}
+{#                                <li>#}
+{#                                    <a class="dropdown-item" href="#" data-action="live#action" data-action-name="prevent|inactiveModems()">#}
+{#                                        <i class="fas fa-circle"></i> Inactivos#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                                <li>#}
+{#                                    <a class="dropdown-item" href="#" data-action="live#action" data-action-name="prevent|activeModems()">#}
+{#                                        <i class="fas fa-check-circle"></i> Activos#}
+{#                                    </a>#}
+{#                                </li>#}
+{#                            </ul>#}
+{#                        </div>#}
+{#                    {% endif %}#}
                     <button class="btn btn-primary btn-sm
                             {% if port is null %}
                                 disabled

@@ -3,10 +3,15 @@ namespace App\Components\Live\ConnectionModem;
 
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
+use App\Components\Live\ConnectionMsam\ConnectionMsamCardPortList;
+use App\Entity\Card;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
+use App\Entity\Msam;
 use App\Entity\Port;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
+use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -25,6 +30,19 @@ class ConnectionModem
 
     #[LiveProp]
     public ?ConnectionType $connection = null;
+
+    #[LiveProp]
+    public ?Card $card = null;
+
+    #[LiveProp]
+    public ?Msam $msam = null;
+
+//    #[LiveProp]
+//    public bool $inactives = false;
+
+    public function __construct(protected readonly EntityManagerInterface $entityManager)
+    {
+    }
 
     protected function onConnectionCommutatorPortListSelected(?Port $port): void
     {
@@ -84,5 +102,39 @@ class ConnectionModem
     {
         $this->onConnectionCommutatorTableChange();
     }
+
+    #[LiveListener(ConnectionMsamCardPortList::SELECTED.'_Full')]
+    public function onConnectionMsamCardPortListSelectedFull(#[LiveArg] ?Port $port): void
+    {
+        $this->port = $port;
+//        $this->card = $this->getRealEntity($port->getCard());
+        $this->card = $port->getCard();
+//        $this->msam = $this->getRealEntity($port->getCard()->getMsam());
+        $this->msam = $port->getCard()->getMsam();
+    }
+
+    public function getRealEntity($proxy)
+    {
+        if ($proxy instanceof \Doctrine\Persistence\Proxy) {
+            $proxy_class_name = get_class($proxy);
+            $class_name = $this->entityManager->getClassMetadata($proxy_class_name)->rootEntityName;
+            $this->entityManager->detach($proxy);
+            return $this->entityManager->find($class_name, $proxy->getId());
+        }
+
+        return $proxy;
+    }
+
+//    #[LiveAction]
+//    public function inactiveModems(): void
+//    {
+//        $this->inactives = true;
+//    }
+//
+//    #[LiveAction]
+//    public function activeModems(): void
+//    {
+//        $this->inactives = false;
+//    }
 
 }

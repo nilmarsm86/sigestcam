@@ -5,12 +5,13 @@
     {{ form_errors(form) }}
 
     {{ form_row(form.type) }}
-    {{ form_row(form.interruption) }}
-    {{ form_row(form.interruptionReason) }}
-    {{ form_row(form.priority) }}
     {{ form_row(form.flaw) }}
+    {{ form_row(form.detail) }}
     {{ form_row(form.aim) }}
     {{ form_row(form.boss) }}
+    {{ form_row(form.priority) }}
+    {{ form_row(form.interruptionReason) }}
+
     {{ form_row(form.equipment) }}
     {% if form.observation is defined or form.solution is defined or form.technical is defined %}
         <hr>
@@ -40,10 +41,10 @@
 
             {% if form.observation is defined or form.solution is defined %}
                 {% if is_granted('ROLE_OFFICER') %}
-                <button class="btn btn-danger" type="button" data-action="report#closeReport">
-                    <i class="fas fa-clipboard-check"></i>
-                    Cerrar reporte
-                </button>
+                    <button class="btn btn-danger" type="button" data-action="report#closeReport">
+                        <i class="fas fa-clipboard-check"></i>
+                        Cerrar reporte
+                    </button>
                 {% endif %}
             {% endif %}
         </div>

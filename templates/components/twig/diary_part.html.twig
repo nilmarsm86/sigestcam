@@ -1,23 +1,22 @@
 <div class="nav-item dropdown no-arrow">
     <a class="dropdown-toggle nav-link" aria-expanded="false" data-bs-toggle="dropdown"
        href="#">
-        {#                                        <span class="badge bg-danger badge-counter">7+</span>#}
         <i class="fas fa-clipboard-check fa-fw"></i>
         Cantidades
     </a>
     <div class="dropdown-menu dropdown-menu-end dropdown-list animated--grow-in">
         <h6 class="dropdown-header">Parte diario: {{ 'now'| date('d/m/Y') }}</h6>
-        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Rotura', type: '1'}) }}">
+        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {interruption:1}) }}">
             <div class="bg-info icon-circle dropdown-list-image me-3">
                 <span class="fw-bold fa-3x font-monospace">{{ this.ripCamera() }}</span>
                 <div class="bg-success status-indicator"></div>
             </div>
             <div class="fw-bold">
-                <div><span>Pendiente por sustitutcion o rotura</span></div>
-                <p class="small text-gray-500 mb-0">Cámaras</p>
+                <div><span>Pendiente por revisión</span></div>
+                <p class="small text-gray-500 mb-0">Todos los equipos</p>
             </div>
         </a>
-        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Conectividad', type: '1'}) }}">
+        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {interruption:2}) }}">
             <div class="bg-info icon-circle dropdown-list-image me-3">
                 <span class="fw-bold fa-3x font-monospace">{{ this.connectivityCamera() }}</span>
                 <div class="bg-success status-indicator"></div>
@@ -26,22 +25,10 @@
                 <div class="">
                     <span>Pendientes por conectividad</span>
                 </div>
-                <p class="small text-gray-500 mb-0">Cámaras</p>
+                <p class="small text-gray-500 mb-0">Todos los equipos</p>
             </div>
         </a>
-        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Conectividad', type: '2'}) }}">
-            <div class="bg-info icon-circle dropdown-list-image me-3">
-                <span class="fw-bold fa-3x font-monospace">{{ this.connectivityModem() }}</span>
-                <div class="bg-success status-indicator"></div>
-            </div>
-            <div class="fw-bold">
-                <div class="">
-                    <span>Pendientes por conectividad</span>
-                </div>
-                <p class="small text-gray-500 mb-0">Modems</p>
-            </div>
-        </a>
-        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Fluido eléctrico', type: '1'}) }}">
+        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {interruption:3}) }}">
             <div class="bg-info icon-circle dropdown-list-image me-3">
                 <span class="fw-bold fa-3x font-monospace">{{ this.electricFluidCamera() }}</span>
                 <div class="bg-success status-indicator"></div>
@@ -50,42 +37,41 @@
                 <div class="">
                     <span>Pendiente por fluido eléctrico</span>
                 </div>
-                <p class="small text-gray-500 mb-0">Cámaras</p>
+                <p class="small text-gray-500 mb-0">Todos los equipos</p>
             </div>
         </a>
-{#        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Sustitución', type: '1'}) }}">#}
-{#            <div class="bg-info icon-circle dropdown-list-image me-3">#}
-{#                <span class="fw-bold fa-3x font-monospace">{{ this.sustitutionCamera() }}</span>#}
-{#                <div class="bg-success status-indicator"></div>#}
-{#            </div>#}
-{#            <div class="fw-bold">#}
-{#                <div class="">#}
-{#                    <span>Pendiente por sustitutcion o rotura</span>#}
-{#                </div>#}
-{#                <p class="small text-gray-500 mb-0">Cámaras</p>#}
-{#            </div>#}
-{#        </a>#}
-        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:'Modem', type: '1'}) }}">
+        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {interruption:4}) }}">
             <div class="bg-info icon-circle dropdown-list-image me-3">
-                <span class="fw-bold fa-3x font-monospace">{{ this.modemCamera() }}</span>
+                <span class="fw-bold fa-3x font-monospace">{{ this.sustitutionCamera() }}</span>
+                <div class="bg-success status-indicator"></div>
+            </div>
+            <div class="fw-bold">
+                <div class="">
+                    <span>Pendientes por cámara</span>
+                </div>
+                <p class="small text-gray-500 mb-0">Cámara</p>
+            </div>
+        </a>
+        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {interruption:5}) }}">
+            <div class="bg-info icon-circle dropdown-list-image me-3">
+                <span class="fw-bold fa-3x font-monospace">{{ this.sustitutionModem() }}</span>
                 <div class="bg-success status-indicator"></div>
             </div>
             <div class="fw-bold">
                 <div class="">
                     <span>Pendiente por moden</span>
                 </div>
-                <p class="small text-gray-500 mb-0">Cámaras</p>
+                <p class="small text-gray-500 mb-0">Modem</p>
             </div>
         </a>
-
-        <a class="dropdown-item d-flex align-items-center" href="#">
+        <a class="dropdown-item d-flex align-items-center" href="{{ path('report_index', {filter:date('now')|date('d/m/Y')|url_encode, state: '0'}) }}">
             <div class="bg-info icon-circle dropdown-list-image me-3">
-                <span class="fw-bold fa-3x font-monospace">{{ this.others() }}</span>
+                <span class="fw-bold fa-3x font-monospace">{{ this.resolvedInterruption() }}</span>
                 <div class="bg-success status-indicator"></div>
             </div>
             <div class="fw-bold">
                 <div class="">
-                    <span>Otros reportes</span>
+                    <span>Interrupción resuelta</span>
                 </div>
                 <p class="small text-gray-500 mb-0">Todos los equipos</p>
             </div>

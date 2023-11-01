@@ -30,6 +30,7 @@
                     <th>Multicast</th>
                     <th>Núm. serie</th>
                     <th>Estado</th>
+                    <th>Esclavo</th>
 {#                    <th>PortsAmount</th>#}
                     <th>Provincia</th>
                     <th>Municipio</th>
@@ -69,7 +70,13 @@
                             </a>
                             {% endif %}
                         </td>
-{#                        <td>{{ commutator.portsAmount }}</td>#}
+                        <td>
+                            {% if commutator.gateway is null %}
+                                <span class="badge text-bg-success">SI</span>
+                            {% else %}
+                                <span class="badge text-bg-success">NO</span>
+                            {% endif %}
+                        </td>
                         <td>
                             <a href="{{ path(app.request.attributes.get('_route'), {'filter': commutator.municipality.province.name}) }}"
                                class="text-decoration-none"

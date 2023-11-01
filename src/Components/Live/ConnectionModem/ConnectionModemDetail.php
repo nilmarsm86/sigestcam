@@ -108,6 +108,12 @@ class ConnectionModemDetail
         $this->onConnectionModemTableDetail($entity);
     }
 
+    #[LiveListener(ConnectionModemTable::DETAIL.'_Full')]
+    public function onConnectionModemTableDetailFull(#[LiveArg] Modem $entity): void
+    {
+        $this->onConnectionModemTableDetail($entity);
+    }
+
     protected function details(Modem $modem): array
     {
         $mod = [];

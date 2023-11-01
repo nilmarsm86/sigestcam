@@ -18,6 +18,10 @@
         {{ include('components/live/connection_list/table/_table_slave_modem.html.twig') }}
     {% endif %}
 
+    {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Full') %}
+        {{ include('components/live/connection_list/table/_table_full.html.twig') }}
+    {% endif %}
+
     <div class="row">
         {{ component('ConnectionListDetail', {connection: connection, data: data}) }}
     </div>

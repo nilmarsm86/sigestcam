@@ -104,14 +104,42 @@
                                                 {{ camera.modem }}
                                             </a>
                                         </li>
-                                        <li><strong>Puerto:</strong> {{ camera.modem.port.number }}</li>
+                                        {% if camera.modem.port %}
+                                            <li><strong>Puerto:</strong> {{ camera.modem.port.number }}</li>
+                                        {% endif %}
+                                        {% if camera.modem.port.card %}
+                                            <li>
+                                                <strong>Targeta:</strong>
+                                                {{ camera.modem.port.card.name }}
+                                            </li>
+                                            <li><strong>Slot:</strong> {{ camera.modem.port.card.slot }}</li>
+                                        {% endif %}
+                                        {% if camera.modem.port.card.msam %}
+                                            <li>
+                                                <strong>Msam:</strong>
+                                                <a href="{{ path('msam_show', {'id':camera.modem.port.card.msam.id}) }}">
+                                                    {{ camera.modem.port.card.msam }}
+                                                </a>
+                                            </li>
+                                        {% endif %}
+                                        {% if camera.modem.port.card.msam.port %}
+                                            <li><strong>Puerto:</strong> {{ camera.modem.port.card.msam.port.number }}</li>
+                                        {% else %}
+                                            <li><strong>Puerto:</strong> {{ camera.modem.port.number }}</li>
+                                        {% endif %}
                                         <li>
                                             <strong>Switch:</strong>
-                                            <a href="{{ path('commutator_show', {'id':camera.modem.port.commutator.id}) }}">
-                                                {{ camera.modem.port.commutator }}
-                                            </a>
+                                            {% if camera.modem.port.card %}
+                                                <a href="{{ path('commutator_show', {'id':camera.modem.port.card.msam.port.commutator.id}) }}">
+                                                    {{ camera.modem.port.card.msam.port.commutator }}
+                                                </a>
+                                            {% else %}
+                                                <a href="{{ path('commutator_show', {'id':camera.modem.port.commutator.id}) }}">
+                                                    {{ camera.modem.port.commutator }}
+                                                </a>
+                                            {% endif %}
                                         </li>
-                                        {% if camera.modem.port.commutator.port %}
+                                        {% if camera.modem.port.commutator %}
                                             <li><strong>Puerto:</strong> {{ camera.modem.port.commutator.port.number }}</li>
                                             <li>
                                                 <strong>Switch Maestro:</strong>

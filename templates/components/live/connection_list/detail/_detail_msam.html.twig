@@ -1,0 +1,139 @@
+{% set msam = data[entityId]['modem']['port']['card']['msam'] %}
+
+<div class="col-8">
+    <h4>Características del msam:</h4>
+    <hr>
+    <div class="card border-primary">
+        <div class="card-header text-bg-info d-flex justify-content-between align-items-center">
+            <p class="text-white m-0 fw-bold">Msam:</p>
+            <div class="row">
+                {% if is_granted('ROLE_BOSS') %}
+                    <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
+                        <a href="{{ path('msam_edit', {'id': msam.id}) }}" class="btn btn-primary" title="Editar msam">
+                            <i class="fas fa-edit text-white"></i>
+                        </a>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="card-body">
+            <div class="row">
+
+                <div class="col">
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'IP:',
+                        data: msam.ip,
+                        connection: connection,
+                        'data-live-id': 'msam-ip-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Puerto:',
+                        data: msam.port.number,
+                        connection: connection,
+                        'data-live-id': 'msam-port-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Switch:',
+                        data: msam.port.commutator.ip,
+                        connection: connection,
+                        'data-live-id': 'msam-switch-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Modelo:',
+                        data: msam.model,
+                        connection: connection,
+                        'data-live-id': 'msam-model-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Marca:',
+                        data: msam.brand,
+                        connection: connection,
+                        'data-live-id': 'msam-brand-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+                </div>
+
+                <div class="col">
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Número de serie:',
+                        data: msam.physicalSerial,
+                        connection: connection,
+                        'data-live-id': 'msam-serial-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Número de inventario:',
+                        data: msam.inventory,
+                        connection: connection,
+                        'data-live-id': 'msam-inventory-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Contic:',
+                        data: msam.contic,
+                        connection: connection,
+                        'data-live-id': 'msam-contic-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Dirección física:',
+                        data: msam.physicalAddress,
+                        connection: connection,
+                        'data-live-id': 'msam-address-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Municipio:',
+                        data: data[entityId].municipality.name,
+                        connection: connection,
+                        'data-live-id': 'msam-municipality-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+
+                    {{ component('ConnectionDetailEditInline', {
+                        label: 'Provincia:',
+                        data: data[entityId].municipality.province.name,
+                        connection: connection,
+                        'data-live-id': 'msam-province-'~ msam.id,
+                        entity: 'App\\Entity\\Msam',
+                        template: 'components/live/connection_camera/edit_inline.html.twig',
+                        editable: false,
+                    }) }}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
