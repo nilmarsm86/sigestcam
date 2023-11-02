@@ -11,7 +11,6 @@ use App\Entity\Msam;
 use App\Entity\Port;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -37,9 +36,6 @@ class ConnectionModem
     #[LiveProp]
     public ?Msam $msam = null;
 
-//    #[LiveProp]
-//    public bool $inactives = false;
-
     public function __construct(protected readonly EntityManagerInterface $entityManager)
     {
     }
@@ -63,6 +59,10 @@ class ConnectionModem
         $this->onConnectionCommutatorPortListSelected($port);
     }
 
+    /**
+     * @param Commutator $entity
+     * @return void
+     */
     public function onConnectionCommutatorTableDetail(Commutator $entity): void
     {
         $this->commutator = $entity;
@@ -107,12 +107,14 @@ class ConnectionModem
     public function onConnectionMsamCardPortListSelectedFull(#[LiveArg] ?Port $port): void
     {
         $this->port = $port;
-//        $this->card = $this->getRealEntity($port->getCard());
         $this->card = $port->getCard();
-//        $this->msam = $this->getRealEntity($port->getCard()->getMsam());
         $this->msam = $port->getCard()->getMsam();
     }
 
+    /**
+     * @param $proxy
+     * @return mixed|object|null
+     */
     public function getRealEntity($proxy)
     {
         if ($proxy instanceof \Doctrine\Persistence\Proxy) {
@@ -124,17 +126,5 @@ class ConnectionModem
 
         return $proxy;
     }
-
-//    #[LiveAction]
-//    public function inactiveModems(): void
-//    {
-//        $this->inactives = true;
-//    }
-//
-//    #[LiveAction]
-//    public function activeModems(): void
-//    {
-//        $this->inactives = false;
-//    }
 
 }

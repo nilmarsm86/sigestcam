@@ -43,7 +43,13 @@ class ConnectionCameraTable
     {
     }
 
-    //cuando se monta por primera vez el componete
+    /**
+     * cuando se monta por primera vez el componete
+     * @param ConnectionType $connection
+     * @param Port $port
+     * @param Modem|null $modem
+     * @return void
+     */
     public function mount(ConnectionType $connection, Port $port, ?Modem $modem = null): void
     {
         $this->connection = $connection;
@@ -52,7 +58,10 @@ class ConnectionCameraTable
         $this->filterAndReload();
     }
 
-    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
+    /**
+     * cuando el componente ya esta montado pero se llama como si fuera la primera vez
+     * @return void
+     */
     public function __invoke(): void
     {
         $this->page = 1;
@@ -60,6 +69,9 @@ class ConnectionCameraTable
         $this->emit($this->getChangeTableEventName());
     }
 
+    /**
+     * @return void
+     */
     private function filterAndReload(): void
     {
         $this->entityId = null;
@@ -67,6 +79,9 @@ class ConnectionCameraTable
         $this->reload();
     }
 
+    /**
+     * @return void
+     */
     private function reload(): void
     {
         if(is_null($this->filter)){
@@ -76,11 +91,6 @@ class ConnectionCameraTable
         //cambiar la forma en la que se buscan los datos
         if($this->connection->name === ConnectionType::Direct->name){
             if($this->port->hasConnectedCamera()){
-//            if($this->port->isActive()){
-//                $data = $this->cameraRepository->findActiveCamerasWithPort($this->filter, $this->amount, $this->page);
-//            }else{
-//                $data = $this->cameraRepository->findInactiveCamerasWithPort($this->filter, $this->amount, $this->page);
-//            }
                 $data = $this->cameraRepository->findCameraByPort($this->port, $this->filter, $this->amount, $this->page);
             }else{
                 $data = $this->cameraRepository->findInactiveCamerasWithoutPort($this->filter, $this->amount, $this->page);
@@ -173,6 +183,9 @@ class ConnectionCameraTable
         return static::DETAIL.'_'.$this->connection->name;
     }
 
+    /**
+     * @return void
+     */
     public function onConnectionDetailEditInlineSaveCamera(): void
     {
         $this->reload();
@@ -208,6 +221,9 @@ class ConnectionCameraTable
         $this->onConnectionDetailEditInlineSaveCamera();
     }
 
+    /**
+     * @return void
+     */
     public function onConnectionCameraDetailActivate(): void
     {
         $this->reload();
@@ -243,6 +259,9 @@ class ConnectionCameraTable
         $this->onConnectionCameraDetailActivate();
     }
 
+    /**
+     * @return void
+     */
     public function onConnectionCameraDetailDeactivate(): void
     {
         $this->reload();

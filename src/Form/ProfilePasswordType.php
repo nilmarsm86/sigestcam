@@ -52,7 +52,6 @@ class ProfilePasswordType extends AbstractType
             'data_class' => ProfilePasswordForm::class,
             'attr' => [
                 'class' => 'profile',
-                //'novalidate' => 'novalidate'
             ]
         ]);
     }

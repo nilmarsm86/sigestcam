@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Controller\Traits\MunicipalityTrait;
 use App\Entity\Server;
 use App\Form\ServerType;
-use App\Repository\CameraRepository;
 use App\Repository\ServerRepository;
 use App\Service\CrudActionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -125,17 +124,6 @@ class ServerController extends AbstractController
             'title' => 'Editar servidor'
         ]);
     }
-
-    /*#[Route('/{id}', name: 'server_delete', methods: ['POST'])]
-    public function delete(Request $request, Server $server, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$server->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($server);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('server_index', [], Response::HTTP_SEE_OTHER);
-    }*/
 
     #[Route('/state', name: 'server_state', methods: ['POST'])]
     #[IsGranted('ROLE_ADMIN')]

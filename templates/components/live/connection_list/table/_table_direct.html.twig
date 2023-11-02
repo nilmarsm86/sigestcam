@@ -33,18 +33,6 @@
                         {% if camera.port.commutator.gateway %}({{ camera.port.commutator.gateway }}){% endif%}
                         {% if camera.port.commutator.multicast %}[{{ camera.port.commutator.multicast }}]{% endif %}
                     </a>
-
-{#                    {% if camera.port.commutator.state and app.user.isOfficer() %}#}
-{#                        <a#}
-{#                                href="#"#}
-{#                                class="ms-1"#}
-{#                                data-action="connection-list-table#report"#}
-{#                                data-connection-list-table-equipment-param="{{ camera.id }}"#}
-{#                                data-connection-list-table-type-param="1"#}
-{#                        >#}
-{#                            <i class="fas fa-clipboard" title="Reportar cámara"></i>#}
-{#                        </a>#}
-{#                    {% endif %}#}
                     {{ report(camera.port.commutator.state, camera.port.commutator.id, 5, 'Reportar switch') }}
                 </td>
                 <td>
@@ -89,10 +77,8 @@
                             type="button"
                             class="btn btn-primary btn-sm"
                             aria-current="page"
-                            {#                                {% if entityId is not same as commutator.id %}#}
                             data-action="live#action"
                             data-action-name="prevent|detail(entityId={{ camera.id }})"
-                            {#                                {% endif %}#}
                     >
                         <i class="fas fa-eye"></i>
                     </button>

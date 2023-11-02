@@ -79,6 +79,10 @@ class AddressType extends AbstractType
         $resolver->setAllowedTypes('crud', 'bool');
     }
 
+    /**
+     * @param array $options
+     * @return array|NotBlank[]
+     */
     private function getMunicipalityConstraints(array $options): array
     {
         $municipalityConstraints = [];
@@ -105,6 +109,10 @@ class AddressType extends AbstractType
         return $municipalityConstraints;
     }
 
+    /**
+     * @param array $options
+     * @return array|NotBlank[]
+     */
     private function getProvinceConstraints(array $options): array
     {
         $provinceConstraints = [];
@@ -125,6 +133,10 @@ class AddressType extends AbstractType
         return $provinceConstraints;
     }
 
+    /**
+     * @param array $options
+     * @return \Closure
+     */
     private function getQueryBuilder(array $options)
     {
         if($options['crud']){
@@ -137,17 +149,5 @@ class AddressType extends AbstractType
             };
         }
     }
-
-//    public function getRealEntity($proxy)
-//    {
-//        if ($proxy instanceof \Doctrine\Persistence\Proxy) {
-//            $proxy_class_name = get_class($proxy);
-//            $class_name = $this->entityManager->getClassMetadata($proxy_class_name)->rootEntityName;
-//            $this->entityManager->detach($proxy);
-//            return $this->entityManager->find($class_name, $proxy->getId());
-//        }
-//
-//        return $proxy;
-//    }
 
 }

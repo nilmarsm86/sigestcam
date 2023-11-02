@@ -13,11 +13,18 @@ trait NameToStringTrait
     #[Assert\NoSuspiciousCharacters]
     private string $name;
 
+    /**
+     * @return string
+     */
     public function getName(): string
     {
         return $this->name;
     }
 
+    /**
+     * @param string $name
+     * @return $this
+     */
     public function setName(string $name): static
     {
         $this->name = $name;
@@ -25,6 +32,9 @@ trait NameToStringTrait
         return $this;
     }
 
+    /**
+     * @return string
+     */
     public function __toString(): string
     {
         return $this->getName();

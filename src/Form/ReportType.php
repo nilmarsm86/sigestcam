@@ -13,18 +13,14 @@ use App\Form\Types\InterruptionReasonEnumType;
 use App\Form\Types\PriorityEnumType;
 use App\Form\Types\ReportTypeEnumType;
 use Doctrine\ORM\EntityRepository;
-use Doctrine\ORM\QueryBuilder;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\EnumType;
 use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\Form\FormEvent;
 use Symfony\Component\Form\FormEvents;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\NegativeOrZero;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 class ReportType extends AbstractType
 {
@@ -54,10 +50,8 @@ class ReportType extends AbstractType
                 'label' => 'Tipo: ',
             ]+$readOnly)
             ->add('interruptionReason', InterruptionReasonEnumType::class, [
-//                'mapped' => false,
                 'label' => 'Motivo de interrupción: ',
                 'attr' => [
-//                    'data-action' => 'report#selectReason'
                 ]+['readonly' => $this->security->getUser()->justTechnical(),'disabled' => $this->security->getUser()->justTechnical()]
             ])
             ->add('equipment', HiddenType::class, [

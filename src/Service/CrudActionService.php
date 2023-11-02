@@ -15,6 +15,17 @@ class CrudActionService
     {
     }
 
+    /**
+     * @param Request $request
+     * @param ServiceEntityRepository $repository
+     * @param string $findMethod
+     * @param string $templateDir
+     * @param array $vars
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function indexAction(Request $request, ServiceEntityRepository $repository, string $findMethod, string $templateDir, array $vars = []): string
     {
         $filter = $request->query->get('filter', '');
@@ -31,6 +42,18 @@ class CrudActionService
         ]+$vars);
     }
 
+    /**
+     * @param Request $request
+     * @param object $entity
+     * @param string $templateDir
+     * @param string $type
+     * @param string $title
+     * @param array $vars
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function showAction(Request $request, object $entity, string $templateDir, string $type, string $title, array $vars = []): string
     {
         $template = ($request->isXmlHttpRequest()) ? '_detail.html.twig' : 'show.html.twig';
@@ -41,6 +64,16 @@ class CrudActionService
         ]+$vars);
     }
 
+    /**
+     * @param Request $request
+     * @param ServiceEntityRepository $repository
+     * @param string $deactivateMessage
+     * @param string $activateMessage
+     * @return string
+     * @throws \Twig\Error\LoaderError
+     * @throws \Twig\Error\RuntimeError
+     * @throws \Twig\Error\SyntaxError
+     */
     public function stateAction(Request $request, ServiceEntityRepository $repository, string $deactivateMessage, string $activateMessage): string
     {
         if($request->isXmlHttpRequest()){

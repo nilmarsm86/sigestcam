@@ -45,11 +45,9 @@
             <div data-loading="addClass(d-none)">
                 {{ component('ConnectionCameraTable', {connection:connection, commutator: commutator, port: port, modem: modem}) }}
             </div>
-{#          {% if port.equipment is not null %}#}
             <div class="row">
                 {{ component('ConnectionCameraDetail', {connection:connection, port: port}) }}
             </div>
-{#          {% endif %}#}
         {% endif %}
     {% endblock %}
 {% endembed %}

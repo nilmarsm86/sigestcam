@@ -27,6 +27,10 @@ final class RegistrationForm
     #[Password]
     public string $plainPassword;
 
+    /**
+     * @param User|null $user
+     * @return User
+     */
     public function toEntity(?User $user = null): User
     {
         if(is_null($user)){

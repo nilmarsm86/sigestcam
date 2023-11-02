@@ -22,13 +22,7 @@
     {% set commutator = data[entityId]['modem']['port']['card']['msam']['port']['commutator'] %}
 {% endif %}
 
-<div class="
-{#{% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}#}
-{#    {% if slaveCommutator == false %}col-12{% else %}col-4{% endif %}#}
-{#{% else %}#}
-    col-4
-{#{% endif %}#}
-">
+<div class="col-4">
     {% if slaveCommutator == true %}<br><br>{% endif %}
     <h4>Características del switch {% if slaveCommutator == true %}esclavo{% endif %}:</h4>
     <hr>

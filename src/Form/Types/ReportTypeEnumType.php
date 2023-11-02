@@ -17,7 +17,6 @@ class ReportTypeEnumType extends AbstractType
             ->setDefault('choices', static fn (Options $options): array => $options['class']::cases())
             ->setDefault('choice_label', ReportType::getLabel())
             ->setDefault('choice_value', ReportType::getValue())
-            //->setDefault('placeholder', '-Seleccione-')
         ;
     }
 

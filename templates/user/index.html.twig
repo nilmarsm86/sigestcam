@@ -15,8 +15,6 @@
             {% embed "embeds/table.html.twig" %}
                 {% block table_container %}
                     data-action="
-{#                        role:startChange->table#showBackdrop#}
-{#                        role:endChange->table#hideBackdrop#}
                         user-role:startChange->table#showBackdrop
                         user-role:endChange->table#hideBackdrop
                     "

@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Enums\State;
-use App\Entity\Enums\State as StateEnum;
 use App\Entity\Traits\ConnectedTrait;
 use App\Repository\ModemRepository;
 use Doctrine\Common\Collections\ArrayCollection;

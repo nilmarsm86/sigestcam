@@ -26,6 +26,12 @@ class UserFixtures extends Fixture
         $manager->flush();
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @param User $user
+     * @param array $roles
+     * @return void
+     */
     private function save(ObjectManager $manager, User $user, array $roles): void
     {
         $user->register($this->userPasswordHasher, $roles[0]);
@@ -39,6 +45,10 @@ class UserFixtures extends Fixture
         $manager->persist($user);
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @return void
+     */
     private function createSuperAdmin(ObjectManager $manager)
     {
         $adminUser = $manager->getRepository(User::class)->findOneBy(['username' => 'admin']);
@@ -50,6 +60,10 @@ class UserFixtures extends Fixture
         }
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @return void
+     */
     private function createAdmin(ObjectManager $manager)
     {
         $adminUser = $manager->getRepository(User::class)->findOneBy(['username' => 'admin']);
@@ -64,6 +78,10 @@ class UserFixtures extends Fixture
         }
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @return void
+     */
     private function createBoss(ObjectManager $manager)
     {
         $bossUser = $manager->getRepository(User::class)->findOneBy(['username' => 'boss']);
@@ -78,6 +96,10 @@ class UserFixtures extends Fixture
         }
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @return void
+     */
     private function createOfficer(ObjectManager $manager)
     {
         $officerUser = $manager->getRepository(User::class)->findOneBy(['username' => 'officer']);
@@ -92,6 +114,10 @@ class UserFixtures extends Fixture
         }
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @return void
+     */
     private function createTechnical(ObjectManager $manager)
     {
         $technicalUser = $manager->getRepository(User::class)->findOneBy(['username' => 'technical']);
@@ -106,6 +132,10 @@ class UserFixtures extends Fixture
         }
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @return void
+     */
     private function createUser(ObjectManager $manager)
     {
         $user = $manager->getRepository(User::class)->findOneBy(['username' => 'user']);
@@ -116,6 +146,5 @@ class UserFixtures extends Fixture
             $this->save($manager, $user, [$role]);
         }
     }
-
 
 }

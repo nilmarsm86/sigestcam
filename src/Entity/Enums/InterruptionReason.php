@@ -14,9 +14,11 @@ enum InterruptionReason: string
     case ElectricFluid = '3';
     case Camera = '4';
     case Modem = '5';
-    //case WithoutLink = '6';
-    //case Null = '-1';
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){
@@ -29,8 +31,6 @@ enum InterruptionReason: string
             self::ElectricFluid => 'Pendiente por Fluido eléctrico',
             self::Camera => 'Pendiente por Cámara',
             self::Modem => 'Pendiente por Modem',
-            //self::WithoutLink => 'Sin enlace',
-            //self::Null => 'Otra',
             default => '-Seleccione-'
         };
     }

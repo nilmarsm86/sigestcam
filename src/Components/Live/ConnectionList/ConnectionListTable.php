@@ -2,21 +2,13 @@
 
 namespace App\Components\Live\ConnectionList;
 
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentTable;
-use App\DTO\Paginator;
 use App\Entity\Camera;
-use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
-use App\Entity\Port;
 use App\Repository\CameraRepository;
-use App\Repository\CommutatorRepository;
-use App\Repository\PortRepository;
-use Doctrine\ORM\AbstractQuery;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
-use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
 use Symfony\UX\LiveComponent\DefaultActionTrait;
@@ -47,6 +39,9 @@ class ConnectionListTable
         $this->reload();
     }
 
+    /**
+     * @return void
+     */
     protected function reload()
     {
         $data = match ($this->connection) {

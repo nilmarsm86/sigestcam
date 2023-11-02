@@ -4,8 +4,6 @@
             {% block table_head %}
                 <tr>
                     <th>IP</th>
-    {#                <th>Puerta de enlace</th>#}
-    {#                <th>Dirección multicast</th>#}
                     <th>Número de serie</th>
                     <th>Cant. Slots</th>
                     <th>Estado</th>
@@ -19,10 +17,7 @@
                 {% for msam in paginator.getData() %}
                     <tr>
                         <td><a href="{{ path('msam_index', {'filter':msam.ip}) }}">{{ msam.ip }}</a></td>
-    {#                    <td>{{ commutator.gateway }}</td>#}
-    {#                    <td>{{ commutator.multicast }}</td>#}
                         <td>
-{#                            <a href="{{ path('msam_index', {'filter':msam.physicalSerial}) }}">{{ msam.physicalSerial }}</a>#}
                             {{ msam.physicalSerial }}
                         </td>
                         <td>{{ msam.slotAmount }}</td>
@@ -40,10 +35,8 @@
                                     type="button"
                                     class="btn btn-primary btn-sm"
                                     aria-current="page"
-    {#                                {% if entityId is not same as commutator.id %}#}
                                         data-action="live#action"
                                         data-action-name="prevent|detail(entityId={{ msam.id }})"
-    {#                                {% endif %}#}
                             >
                                 <i class="fas fa-eye"></i>
                             </button>

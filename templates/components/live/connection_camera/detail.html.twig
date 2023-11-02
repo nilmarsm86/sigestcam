@@ -35,10 +35,8 @@
                                     {% endif %}
 
                                     {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}
-{#                                        {% if port.hasConnectedCamera() == false and port.hasConnectedCommutator() %}#}
                                             data-action="change->live#action"
                                             data-action-name="connect(camera={{ camera.id }})"
-{#                                        {% endif %}#}
                                     {% endif %}
                                 {% endif %}
                         >

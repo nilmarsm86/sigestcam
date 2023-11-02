@@ -12,6 +12,10 @@ enum Flaw: string
     case WithoutLink = '1';
     case Null = '-1';
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){

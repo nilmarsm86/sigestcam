@@ -19,11 +19,6 @@ class CardType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
-//        if($options['msam'] instanceof Msam){
-//            $msam = $options['msam'];
-//        }else{
-//            $msam = $this->msamRepository->find($options['msam']);
-//        }
         $msam = ($options['msam'] instanceof Msam) ? $options['msam'] : $this->msamRepository->find($options['msam']);
         $position = $msam->connectedCards() + 1;
 

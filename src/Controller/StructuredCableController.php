@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Entity\Camera;
 use App\Entity\Modem;
 use App\Entity\StructuredCable;
-use App\Entity\Traits\ConnectedTrait;
 use App\Form\StructuredCableType;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -133,8 +132,6 @@ class StructuredCableController extends AbstractController
             $this->addFlash('success', 'Se ha modificado el cable estructurado.');
             return $this->redirectToRoute($pathIndex, [], Response::HTTP_SEE_OTHER);
         }
-
-//        $template = ($request->isXmlHttpRequest()) ? '_form_modem.html.twig' : 'new.html.twig';
 
         return $this->render("structured_cable/$template", [
             'structured_cable' => $structuredCable,

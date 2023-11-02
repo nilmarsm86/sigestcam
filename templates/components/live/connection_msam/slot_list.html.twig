@@ -4,96 +4,27 @@
         <hr>
         <div class="row" style="position: relative">
             {% for slot in slots %}
-{#                {{ include('components/live/connection_commutator/_port_detail.html.twig') }}#}
                 <div class="col-3 mb-4">
                     <div class="card text-white {{ slot.connection }} {% if selected is same as slot.number %}shadow-lg border-dark{% endif %}" >
                         <div class="card-body" style="padding: 0.5rem">
                             <div
                                     class="row align-items-center no-gutters"
-{#                                    {% if slot.isSelectable %}#}
                                         data-action="dblclick->live#action"
                                         data-action-name="select(number={{ slot.number }}, msamId={{ msam.id }})"
-{#                                    {% endif %}#}
                             >
                                 <div class="col-auto">
                                     <i class="fas {% if slot.card %}fa-check-circle{% else %}fa-circle{% endif %} fa-2x text-gray-300"></i>
-{#                                    {% if port.state %}<span>{% endif %}#}
-{#                    <div class="form-check form-switch">#}
-{#                        <input#}
-{#                                class="form-check-input {% if port.isSelectable == false %}disabled{% endif %}"#}
-{#                                type="checkbox"#}
-{#                                role="switch"#}
-{#                                {% if port.state %}checked{% endif %}#}
-{#                                {% if port.isSelectable %}#}
-{#                                    data-action="change->live#action"#}
-{#                                    {% if port.state %}#}
-{#                                        data-action-name="deactivatePort(portId={{ port.id }})"#}
-{#                                    {% else %}#}
-{#                                        data-action-name="activatePort(portId={{ port.id }})"#}
-{#                                    {% endif %}#}
-{#                                {% else %}#}
-{#                                    disabled#}
-{#                                {% endif %}#}
-{#                        >#}
-{#                    </div>#}
-{#                    {% if port.state %}</span>{% endif %}#}
+
                                 </div>
                                 <div class="col me-2">
                                     <div class="text-uppercase text-white fw-bold text-xs mb-1">
-{#                                        {% if editingSpeed == port.id %}#}
-{#                                            <input#}
-{#                                                    type="text"#}
-{#                                                    data-model="norender|speed"#}
-{#                                                    class="w-25"#}
-{#                                                    data-action="blur->live#action"#}
-{#                                                    data-action-name="saveSpeed(port={{ port.id }})"#}
-{#                                            >#}
-{#                                        {% else %}#}
-{#                                            <span title="Click para editar"#}
-{#                                                  class="w-25 d-inline-block"#}
-{#                                    {% if port.isSelectable %}#}
-{#                                        data-action="click->live#action"#}
-{#                                        data-action-name="activateEditingSpeed(portId={{ port.id }}, speed={{ port.speed }})"#}
-{#                                    {% endif %}#}
-{#                                    style="cursor: pointer"#}
-{#                                            >#}
-{#                                {{ port.speed }}#}
-{#                            </span>#}
-{#                                        {% endif %}#}
-{#                                        <span>{{ constant('App\\Entity\\Port::SPEED_TYPE')}} -</span> <span class="{{ port.equipment_state }}">{{ port.equipment }}</span>#}
+
                                     </div>
                                     <h5 class="card-title">Slot: <span class="fw-bold">{{ slot.number }}</span></h5>
-{#                                    {% if editingType == port.id %}#}
-{#                                        <select style="font-size: 11.5px"#}
-{#                                                data-model="norender|type"#}
-{#                                                data-action="change->live#action blur->live#action"#}
-{#                                                data-action-name="saveType(port={{ port.id }})"#}
-{#                                        >#}
-{#                                            {% for label, value in forSelect %}#}
-{#                                                {% if value is not same as "" %}#}
-{#                                                    <option value="{{ value }}">#}
-{#                                                        {{ label }}#}
-{#                                                    </option>#}
-{#                                                {% endif %}#}
-{#                                            {% endfor %}#}
-{#                                        </select>#}
-{#                                    {% else %}#}
-{#                                        <h6 class="card-subtitle mb-2" title="Click para editar"#}
-{#                                                {% if port.isSelectable %}#}
-{#                                                    data-action="click->live#action"#}
-{#                                                    data-action-name="activateEditingType(portId={{ port.id }}, type={{ port.type_value }})"#}
-{#                                                {% endif %}#}
-{#                                        >#}
-{#                                            {{ port.type_label }}#}
-{#                                        </h6>#}
-{#                                    {% endif %}#}
-
                                 </div>
                             </div>
                         </div>
-                        {#        <backdrop-component data-loading="addClass(d-block)" class="card-backdrop"></backdrop-component>#}
                     </div>
-
 
                 </div>
             {% endfor %}

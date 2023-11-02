@@ -20,14 +20,12 @@ class Camera extends Equipment
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'La camara debe de tener un usuario.')]
-//    #[Assert\NotNull(message: 'El usuario de la camara no puede ser nulo.')]
     #[Assert\NoSuspiciousCharacters]
     #[Username]
     private ?string $user = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'La cámara debe de tener una contraseña.')]
-//    #[Assert\NotNull(message: 'La contraseña de la camara no puede ser nula.')]
     private ?string $password = null;
 
     #[ORM\ManyToOne(inversedBy: 'cameras')]
@@ -36,10 +34,6 @@ class Camera extends Equipment
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Assert\NoSuspiciousCharacters]
-    /*#[Assert\Regex(
-        pattern: '/^[a-zA-Z0-9_\-\.]+$/',
-        message: 'El número de serie electrónico solo debe contener letras, números, guiones y punto.',
-    )]*/
     private ?string $electronicSerial = null;
 
     /**
@@ -157,9 +151,6 @@ class Camera extends Equipment
     public function disconnect(): static
     {
         if(!is_null($this->port)){
-            //if($this->port->isFromCommutator()){
-                //$this->port->getCommutator()?->disconnect();
-            //}
             $this->port->setEquipment(null);
             if(!is_null($this->port->getConnectionType())){
                 $this->port->setConnectionType(ConnectionType::Null);

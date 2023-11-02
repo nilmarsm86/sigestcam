@@ -41,7 +41,10 @@ class ConnectionModemDetail
         $this->entity = Modem::class;
     }
 
-    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
+    /**
+     * cuando el componente ya esta montado pero se llama como si fuera la primera vez
+     * @return void
+     */
     public function __invoke(): void
     {
         $this->modem = null;
@@ -83,6 +86,10 @@ class ConnectionModemDetail
         return static::DISCONNECT.'_'.$this->connection->name;
     }
 
+    /**
+     * @param Modem $entity
+     * @return void
+     */
     public function onConnectionModemTableDetail(Modem $entity): void
     {
         if(isset($this->modem['id'])){
@@ -114,6 +121,10 @@ class ConnectionModemDetail
         $this->onConnectionModemTableDetail($entity);
     }
 
+    /**
+     * @param Modem $modem
+     * @return array
+     */
     protected function details(Modem $modem): array
     {
         $mod = [];
@@ -130,7 +141,6 @@ class ConnectionModemDetail
         $mod['state'] = $modem->isActive();
         $mod['disconnected'] = $modem->isDisconnected();
         $mod['master_modem'] = (string) $modem->getMasterModem();
-//        $mod['electronicSerial'] = (string) $modem->getElectronicSerial();
         $mod['commutator'] = (string) $modem->getPort()?->getCommutator();
         $mod['port'] = $modem->getPort()?->getNumber();
 

@@ -45,6 +45,12 @@ class ProvinceFixtures extends Fixture
         $manager->flush();
     }
 
+    /**
+     * @param ObjectManager $manager
+     * @param string $provinceName
+     * @param array $municipalities
+     * @return bool
+     */
     public function addProvinceMunicipality(ObjectManager $manager, string $provinceName, array $municipalities): bool
     {
         $province = (new Province())->setName($provinceName);

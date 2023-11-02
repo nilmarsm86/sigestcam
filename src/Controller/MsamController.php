@@ -123,17 +123,6 @@ class MsamController extends AbstractController
         ]);
     }
 
-    /*#[Route('/{id}', name: 'msam_delete', methods: ['POST'])]
-    public function delete(Request $request, Msam $msam, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$msam->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($msam);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_msam_index', [], Response::HTTP_SEE_OTHER);
-    }*/
-
     #[Route('/state', name: 'msam_state', methods: ['POST'])]
     public function state(Request $request, MsamRepository $msamRepository, CrudActionService $crudActionService): Response
     {
@@ -149,7 +138,6 @@ class MsamController extends AbstractController
         return $this->render("commutator/$template", [
             'msam' => $msam,
             'title' => 'Targetas del msam',
-            //'forSelect' => PortType::forSelect(),
         ]);
     }
 }

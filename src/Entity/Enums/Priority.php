@@ -14,6 +14,10 @@ enum Priority: string
     case Medium = '0';
     case Low = '-1';
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){

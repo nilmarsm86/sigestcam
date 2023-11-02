@@ -43,6 +43,10 @@ class ConnectionCommutatorDetail
         return static::DEACTIVATE.'_'.$this->connection->name;
     }
 
+    /**
+     * @param Commutator $entity
+     * @return void
+     */
     protected function onConnectionCommutatorTableDetail(#[LiveArg] Commutator $entity): void
     {
         if(isset($this->commutator['id'])){
@@ -86,6 +90,10 @@ class ConnectionCommutatorDetail
         $this->onConnectionCommutatorTableDetail($entity);
     }
 
+    /**
+     * @param Commutator $commutator
+     * @return array
+     */
     protected function details(Commutator $commutator): array
     {
         $switch = [];

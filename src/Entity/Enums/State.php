@@ -13,6 +13,10 @@ enum State: string
     case Active = '1';
     case Inactive = '0';
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){

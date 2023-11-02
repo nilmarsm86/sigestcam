@@ -17,6 +17,10 @@ final class ProfilePasswordForm
     #[Password]
     public string $plainPassword;
 
+    /**
+     * @param User|null $user
+     * @return User
+     */
     public function toEntity(?User $user): User
     {
         $user->setPassword($this->plainPassword);

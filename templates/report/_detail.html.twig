@@ -114,7 +114,6 @@
                             </span>
                         </td>
                     </tr>
-{#                    {% if report.flaw and report.type is same as constant('App\\Entity\\Enums\\ReportType::Camera') %}#}
                         <tr>
                             <th>Desperfecto:</th>
                             <td>
@@ -127,7 +126,6 @@
                                 {% endif %}
                             </td>
                         </tr>
-{#                    {% endif %}#}
                     <tr>
                         <th>Detalle:</th>
                         <td>{{ report.detail }}</td>
@@ -175,7 +173,6 @@
                 </tbody>
             </table>
         </div>
-        {#    {{ include('report/_delete_form.html.twig') }} #}
     {% endblock %}
 
     {% block card_footer %}

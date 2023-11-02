@@ -30,7 +30,39 @@
                     data-action-name="prevent|save()"
             >Crear conexion
             </button>
-        {% else %}
+        {% endif %}
+
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Simple') or connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveModem') %}
+            <button
+                    type="button"
+                    class="btn btn-primary btn-lg
+                    {% if camera is null %}
+                        disabled
+                    {% else %}
+                        {% if modem and port %}
+                            {% if modem.canAddCameraOrModem() == false %}
+                                disabled
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}"
+
+                    {% if camera is null %}
+                        disabled
+                    {% else %}
+                        {% if modem and port %}
+                            {% if modem.canAddCameraOrModem() == false %}
+                                disabled
+                            {% endif %}
+                        {% endif %}
+
+                    {% endif %}
+                    data-action="live#action"
+                    data-action-name="prevent|save()"
+            >Crear conexion
+            </button>
+        {% endif %}
+
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::Direct') %}
             <button
                     type="button"
                     class="btn btn-primary btn-lg
@@ -81,5 +113,58 @@
             >Crear conexion
             </button>
         {% endif %}
+
+        {% if connection is same as constant('App\\Entity\\Enums\\ConnectionType::SlaveSwitch') %}
+            <button
+                    type="button"
+                    class="btn btn-primary btn-lg
+                {% if camera is null %}
+                    disabled
+                {% else %}
+                    {% if port %}
+                        {% if port.getConnectionType() is not null %}
+                            disabled
+                        {% endif %}
+                    {% endif %}
+
+                    {% if modem %}
+                        {% if modem.masterModem is not null %}
+                            {% if modem.masterModem.port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
+                        {% else %}
+                            {% if modem.port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                {% endif %}"
+                    {% if camera is null %}
+                        disabled
+                    {% else %}
+                        {% if port %}
+                            {% if port.getConnectionType() is not null %}
+                                disabled
+                            {% endif %}
+                        {% endif%}
+
+                        {% if modem %}
+                            {% if modem.masterModem is not null %}
+                                {% if modem.masterModem.port.getConnectionType() is not null %}
+                                    disabled
+                                {% endif %}
+                            {% else %}
+                                {% if modem.port.getConnectionType() is not null %}
+                                    disabled
+                                {% endif %}
+                            {% endif %}
+                        {% endif %}
+                    {% endif %}
+                    data-action="live#action"
+                    data-action-name="prevent|save()"
+            >Crear conexion
+            </button>
+        {% endif %}
+
     </div>
 </div>

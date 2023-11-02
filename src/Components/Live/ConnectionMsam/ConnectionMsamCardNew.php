@@ -2,18 +2,12 @@
 
 namespace App\Components\Live\ConnectionMsam;
 
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentNewForm;
 use App\Entity\Card;
 use App\Entity\Enums\ConnectionType;
-use App\Entity\Modem;
 use App\Entity\Msam;
-use App\Entity\Port;
 use App\Form\CardType;
-use App\Form\MsamType;
 use App\Repository\CardRepository;
-use App\Repository\MsamRepository;
-use App\Repository\MunicipalityRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;

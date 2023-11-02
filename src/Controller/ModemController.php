@@ -4,9 +4,7 @@ namespace App\Controller;
 
 use App\Controller\Traits\MunicipalityTrait;
 use App\Entity\Modem;
-use App\Entity\Municipality;
 use App\Form\ModemType;
-use App\Repository\CameraRepository;
 use App\Repository\ModemRepository;
 use App\Service\CrudActionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -87,10 +85,6 @@ class ModemController extends AbstractController
             ? $request->request->all()['modem']['address']['province']
             : $modem->getMunicipality()->getProvince()->getId();
 
-//        $municipalityId = isset($postData['modem'])
-//            ? $request->request->all()['modem']['address']['municipality']
-//            : $modem->getMunicipality()->getId();
-
         $municipalityId = $this->findMunicipalityForExistEquipment($modem, $request, 'modem');
 
         $form = $this->createForm(ModemType::class, $modem, [
@@ -126,17 +120,6 @@ class ModemController extends AbstractController
             'title' => 'Editar modem'
         ]);
     }
-
-//    #[Route('/{id}', name: 'app_modem_delete', methods: ['POST'])]
-//    public function delete(Request $request, Modem $modem, EntityManagerInterface $entityManager): Response
-//    {
-//        if ($this->isCsrfTokenValid('delete'.$modem->getId(), $request->request->get('_token'))) {
-//            $entityManager->remove($modem);
-//            $entityManager->flush();
-//        }
-//
-//        return $this->redirectToRoute('app_modem_index', [], Response::HTTP_SEE_OTHER);
-//    }
 
     #[Route('/state', name: 'modem_state', methods: ['POST'])]
     public function state(Request $request, ModemRepository $modemRepository, CrudActionService $crudActionService): Response

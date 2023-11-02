@@ -41,7 +41,10 @@ class ConnectionCameraDetail
         $this->entity = Camera::class;
     }
 
-    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
+    /**
+     * cuando el componente ya esta montado pero se llama como si fuera la primera vez
+     * @return void
+     */
     public function __invoke(): void
     {
         $this->camera = null;
@@ -83,6 +86,10 @@ class ConnectionCameraDetail
         return static::CONNECT.'_'.$this->connection->name;
     }
 
+    /**
+     * @param Camera $entity
+     * @return void
+     */
     private function onConnectionCameraTableDetail(Camera $entity): void
     {
         if(isset($this->camera['id'])){
@@ -126,6 +133,10 @@ class ConnectionCameraDetail
         $this->onConnectionCameraTableDetail($entity);
     }
 
+    /**
+     * @param Camera $camera
+     * @return array
+     */
     private function details(Camera $camera): array
     {
         $cam = [];

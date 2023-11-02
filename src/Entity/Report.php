@@ -25,22 +25,16 @@ class Report
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
-//    #[Assert\NotBlank(message: 'El reporte debe de tener un número.')]
-//    #[Assert\NotNull(message: 'El número del reporte no puede ser nulo.')]
-//    #[Assert\Positive]
     private ?string $number = null;
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El reporte debe de tener una especialidad.')]
-//    #[Assert\NotNull(message: 'La especialidad del reporte no puede ser nulo.')]
     private string $specialty = 'videoproteccion';
 
     #[ORM\Column]
-//    #[Assert\DateTime]
     private ?DateTimeImmutable $entryDate = null;
 
     #[ORM\Column(nullable: true)]
-//    #[Assert\DateTime]
     private ?DateTimeImmutable $closeDate = null;
 
     #[ORM\Column(length: 255)]
@@ -80,7 +74,6 @@ class Report
 
     #[ORM\Column(length: 255)]
     #[Assert\NotBlank(message: 'El reporte debe de tener una unidad.')]
-//    #[Assert\NotNull(message: 'la unidad del reporte no puede ser nula.')]
     private string $unit = 'Unidad 1';
 
     #[ORM\ManyToOne]
@@ -197,11 +190,13 @@ class Report
 
     public function setInterruptionReason(InterruptionReason|string|null $interruptionReason): static
     {
-        if(is_string($interruptionReason)){
+        /*if(is_string($interruptionReason)){
             $this->interruptionReason = $interruptionReason;
         }else{
             $this->interruptionReason = $interruptionReason->value;
-        }
+        }*/
+
+        $this->interruptionReason = (is_string($interruptionReason)) ? $interruptionReason : $interruptionReason->value;
 
         return $this;
     }
@@ -237,11 +232,12 @@ class Report
 
     public function setFlaw(Flaw|string|null $flaw): static
     {
-        if(is_string($flaw)){
+        /*if(is_string($flaw)){
             $this->flaw = $flaw;
         }else{
             $this->flaw = $flaw->value;
-        }
+        }*/
+        $this->flaw = (is_string($flaw)) ? $flaw : $flaw->value;
 
         return $this;
     }

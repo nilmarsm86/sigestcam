@@ -34,31 +34,15 @@ class Equipment
     protected ?int $id = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    //#[Assert\NotBlank(message: 'El tipo no debe estar vacío.')]
-    //#[Assert\NotNull(message: 'El tipo no debe ser nulo.')]
     protected ?string $brand = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-//    #[Assert\When(
-//        expression: 'this.getClass() == "Camera" || this.getClass() == "Msam" || this.getClass() == "Server" || this.getClass() == "Commutator"',
-//        constraints: [
-//            new Assert\NotBlank(message: 'Establezca el IP del equipo.'),
-//            new Assert\NotNull(message: 'El IP del equipo no puede ser nulo.')
-//        ],
-//    )]
-//    #[Assert\Ip(message:'Establezca un IP válido.')]
     protected ?string $ip = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-//    #[Assert\NotBlank(message: 'La dirección física no debe estar vacía.')]
-//    #[Assert\NotNull(message: 'La dirección física no debe ser nula.')]
     protected ?string $physicalAddress = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    /*#[Assert\Regex(
-        pattern: '/^[a-zA-Z0-9_\-\.]+$/',
-        message: 'El número de serie físico solo debe contener letras, números, guiones y punto.',
-    )]*/
     protected ?string $physicalSerial = null;
 
     #[ORM\ManyToOne]
@@ -67,24 +51,12 @@ class Equipment
     protected ?Municipality $municipality = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    /*#[Assert\Regex(
-        pattern: '/^[a-zA-Z0-9_\-\.]+$/',
-        message: 'El número de inventario solo debe contener letras, números, guiones y punto.',
-    )]*/
     protected ?string $model = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    /*#[Assert\Regex(
-        pattern: '/^[a-zA-Z0-9_\-\.]+$/',
-        message: 'El número de inventario solo debe contener letras, números, guiones y punto.',
-    )]*/
     protected ?string $inventory = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    /*#[Assert\Regex(
-        pattern: '/^[a-zA-Z0-9_\-\.]+$/',
-        message: 'El contic solo debe contener letras, números, guiones y punto.',
-    )]*/
     protected ?string $contic = null;
 
     #[ORM\OneToOne(inversedBy: 'equipment', targetEntity: Port::class)]
@@ -226,7 +198,6 @@ class Equipment
     public function __toString(): string
     {
         $namespace = explode('\\', static::class);
-        //$className = $namespace[count($namespace) - 1];
         $data = $namespace[count($namespace) - 1];
         if(!is_null($this->getPhysicalSerial())){
             $data .= ': ('.$this->getPhysicalSerial().')';
@@ -251,7 +222,6 @@ class Equipment
     public function disconnect(): static
     {
         if(!is_null($this->port)){
-            //$this->port->getCommutator()?->disconnect();
             $this->port->setEquipment(null);
             if(!is_null($this->port->getConnectionType())){
                 $this->port->setConnectionType(ConnectionType::Null);

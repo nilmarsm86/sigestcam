@@ -22,26 +22,17 @@ class Commutator extends Equipment implements HarborInterface
 
     #[ORM\OneToMany(mappedBy: 'commutator', targetEntity:PortEntity::class, cascade: ['persist'])]
     #[ORM\OrderBy(['number' => 'ASC'])]
-    /*#[Assert\Count(
-        min: 1,
-        minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
-    )]*/
     private Collection $ports;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la cantidad de puertos.')]
-//    #[Assert\NotNull(message: 'La cantidad de puertos no debe ser nula.')]
     #[Assert\Positive]
     private ?int $portsAmount;
 
     #[ORM\Column(length: 255, nullable: true)]
-//    #[Assert\NotBlank(message: 'El IP gateway no debe estar vacío.')]
-//    #[Assert\NotNull(message: 'El IP gateway no debe ser nulo.')]
-//    #[Assert\Ip(message:'Establezca un IP gateway válido.')]
     private ?string $gateway = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    //#[Assert\NotBlank(message: 'La direccion multicast no debe estar vacía.')]
     private ?string $multicast = null;
 
     #[ORM\ManyToOne(targetEntity: self::class)]
@@ -59,7 +50,8 @@ class Commutator extends Equipment implements HarborInterface
     {
         parent::__construct();
         $this->ports = new ArrayCollection();
-        $this->ip = $ip;//validar que es un ip correcto
+        //TODO: validar que es un ip correcto
+        $this->ip = $ip;
         $this->portsAmount = $portsAmount;
         $this->enumState = State::Active;
         $this->maximumPortsAmount = $portsAmount;

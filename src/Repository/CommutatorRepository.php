@@ -7,7 +7,6 @@ use App\Entity\Enums\State;
 use App\Entity\Port;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
-use Doctrine\ORM\AbstractQuery;
 use Doctrine\ORM\QueryBuilder;
 use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
@@ -167,6 +166,14 @@ class CommutatorRepository extends ServiceEntityRepository
         $this->addFilter($builder, $filter);
         $query = $builder->orderBy('c.id', 'ASC')->getQuery();
         return $this->paginate($query, $page, $amountPerPage);
+    }
+
+    public function findAmountCommutators(): int
+    {
+        return $this->createQueryBuilder('c')
+            ->select('COUNT(c) as total')
+            ->getQuery()
+            ->getSingleScalarResult();
     }
 
 //    /**

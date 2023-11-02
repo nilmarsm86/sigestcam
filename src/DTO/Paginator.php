@@ -24,18 +24,30 @@ class Paginator
     {
     }
 
+    /**
+     * @param int $fake
+     * @return $this
+     */
     public function setFake(int $fake): static
     {
         $this->fake = $fake;
         return $this;
     }
 
+    /**
+     * @param int $amount
+     * @return $this
+     */
     public function setAmount(int $amount): static
     {
         $this->amount = $amount;
         return $this;
     }
 
+    /**
+     * @param int $page
+     * @return $this
+     */
     public function setPage(int $page): static
     {
         $this->page = $page;

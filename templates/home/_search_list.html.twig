@@ -5,18 +5,6 @@
 
     {% block card_title %}Equipos con IP: <strong>{{ app.request.query.get('filter') }}</strong>{% endblock %}
 
-{#    {% block card_header_options %}#}
-{#        <div>#}
-{#            <a class="btn btn-primary btn-sm active"#}
-{#               data-action="page#showFormContent"#}
-{#               href="{{ path('camera_new') }}"#}
-{#            >#}
-{#                <i class="fas fa-plus"></i>#}
-{#                Nuevo#}
-{#            </a>#}
-{#        </div>#}
-{#    {% endblock %}#}
-
     {% block card_body %}
         {% embed "embeds/table.html.twig" %}
             {% block table_head %}

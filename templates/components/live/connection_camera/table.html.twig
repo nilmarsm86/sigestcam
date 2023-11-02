@@ -1,21 +1,11 @@
 <div {{ attributes }} style="position: relative">
     {% if port is not null or modem is not null %}
         {% embed "embeds/async_table.html.twig" %}
-{#            {% block table_filter %}#}
-{#                {% if port.hasConnectedCamera() %}#}
-{#                    readonly#}
-{#                {% endif %}#}
-{#            {% endblock %}#}
-
             {% block table_head %}
                 <tr>
                     <th>Ip</th>
-{#                    <th>Número de inventario</th>#}
-{#                    <th>Dirección física</th>#}
                     <th>Marca</th>
                     <th>Modelo</th>
-{#                    <th>Contic</th>#}
-{#                    <th>Serie</th>#}
                     <th>Estado</th>
                     <th>Provincia</th>
                     <th>Municipio</th>
@@ -38,18 +28,13 @@
                         </td>
                         <td>{{ camera.municipality.province.name }}</td>
                         <td>{{ camera.municipality.name }}</td>
-
-{#                        <td>{{ camera.contic }}</td>#}
-{#                        <td>{{ camera.physicalSerial }}</td>#}
                         <td>
                             <button title="Detalle de la cámara"
                                     type="button"
                                     class="btn btn-primary btn-sm"
                                     aria-current="page"
-{#                                    {% if entityId is not same as camera.id %}#}
                                         data-action="live#action"
                                         data-action-name="prevent|detail(entityId={{ camera.id }})"
-{#                                    {% endif %}#}
                             >
                                 <i class="fas fa-eye"></i>
                             </button>

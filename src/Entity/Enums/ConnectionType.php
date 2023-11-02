@@ -16,6 +16,10 @@ enum ConnectionType: string
     case SlaveModem = '4';
     case Full = '5';
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){

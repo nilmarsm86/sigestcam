@@ -58,6 +58,10 @@ class ConnectionSave extends AbstractController
     {
     }
 
+    /**
+     * @param Camera $entity
+     * @return void
+     */
     public function onConnectionCameraTableDetail(Camera $entity): void
     {
         $this->camera = $entity;
@@ -86,7 +90,6 @@ class ConnectionSave extends AbstractController
     #[LiveListener(ConnectionCameraTable::DETAIL.'_SlaveModem')]
     public function onConnectionCameraTableDetailSlaveModem(#[LiveArg] Camera $entity): void
     {
-        //$this->onConnectionCameraTableDetail($entity);
         $this->modem = $entity->getModem();
         $this->onConnectionCameraTableDetail($entity);
         $this->port = $this->getRealEntity($this->modem?->getMasterModem()?->getPort());
@@ -138,6 +141,10 @@ class ConnectionSave extends AbstractController
         $this->onConnectionCameraTableChange();
     }
 
+    /**
+     * @return string
+     * @throws Exception
+     */
     protected function saveDirect(): string
     {
         if($this->port){
@@ -302,17 +309,6 @@ class ConnectionSave extends AbstractController
 
     protected function saveFull(): string
     {
-//        if($this->port){
-//            if(is_null($this->modem)){
-//                $this->camera->setPort($this->port);
-//
-//                if($this->port->isFromCommutator()){
-//                    $commutator = $this->port->getCommutator();
-//                    $this->camera->setMunicipality($commutator->getMunicipality());
-//                }
-//            }
-//        }
-
         if($this->modem){
             $this->camera->setModem($this->modem);
             if(!$this->modem->isActive()){
@@ -331,10 +327,6 @@ class ConnectionSave extends AbstractController
         }
 
         $this->entityManager->persist($this->camera);
-
-//        if(!$this->port){
-//            $this->port = $this->modem->getPort();
-//        }
 
         $this->port->setConnectionType($this->connection);
         if(!$this->port->isActive()){
@@ -360,63 +352,6 @@ class ConnectionSave extends AbstractController
         if(!$this->camera->isActive()){
             $this->camera->activate();
         }
-
-        /*if($this->port){
-            if(is_null($this->modem)){
-                $this->camera->setPort($this->port);
-
-                if($this->port->isFromCommutator()){
-                    $commutator = $this->port->getCommutator();
-                    $this->camera->setMunicipality($commutator->getMunicipality());
-                }
-            }
-        }
-
-        if($this->modem){
-            $this->camera->setModem($this->modem);
-            $port = $this->modem->getPort();
-            if($port->isFromCommutator()){
-                $commutator = $this->port->getCommutator();
-                $this->modem->setMunicipality($commutator->getMunicipality());
-                $this->camera->setMunicipality($commutator->getMunicipality());
-            }
-        }
-        $this->entityManager->persist($this->camera);
-
-        if($this->modem){
-            if(!$this->modem->isActive()){
-                $this->modem->activate();
-            }
-            $this->entityManager->persist($this->modem);
-        }
-
-        if(!$this->port){
-            $this->port = $this->modem->getPort();
-        }
-
-        $this->port->setConnectionType($this->connection);
-        if(!$this->port->isActive()){
-            $this->port->activate();
-        }
-        $this->entityManager->persist($this->port);
-
-        $commutator = $this->port->getCommutator();
-        if(!$commutator->isActive()){
-            $commutator->activate();
-        }
-        $this->entityManager->persist($commutator);
-
-        $this->entityManager->flush();
-
-        $this->addFlash('success', 'Se a registrado una nueva conexión '.ConnectionType::getLabelFrom($this->connection).' en el sistema.');
-
-        $redirect = match ($this->connection) {
-            ConnectionType::Direct => 'connection_direct_list',
-            ConnectionType::Simple => 'connection_simple_list',
-            ConnectionType::SlaveSwitch => '',
-            ConnectionType::SlaveModem => '',
-            ConnectionType::Full => '',
-        };*/
 
         $redirect = match ($this->connection) {
             ConnectionType::Direct => $this->saveDirect(),
@@ -575,6 +510,10 @@ class ConnectionSave extends AbstractController
         $this->port = $modem?->getPort();
     }
 
+    /**
+     * @param $proxy
+     * @return mixed|object|null
+     */
     public function getRealEntity($proxy)
     {
         if ($proxy instanceof \Doctrine\Persistence\Proxy) {

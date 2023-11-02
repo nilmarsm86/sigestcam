@@ -79,23 +79,6 @@ class MsamRepository extends ServiceEntityRepository
      * @param int $amountPerPage
      * @param int $page
      * @return Paginator Returns an array of User objects
-
-    public function findMsam(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
-    {
-        $builder = $this->createQueryBuilder('c')->select(['m', 'mun', 'pro'])
-            ->innerJoin('m.municipality', 'mun')
-            ->leftJoin('mun.province', 'pro');
-
-        $this->addFilter($builder, $filter);
-        $query = $builder->orderBy('m.id', 'ASC')->getQuery();
-        return $this->paginate($query, $page, $amountPerPage);
-    }*/
-
-    /**
-     * @param string $filter
-     * @param int $amountPerPage
-     * @param int $page
-     * @return Paginator Returns an array of User objects
      */
     public function findMsams(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {

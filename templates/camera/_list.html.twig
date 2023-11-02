@@ -25,10 +25,7 @@
                     <th>Marca</th>
                     <th>Model</th>
                     <th>Núm. serie</th>
-{#                    <th>Inventory</th>#}
-{#                    <th>Contic</th>#}
                     <th>Estado</th>
-{#                    <th>ElectronicSerial</th>#}
                     <th>Provincia</th>
                     <th>Municipio</th>
                     <th></th>
@@ -42,8 +39,6 @@
                         <td>{{ camera.brand }}</td>
                         <td>{{ camera.model }}</td>
                         <td>{{ camera.physicalSerial }}</td>
-{#                        <td>{{ camera.inventory }}</td>#}
-{#                        <td>{{ camera.contic }}</td>#}
                         <td>
                             {% if camera.isActive() %}
                             <a href="{{ path('camera_state') }}"
@@ -77,7 +72,6 @@
                                 {{ camera.municipality }}
                             </a>
                         </td>
-{#                        <td>{{ camera.electronicSerial }}</td>#}
                         <td>
                             <a class="btn btn-sm btn-primary" title="Detalle de la cámara"
                                href="{{ path('camera_show', {'id': camera.id}) }}"

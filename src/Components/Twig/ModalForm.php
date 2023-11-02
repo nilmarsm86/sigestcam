@@ -2,7 +2,6 @@
 
 namespace App\Components\Twig;
 
-
 use Symfony\UX\TwigComponent\Attribute\AsTwigComponent;
 
 #[AsTwigComponent(template: 'components/twig/modal_form.html.twig')]

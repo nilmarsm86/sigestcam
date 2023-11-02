@@ -8,6 +8,10 @@ use Symfony\UX\TwigComponent\Event\PreRenderEvent;
 
 class ComponentPreRenderSubscriber implements EventSubscriberInterface
 {
+    /**
+     * @param PreRenderEvent $event
+     * @return void
+     */
     public function onPreRender(PreRenderEvent $event): void
     {
         if($event->getComponent() instanceof ConnectionDetailEditInline){
@@ -15,6 +19,9 @@ class ComponentPreRenderSubscriber implements EventSubscriberInterface
         }
     }
 
+    /**
+     * @return string[]
+     */
     public static function getSubscribedEvents(): array
     {
         return [PreRenderEvent::class => 'onPreRender'];

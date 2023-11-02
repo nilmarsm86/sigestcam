@@ -27,13 +27,11 @@ class Port
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca el número del puerto.')]
-//    #[Assert\NotNull(message: 'El número del puerto no puede ser nulo.')]
     #[Assert\PositiveOrZero]
     private ?int $number = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la velocidad del puerto.')]
-//    #[Assert\NotNull(message: 'La velocidad del puerto no puede ser nula.')]
     #[Assert\PositiveOrZero]
     private float $speed;
 
@@ -156,13 +154,9 @@ class Port
      */
     public function setEquipment(?Equipment $equipment): static
     {
-        if(!$equipment instanceof Modem){
+        if(!$equipment instanceof Modem && $this->isFromCard()){
             throw new Exception('Only modems can be connected directly to the card ports.');
         }
-
-//        if (!is_null($equipment) && $this->isFromCard() && !$this->hasConnectedModem()) {
-//
-//        }
 
         $this->equipment = $equipment;
 
@@ -261,7 +255,7 @@ class Port
         if (!is_null($this->getEquipment())) {
             //si el puerto tiene conectado algun equipo, ese equipo debe pasarce a otro puerto libre
             $port->setEquipment($this->getEquipment());
-            //debo quitar el equipo de este puerto
+            //TODO: debo quitar el equipo de este puerto
             $this->setEquipment(null);
         }
 

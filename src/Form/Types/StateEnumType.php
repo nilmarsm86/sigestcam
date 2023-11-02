@@ -17,7 +17,6 @@ class StateEnumType extends AbstractType
             ->setDefault('choices', static fn (Options $options): array => $options['class']::cases())
             ->setDefault('choice_label', State::getLabel())
             ->setDefault('choice_value', State::getValue())
-            //->setDefault('placeholder', '-Seleccione-')
         ;
     }
 

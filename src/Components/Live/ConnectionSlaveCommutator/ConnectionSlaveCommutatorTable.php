@@ -2,9 +2,7 @@
 
 namespace App\Components\Live\ConnectionSlaveCommutator;
 
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorNew;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
-use App\Components\Live\Traits\ComponentTable;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Port;
@@ -13,14 +11,11 @@ use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
 use Symfony\UX\LiveComponent\ComponentToolsTrait;
-use Symfony\UX\LiveComponent\DefaultActionTrait;
 
 #[AsLiveComponent(template: 'components/live/connection_slave_commutator/table.html.twig')]
 class ConnectionSlaveCommutatorTable extends ConnectionCommutatorTable
 {
-//    use DefaultActionTrait;
     use ComponentToolsTrait;
-//    use ComponentTable;
 
     const CHANGE = self::class.'_change';
     const DETAIL = self::class.'_detail';
@@ -31,7 +26,13 @@ class ConnectionSlaveCommutatorTable extends ConnectionCommutatorTable
     #[LiveProp(updateFromParent: true)]
     public bool $inactive = false;
 
-    //cuando se monta por primera vez el componete
+    /**
+     * cuando se monta por primera vez el componete
+     * @param ConnectionType|null $connection
+     * @param Port|null $masterPort
+     * @param bool $inactive
+     * @return void
+     */
     public function mount(ConnectionType $connection = null, Port $masterPort = null, bool $inactive = false): void
     {
         $this->connection = $connection;
@@ -40,7 +41,10 @@ class ConnectionSlaveCommutatorTable extends ConnectionCommutatorTable
         $this->filterAndReload();
     }
 
-    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
+    /**
+     * cuando el componente ya esta montado pero se llama como si fuera la primera vez
+     * @return void
+     */
     public function __invoke(): void
     {
         $this->page = 1;
@@ -50,6 +54,9 @@ class ConnectionSlaveCommutatorTable extends ConnectionCommutatorTable
         }
     }
 
+    /**
+     * @return void
+     */
     protected function filterAndReload(): void
     {
         $this->entityId = null;
@@ -57,13 +64,16 @@ class ConnectionSlaveCommutatorTable extends ConnectionCommutatorTable
         $this->reload();
     }
 
+    /**
+     * @return void
+     */
     protected function reload()
     {
         if(is_null($this->filter)){
             $this->filter = '';
         }
 
-        //cambiar la forma en la que se buscan los datos
+        //TODO: cambiar la forma en la que se buscan los datos
         if($this->masterPort->hasConnectedCommutator()){
             $data = $this->commutatorRepository->findByPort($this->masterPort, $this->filter, $this->amount, $this->page);
         }else{

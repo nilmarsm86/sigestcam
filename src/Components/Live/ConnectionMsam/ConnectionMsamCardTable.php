@@ -2,26 +2,15 @@
 
 namespace App\Components\Live\ConnectionMsam;
 
-use App\Components\Live\ConnectionCamera\ConnectionCameraDetail;
-use App\Components\Live\ConnectionCamera\ConnectionCameraNew;
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorDetail;
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\ConnectionDetailEditInline;
-use App\Components\Live\Traits\ComponentActiveInactive;
 use App\Components\Live\Traits\ComponentTable;
-use App\Entity\Camera;
 use App\Entity\Card;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
-use App\Entity\Enums\PortType;
 use App\Entity\Msam;
-use App\Entity\Port;
 use App\Repository\CardRepository;
-use App\Repository\MsamRepository;
 use App\Repository\PortRepository;
-use Doctrine\ORM\EntityManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
-use Symfony\UX\LiveComponent\Attribute\LiveAction;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
 use Symfony\UX\LiveComponent\Attribute\LiveListener;
 use Symfony\UX\LiveComponent\Attribute\LiveProp;
@@ -53,14 +42,21 @@ class ConnectionMsamCardTable
     public function __construct(protected readonly CardRepository $cardRepository, protected readonly PortRepository $portRepository)
     {}
 
-    //cuando se monta por primera vez el componete
+    /**
+     * cuando se monta por primera vez el componete
+     * @param ConnectionType $connection
+     * @return void
+     */
     public function mount(ConnectionType $connection): void
     {
         $this->connection = $connection;
         $this->filterAndReload();
     }
 
-    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
+    /**
+     * cuando el componente ya esta montado pero se llama como si fuera la primera vez
+     * @return void
+     */
     public function __invoke(): void
     {
         $this->page = 1;
@@ -71,7 +67,6 @@ class ConnectionMsamCardTable
     protected function filterAndReload(): void
     {
         $this->entityId = null;
-//        $this->filter = ($this->port->hasConnectedMsam()) ? $this->port->getEquipment()->getPhysicalSerial() : '';
         $this->filter = '';
         $this->reload();
     }
@@ -92,7 +87,10 @@ class ConnectionMsamCardTable
         $this->setPortsAmount();
     }
 
-    //mejorar
+    /**
+     * TODO: mejorar
+     * @return void
+     */
     protected function setPortsAmount()
     {
         for($i=0;$i<count($this->data);$i++){
@@ -105,16 +103,16 @@ class ConnectionMsamCardTable
      * @param Commutator $commutator
      * @return void
      */
-    protected function onConnectionMsamNewFormSuccess(Msam $msam): void
+    protected function onConnectionMsamNewFormSuccess(Card $card): void
     {
-        $this->filter = $msam->getPhysicalSerial();//filtrar por numero de serie
+        $this->filter = '';//filtrar por numero de serie
         $this->changeFilter();
     }
 
-    #[LiveListener(ConnectionMsamNew::FORM_SUCCESS.'_Full')]
-    public function onConnectionMsamNewFormSuccessFull(#[LiveArg] Msam $msam): void
+    #[LiveListener(ConnectionMsamCardNew::FORM_SUCCESS.'_Full')]
+    public function onConnectionMsamCardNewFormSuccessFull(#[LiveArg] Card $card): void
     {
-        $this->onConnectionMsamNewFormSuccess($msam);
+        $this->onConnectionMsamNewFormSuccess($card);
     }
 
     /**
@@ -146,6 +144,9 @@ class ConnectionMsamCardTable
         $this->onConnectionMsamDetailEditInlineSave();
     }
 
+    /**
+     * @return void
+     */
     public function onConnectionMsamDetailActivate(): void
     {
         $this->reload();
@@ -157,6 +158,9 @@ class ConnectionMsamCardTable
         $this->onConnectionMsamDetailActivate();
     }
 
+    /**
+     * @return void
+     */
     public function onConnectionMsamDetailDeactivate(): void
     {
         $this->reload();

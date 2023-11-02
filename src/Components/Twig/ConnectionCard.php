@@ -2,7 +2,6 @@
 
 namespace App\Components\Twig;
 
-
 use App\Entity\Enums\ConnectionType;
 use App\Repository\PortRepository;
 use Doctrine\ORM\NonUniqueResultException;

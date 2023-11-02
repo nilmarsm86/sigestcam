@@ -40,7 +40,12 @@ class ConnectionMsamTable
     {
     }
 
-    //cuando se monta por primera vez el componete
+    /**
+     * cuando se monta por primera vez el componete
+     * @param ConnectionType $connection
+     * @param Port $port
+     * @return void
+     */
     public function mount(ConnectionType $connection, Port $port): void
     {
         $this->connection = $connection;
@@ -48,13 +53,19 @@ class ConnectionMsamTable
         $this->filterAndReload();
     }
 
-    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
+    /**
+     * cuando el componente ya esta montado pero se llama como si fuera la primera vez
+     * @return void
+     */
     public function __invoke(): void
     {
         $this->page = 1;
         $this->filterAndReload();
     }
 
+    /**
+     * @return void
+     */
     protected function filterAndReload(): void
     {
         $this->entityId = null;
@@ -62,6 +73,9 @@ class ConnectionMsamTable
         $this->reload();
     }
 
+    /**
+     * @return void
+     */
     protected function reload(): void
     {
         if(is_null($this->filter)){
@@ -78,7 +92,12 @@ class ConnectionMsamTable
         $this->setCardsAmount();
     }
 
-    //mejorar
+    /**
+     * TODO: mejorar
+     * @return void
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     protected function setCardsAmount()
     {
         for($i=0;$i<count($this->data);$i++){
@@ -88,7 +107,7 @@ class ConnectionMsamTable
 
     /**
      * When save new commutator table filer by it
-     * @param Commutator $commutator
+     * @param Msam $msam
      * @return void
      */
     protected function onConnectionMsamNewFormSuccess(Msam $msam): void

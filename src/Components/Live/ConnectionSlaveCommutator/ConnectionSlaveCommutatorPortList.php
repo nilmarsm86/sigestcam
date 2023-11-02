@@ -3,8 +3,6 @@
 namespace App\Components\Live\ConnectionSlaveCommutator;
 
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
-use App\Components\Live\Traits\ComponentActiveInactive;
 use App\Entity\Commutator;
 use App\Entity\Port;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
@@ -17,8 +15,6 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 #[AsLiveComponent(template: 'components/live/connection_slave_commutator/port_list.html.twig')]
 class ConnectionSlaveCommutatorPortList extends ConnectionCommutatorPortList
 {
-//    use DefaultActionTrait;
-//    use ComponentActiveInactive;
     use ComponentToolsTrait;
 
     const DEACTIVATE = self::class.'_deactivate';

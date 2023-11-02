@@ -12,11 +12,18 @@ trait ConnectedTrait
     #[Assert\Valid]
     private ?StructuredCable $structuredCable = null;
 
+    /**
+     * @return StructuredCable|null
+     */
     public function getStructuredCable(): ?StructuredCable
     {
         return $this->structuredCable;
     }
 
+    /**
+     * @param StructuredCable $structuredCable
+     * @return $this
+     */
     public function setStructuredCable(StructuredCable $structuredCable): static
     {
         $this->structuredCable = $structuredCable;

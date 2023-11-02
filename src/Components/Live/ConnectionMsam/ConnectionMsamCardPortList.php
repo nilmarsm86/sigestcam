@@ -2,12 +2,7 @@
 
 namespace App\Components\Live\ConnectionMsam;
 
-use App\Components\Live\ConnectionCamera\ConnectionCameraDetail;
-use App\Components\Live\ConnectionCamera\ConnectionCameraNew;
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorDetail;
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentActiveInactive;
-use App\Entity\Camera;
 use App\Entity\Card;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;

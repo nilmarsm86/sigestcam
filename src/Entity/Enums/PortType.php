@@ -13,6 +13,10 @@ enum PortType: string
     case Electric = '1';
     case Optic = '0';
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){
@@ -26,6 +30,10 @@ enum PortType: string
         };
     }
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getValueFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){

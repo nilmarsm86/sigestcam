@@ -6,7 +6,6 @@ use App\Components\Live\Traits\ComponentActiveInactive;
 use App\Entity\Card;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
-use App\Entity\Modem;
 use App\Entity\Msam;
 use App\Entity\Port;
 use Doctrine\ORM\EntityManagerInterface;
@@ -44,7 +43,10 @@ class ConnectionMsamDetail
         $this->entity = Msam::class;
     }
 
-    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
+    /**
+     * TODO: cuando el componente ya esta montado pero se llama como si fuera la primera vez
+     * @return void
+     */
     public function __invoke(): void
     {
         $this->msam = null;
@@ -86,6 +88,10 @@ class ConnectionMsamDetail
         return static::DISCONNECT.'_'.$this->connection->name;
     }
 
+    /**
+     * @param Msam $entity
+     * @return void
+     */
     protected function onConnectionMsamTableDetail(#[LiveArg] Msam $entity): void
     {
         if(isset($this->msam['id'])){
@@ -105,12 +111,14 @@ class ConnectionMsamDetail
         $this->onConnectionMsamTableDetail($entity);
     }
 
+    /**
+     * @param Msam $msam
+     * @return array
+     */
     protected function details(Msam $msam): array
     {
         $switch = [];
         $switch['id'] = $msam->getId();
-        //$switch['ip'] = $commutator->getIp();
-        //$switch['gateway'] = $commutator->getGateway();
         $switch['inventary'] = $msam->getInventory();
         $switch['physical_address'] = $msam->getPhysicalAddress();
         $switch['brand'] = $msam->getBrand();
@@ -119,10 +127,8 @@ class ConnectionMsamDetail
         $switch['serial'] = $msam->getPhysicalSerial();
         $switch['province'] = (string) $msam->getMunicipality()->getProvince();
         $switch['municipality'] = (string) $msam->getMunicipality();
-        //$switch['ports'] = $this->portsInfo($commutator);
         $switch['cards'] = $this->cardsInfo($msam);
         $switch['state'] = $msam->isActive();
-        //$switch['multicast'] = $commutator->getMulticast();
 
         return $switch;
     }
@@ -142,6 +148,10 @@ class ConnectionMsamDetail
         return $cards;
     }
 
+    /**
+     * @param Card $card
+     * @return array
+     */
     protected function cardData(Card $card): array
     {
         $data = [];

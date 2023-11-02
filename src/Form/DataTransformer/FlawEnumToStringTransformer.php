@@ -16,8 +16,8 @@ class FlawEnumToStringTransformer implements DataTransformerInterface
     /**
      * Transforms an object (issue) to a string (number).
      *
-     * @param $equipment
-     * @return string
+     * @param $flaw
+     * @return Flaw|string|null
      */
     public function transform($flaw): Flaw|string|null
     {
@@ -31,7 +31,6 @@ class FlawEnumToStringTransformer implements DataTransformerInterface
 
         if(is_string($flaw)){
             return Flaw::tryFrom($flaw);
-            //return $flaw;
         }
 
         return $flaw->value;
@@ -40,7 +39,7 @@ class FlawEnumToStringTransformer implements DataTransformerInterface
     /**
      * Transforms a string (number) to an object (issue).
      *
-     * @param $id
+     * @param $value
      * @return Equipment|null
      */
     public function reverseTransform($value): ?Flaw

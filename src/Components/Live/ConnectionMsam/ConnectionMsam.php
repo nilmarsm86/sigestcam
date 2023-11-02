@@ -6,7 +6,6 @@ use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
-use App\Entity\Msam;
 use App\Entity\Port;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveArg;
@@ -19,9 +18,6 @@ class ConnectionMsam
 {
     use DefaultActionTrait;
 
-//    #[LiveProp]
-//    public ?Msam $msam = null;
-
     #[LiveProp]
     public ?Port $port = null;
 
@@ -31,6 +27,10 @@ class ConnectionMsam
     #[LiveProp(writable: true)]
     public ?ConnectionType $connection = null;
 
+    /**
+     * @param Port|null $port
+     * @return void
+     */
     protected function onConnectionCommutatorPortListSelected(?Port $port): void
     {
         $this->commutator = null;
@@ -44,6 +44,10 @@ class ConnectionMsam
         $this->onConnectionCommutatorPortListSelected($port);
     }
 
+    /**
+     * @param Commutator $entity
+     * @return void
+     */
     public function onConnectionCommutatorTableDetail(Commutator $entity): void
     {
         $this->commutator = $entity;

@@ -8,7 +8,6 @@ use App\Entity\Enums\ConnectionType;
 use App\Entity\Enums\State;
 use App\Entity\Modem;
 use App\Entity\Port;
-use App\Entity\Traits\StateTrait;
 use App\Repository\Traits\PaginateTarit;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\ORM\NonUniqueResultException;
@@ -250,7 +249,9 @@ class CameraRepository extends ServiceEntityRepository
             ->setParameter(':connectionType', ConnectionType::Direct)
             ->innerJoin('p.commutator', 'comm')
             ->innerJoin('c.municipality', 'mun')
-            ->leftJoin('mun.province', 'pro');
+            ->leftJoin('mun.province', 'pro')
+            ->andWhere('c.state = :state')
+            ->setParameter(':state', State::Active);
 
         if($filter){
             $predicate = "c.brand LIKE :filter ";
@@ -275,14 +276,15 @@ class CameraRepository extends ServiceEntityRepository
     public function findBySimpleConnection(string $filter = '', int $amountPerPage = 10, int $page = 1): Paginator
     {
         $builder = $this->createQueryBuilder('c')->select(['c', 'modem', 'p', 'comm', 'mun', 'pro']);
-        //$builder->innerJoin('c.port', 'p')
         $builder->innerJoin('c.modem', 'modem')
             ->innerJoin('modem.port', 'p')
             ->where('p.connectionType = :connectionType')
             ->setParameter(':connectionType', ConnectionType::Simple)
             ->innerJoin('p.commutator', 'comm')
             ->innerJoin('c.municipality', 'mun')
-            ->leftJoin('mun.province', 'pro');
+            ->leftJoin('mun.province', 'pro')
+            ->andWhere('c.state = :state')
+            ->setParameter(':state', State::Active);
 
         if($filter){
             $predicate = "c.brand LIKE :filter ";
@@ -315,7 +317,9 @@ class CameraRepository extends ServiceEntityRepository
             ->innerJoin('slaveCommutator.port', 'masterPort')
             ->innerJoin('masterPort.commutator', 'masterCommutator')
             ->innerJoin('c.municipality', 'mun')
-            ->leftJoin('mun.province', 'pro');
+            ->leftJoin('mun.province', 'pro')
+            ->andWhere('c.state = :state')
+            ->setParameter(':state', State::Active);
 
         if($filter){
             $predicate = "c.brand LIKE :filter ";
@@ -348,7 +352,9 @@ class CameraRepository extends ServiceEntityRepository
             ->innerJoin('c.municipality', 'mun')
             ->leftJoin('mun.province', 'pro')
             ->where('port.connectionType = :connectionType')
-            ->setParameter(':connectionType', ConnectionType::SlaveModem);
+            ->setParameter(':connectionType', ConnectionType::SlaveModem)
+            ->andWhere('c.state = :state')
+            ->setParameter(':state', State::Active);
 
         if($filter){
             $predicate = "c.brand LIKE :filter ";
@@ -384,7 +390,9 @@ class CameraRepository extends ServiceEntityRepository
             ->setParameter(':connectionType', ConnectionType::Full)
             ->innerJoin('p.commutator', 'comm')
             ->innerJoin('c.municipality', 'mun')
-            ->leftJoin('mun.province', 'pro');
+            ->leftJoin('mun.province', 'pro')
+            ->andWhere('c.state = :state')
+            ->setParameter(':state', State::Active);
 
         if($filter){
             $predicate = "c.brand LIKE :filter ";

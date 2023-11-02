@@ -4,7 +4,6 @@ namespace App\Components\Live\ConnectionModem;
 
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentNewForm;
-use App\Entity\Camera;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
 use App\Entity\Port;

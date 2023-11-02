@@ -23,5 +23,4 @@ class ConnectionList
 
     #[LiveProp]
     public ?string $filter = '';
-
 }

@@ -6,10 +6,8 @@ use App\Entity\Card;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Port;
 use Doctrine\Common\Collections\Collection;
-use Doctrine\ORM\Mapping as ORM;
 use App\Entity\Port as PortEntity;
 use Exception;
-use Symfony\Component\Validator\Constraints as Assert;
 
 trait PortTrait
 {

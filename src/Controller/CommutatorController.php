@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Controller\Traits\MunicipalityTrait;
 use App\Entity\Commutator;
 use App\Entity\Enums\PortType;
-use App\Entity\Municipality;
 use App\Form\CommutatorType;
 use App\Repository\CommutatorRepository;
 use App\Service\CrudActionService;
@@ -124,17 +123,6 @@ class CommutatorController extends AbstractController
             'title' => 'Editar switch'
         ]);
     }
-
-//    #[Route('/{id}', name: 'app_crud_commutator_delete', methods: ['POST'])]
-//    public function delete(Request $request, Commutator $commutator, EntityManagerInterface $entityManager): Response
-//    {
-//        if ($this->isCsrfTokenValid('delete'.$commutator->getId(), $request->request->get('_token'))) {
-//            $entityManager->remove($commutator);
-//            $entityManager->flush();
-//        }
-//
-//        return $this->redirectToRoute('commutator_index', [], Response::HTTP_SEE_OTHER);
-//    }
 
     #[Route('/state', name: 'commutator_state', methods: ['POST'])]
     public function state(Request $request, CommutatorRepository $commutatorRepository, CrudActionService $crudActionService): Response

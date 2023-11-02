@@ -16,6 +16,10 @@ enum Aim: string
     case Border = '3';
     case Tuition = '4';
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){

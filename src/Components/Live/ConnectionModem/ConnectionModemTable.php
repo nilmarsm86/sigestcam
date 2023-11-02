@@ -42,14 +42,16 @@ class ConnectionModemTable
     #[LiveProp(updateFromParent: true)]
     public ?Commutator $commutator = null;
 
-//    #[LiveProp(updateFromParent: true)]
-//    public bool $inactives = false;
-
     public function __construct(protected readonly ModemRepository $modemRepository, protected CameraRepository $cameraRepository)
     {
     }
 
-    //cuando se monta por primera vez el componete
+    /**
+     * cuando se monta por primera vez el componete
+     * @param ConnectionType $connection
+     * @param Port $port
+     * @return void
+     */
     public function mount(ConnectionType $connection, Port $port): void
     {
         $this->connection = $connection;
@@ -57,7 +59,10 @@ class ConnectionModemTable
         $this->filterAndReload();
     }
 
-    //cuando el componente ya esta montado pero se llama como si fuera la primera vez
+    /**
+     * cuando el componente ya esta montado pero se llama como si fuera la primera vez
+     * @return void
+     */
     public function __invoke(): void
     {
         $this->page = 1;
@@ -77,20 +82,13 @@ class ConnectionModemTable
             $this->filter = '';
         }
 
-//        if($this->inactives === false){
-            //cambiar la forma en la que se buscan los datos
-            if($this->port->hasConnectedModem()){
-                $data = $this->modemRepository->findModemByPort($this->port, $this->filter, $this->amount, $this->page);
-            }else{
-                $data = $this->modemRepository->findInactiveModemsWithoutPort($this->filter, $this->amount, $this->page);
-            }
-//        }else{
-//            if($this->port->hasConnectedModem()){
-//                $data = $this->modemRepository->findModemByPort($this->port, $this->filter, $this->amount, $this->page);
-//            }else{
-//                $data = $this->modemRepository->findInactiveModemsWithoutPort($this->filter, $this->amount, $this->page);
-//            }
-//        }
+        //cambiar la forma en la que se buscan los datos
+        if($this->port->hasConnectedModem()){
+            $data = $this->modemRepository->findModemByPort($this->port, $this->filter, $this->amount, $this->page);
+        }else{
+            $data = $this->modemRepository->findInactiveModemsWithoutPort($this->filter, $this->amount, $this->page);
+        }
+
         $this->reloadData($data);
         $this->setCamerasAmount();
         if($this->connection->name === ConnectionType::SlaveModem->name){
@@ -98,8 +96,12 @@ class ConnectionModemTable
         }
 
     }
-
-    //mejorar
+    /**
+     * TODO: mejorar
+     * @return void
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     protected function setCamerasAmount()
     {
         for($i=0;$i<count($this->data);$i++){
@@ -107,7 +109,12 @@ class ConnectionModemTable
         }
     }
 
-    //mejorar
+    /**
+     * TODO: mejorar
+     * @return void
+     * @throws \Doctrine\ORM\NoResultException
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     */
     protected function setModemsAmount()
     {
         for($i=0;$i<count($this->data);$i++){
@@ -186,6 +193,9 @@ class ConnectionModemTable
         $this->onConnectionDetailEditInlineSaveModem();
     }
 
+    /**
+     * @return void
+     */
     public function onConnectionModemDetailActivate(): void
     {
         $this->reload();
@@ -220,6 +230,10 @@ class ConnectionModemTable
         $this->onConnectionModemDetailDeactivate();
     }
 
+    /**
+     * @param Modem $modem
+     * @return void
+     */
     public function onConnectionCameraDetailDisconnect(Modem $modem): void
     {
         //TODO que hacer cuando se desconecta una camara de un modem
@@ -238,6 +252,10 @@ class ConnectionModemTable
         $this->onConnectionCameraDetailDisconnect($modem);
     }
 
+    /**
+     * @param Modem $modem
+     * @return void
+     */
     public function onConnectionCameraDetailConnect(Modem $modem): void
     {
         //TODO que hacer cuando se conecta una camara de un modem

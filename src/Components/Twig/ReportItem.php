@@ -2,9 +2,7 @@
 
 namespace App\Components\Twig;
 
-use App\Entity\Enums\ConnectionType;
 use App\Entity\Enums\ReportType;
-use App\Repository\PortRepository;
 use App\Repository\ReportRepository;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
@@ -19,7 +17,6 @@ final class ReportItem
     public string $icon;
     public string $color;
     public ReportType $reportType;
-//    public array $options = [];
 
     public function __construct(private readonly ReportRepository $reportRepository)
     {

@@ -8,7 +8,6 @@ use App\Entity\Enums\Priority;
 use App\Entity\Enums\ReportState;
 use App\Entity\Report;
 use App\Form\ReportType;
-use App\Form\Types\PriorityEnumType;
 use App\Repository\ReportRepository;
 use App\Service\CrudActionService;
 use Doctrine\ORM\EntityManagerInterface;
@@ -54,9 +53,9 @@ class ReportController extends AbstractController
         $form = $this->createForm(ReportType::class, $report,[
             'action' => $this->generateUrl('report_new'),
             'equipment' => (int) $request->query->get('equipment')
-            //deberia pasar el rol auenticado y ponerlo en un campo oculto,
-            //de esta forma puedo validar que el rol autenticado tiene los permisos correspondientes
-            //sino muestro mensaje de error en el formulario
+            //TODO: deberia pasar el rol auenticado y ponerlo en un campo oculto,
+            //TODO: de esta forma puedo validar que el rol autenticado tiene los permisos correspondientes
+            //TODO: sino muestro mensaje de error en el formulario
         ]);
         $form->handleRequest($request);
 
@@ -75,7 +74,7 @@ class ReportController extends AbstractController
             }
 
             $this->addFlash('success', 'Se ha creado el reporte con el número '.$report->getNumber());
-            return $this->redirectToRoute('app_report_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('report_index', [], Response::HTTP_SEE_OTHER);
         }
 
         if($request->isXmlHttpRequest()){
@@ -157,6 +156,6 @@ class ReportController extends AbstractController
             $entityManager->flush();
         }
 
-        return $this->redirectToRoute('app_report_index', [], Response::HTTP_SEE_OTHER);
+        return $this->redirectToRoute('report_index', [], Response::HTTP_SEE_OTHER);
     }
 }

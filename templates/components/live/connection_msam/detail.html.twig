@@ -14,25 +14,6 @@
                 <p class="text-white m-0 fw-bold">Detalles:</p>
                 <div class="row">
                     <div class="btn-group btn-group-sm" role="group" aria-label="Basic example">
-{#                        <!-- BOTON DE DESCONETAR -->#}
-{#                        <input#}
-{#                                type="checkbox"#}
-{#                                class="btn-check btn-primary"#}
-{#                                id="modem_connect{{ modem.id }}"#}
-{#                                autocomplete="off"#}
-{#                                {% if msam.disconnected == false %}checked{% endif %}#}
-{#                                data-action="change->live#action"#}
-{#                                {% if msam.disconnected == false %}#}
-{#                                    data-action-name="disconnect(modem={{ msam.id }})"#}
-{#                                {% else %}#}
-{#                                    data-action-name="connect(modem={{ msam.id }})"#}
-{#                                {% endif %}#}
-{#                        >#}
-{#                        <label class="btn btn-primary" for="modem_connect{{ modem.id }}" title="Conectar / Desconectar">#}
-{#                            <i class="fas fa-plug text-white"></i>#}
-{#                        </label>#}
-{#                        <!-- BOTON DE DESCONETAR -->#}
-
                         <!-- BOTON DE DESACTIVAR -->
                         <input
                                 type="checkbox"
@@ -60,47 +41,6 @@
             </div>
 
             {# no es necesario usar updateFromParent, en el data, pues se pasa el data-live-id y esto lleva a que el componente se construya completo #}
-{#            {{ component('ConnectionDetailEditInline', {#}
-{#                label: 'IP:',#}
-{#                data: commutator.ip,#}
-{#                id: commutator.id,#}
-{#                setter: 'setIp',#}
-{#                connection: connection,#}
-{#                constraints: [#}
-{#                    {'class': 'NotBlank', 'options': {message:'Establezca el IP del equipo.'}},#}
-{#                    {'class': 'Ip', 'options': {message:'Establezca un IP válido.'}}#}
-{#                ],#}
-{#                'data-live-id': 'commutator-ip-'~ commutator.id,#}
-{#                entity: 'App\\Entity\\Commutator',#}
-{#                template: 'components/live/connection_commutator/edit_inline.html.twig'#}
-{#            }) }}#}
-
-{#            {{ component('ConnectionDetailEditInline', {#}
-{#                label: 'Puerta de enlace:',#}
-{#                data: commutator.gateway,#}
-{#                id: commutator.id,#}
-{#                setter: 'setGateway',#}
-{#                connection: connection,#}
-{#                constraints: [#}
-{#                    {'class': 'NotBlank', 'options': {message:'Establezca el IP gateway del equipo.'}},#}
-{#                    {'class': 'Ip', 'options': {message:'Establezca un IP gateway válido.'}}#}
-{#                ],#}
-{#                'data-live-id': 'commutator-gateway-'~ commutator.id,#}
-{#                entity: 'App\\Entity\\Commutator',#}
-{#                template: 'components/live/connection_commutator/edit_inline.html.twig'#}
-{#            }) }}#}
-
-{#            {{ component('ConnectionDetailEditInline', {#}
-{#                label: 'Dirección multicast:',#}
-{#                data: commutator.multicast,#}
-{#                id: commutator.id,#}
-{#                setter: 'setMulticast',#}
-{#                connection: connection,#}
-{#                'data-live-id': 'commutator-multicast-'~ commutator.id,#}
-{#                entity: 'App\\Entity\\Commutator',#}
-{#                template: 'components/live/connection_commutator/edit_inline.html.twig'#}
-{#            }) }}#}
-
             {{ component('ConnectionDetailEditInline', {
                 label: 'Inventario:',
                 data: msam.inventary,

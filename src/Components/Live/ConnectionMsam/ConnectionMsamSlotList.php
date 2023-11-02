@@ -2,19 +2,10 @@
 
 namespace App\Components\Live\ConnectionMsam;
 
-use App\Components\Live\ConnectionCamera\ConnectionCameraDetail;
-use App\Components\Live\ConnectionCamera\ConnectionCameraNew;
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorDetail;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorPortList;
-use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\Traits\ComponentActiveInactive;
-use App\Entity\Camera;
-use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
-use App\Entity\Enums\PortType;
 use App\Entity\Msam;
-use App\Entity\Port;
-use App\Repository\PortRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -31,8 +22,6 @@ class ConnectionMsamSlotList
     use ComponentActiveInactive;
     use ComponentToolsTrait;
 
-    //const DEACTIVATE = self::class.'_deactivate';
-    //const ACTIVATE = self::class.'_activate';
     const SELECTED = self::class.'_selected';
 
     #[LiveProp]
@@ -41,20 +30,8 @@ class ConnectionMsamSlotList
     #[LiveProp]
     public ?int $selected = null;
 
-//    #[LiveProp]
-//    public ?int $editingSpeed = null;
-
-//    #[LiveProp]
-//    public ?int $editingType = null;
-
     #[LiveProp]
     public ?array $forSelect = null;
-
-//    #[LiveProp(writable: true )]
-//    public ?string $speed = null;
-
-//    #[LiveProp(writable: true )]
-//    public ?string $type = null;
 
     #[LiveProp]
     public ?Msam $msam = null;
@@ -64,7 +41,6 @@ class ConnectionMsamSlotList
 
     public function __construct(protected readonly EntityManagerInterface $entityManager)
     {
-        //$this->entity = Port::class;
     }
 
     /**
@@ -140,9 +116,6 @@ class ConnectionMsamSlotList
         $this->msam = $entity;
         $this->slots = $this->slotInfo($entity);
         $this->selected = null;
-        //$this->editingSpeed = null;
-        //$this->editingType = null;
-        //$this->select(null);//ya ConnectionCameraNew escucha ConnectionCameraTable::SHOW_DETAIL
     }
 
     #[LiveListener(ConnectionMsamTable::DETAIL.'_Full')]

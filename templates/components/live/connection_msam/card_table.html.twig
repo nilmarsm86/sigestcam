@@ -8,10 +8,8 @@
                 <p class="text-white m-0 fw-bold">Targetas:</p>
                 <div>
                     <button class="btn btn-primary btn-sm
-                            {% if msam.canAddTarget() == false  %}
+                            {% if msam and msam.canAddTarget() == false  %}
                                 disabled
-{#                            {% else %}#}
-{#                                {% if port.equipment is not null %}disabled{% endif %}#}
                             {% endif %}"
                             aria-current="page"
                             data-bs-toggle="modal"
@@ -69,7 +67,7 @@
                     {{ component('ConnectionMsamCardPortList', {connection: connection, card: card}) }}
                 </div>
 
-                {% if msam.canAddTarget() %}
+                {% if msam and msam.canAddTarget() %}
                     <!-- Modal -->
                     {{ component('ModalForm', {
                         title: 'Agregar Targeta',

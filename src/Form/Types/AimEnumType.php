@@ -17,7 +17,6 @@ class AimEnumType extends AbstractType
             ->setDefault('choices', static fn (Options $options): array => $options['class']::cases())
             ->setDefault('choice_label', Aim::getLabel())
             ->setDefault('choice_value', Aim::getValue())
-            //->setDefault('placeholder', '-Seleccione-')
         ;
     }
 

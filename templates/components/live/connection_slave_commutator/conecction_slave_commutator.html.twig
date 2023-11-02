@@ -29,12 +29,10 @@
 
             {% block card_body %}
                 {{ component('ConnectionSlaveCommutatorTable', {connection: connection, masterCommutator: commutator, masterPort: masterPort, inactive: inactive}) }}
-    {#            {% if commutator is not null %}#}
                     <div class="row">
                         {{ component('ConnectionSlaveCommutatorDetail', {connection: connection, masterPort: masterPort}) }}
                         {{ component('ConnectionSlaveCommutatorPortList', {connection: connection, masterPort: masterPort}) }}
                     </div>
-    {#            {% endif %}#}
             {% endblock %}
         {% endembed %}
 

@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Controller\Traits\MunicipalityTrait;
 use App\Entity\Camera;
-use App\Entity\Municipality;
 use App\Form\CameraType;
 use App\Repository\CameraRepository;
 use App\Service\CrudActionService;
@@ -123,17 +122,6 @@ class CameraController extends AbstractController
             'title' => 'Editar cámara'
         ]);
     }
-
-    /*#[Route('/{id}', name: 'app_camera_delete', methods: ['POST'])]
-    public function delete(Request $request, Camera $camera, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$camera->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($camera);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('app_camera_index', [], Response::HTTP_SEE_OTHER);
-    }*/
 
     #[Route('/state', name: 'camera_state', methods: ['POST'])]
     public function state(Request $request, CameraRepository $cameraRepository, CrudActionService $crudActionService): Response

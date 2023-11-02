@@ -62,7 +62,9 @@ class ConnectionCamera
     #[LiveListener(ConnectionCommutatorPortList::SELECTED.'_Simple')]
     public function onConnectionCommutatorPortListSelectedSimple(#[LiveArg] ?Port $port): void
     {
-        $this->onConnectionCommutatorPortListSelected($port);
+        $this->commutator = null;
+        $this->port = $port;
+        $this->modem = null;
     }
 
     #[LiveListener(ConnectionSlaveCommutatorPortList::SELECTED.'_SlaveSwitch')]
@@ -141,7 +143,6 @@ class ConnectionCamera
     {
         $this->modem = $entity;
         $this->port = $entity->getPort() ?: $this->port;
-        //$this->commutator = $this->port->getCommutator();
         $this->card = $entity->getPort()->getCard();
         $this->msam = $entity->getPort()->getCard()->getMsam();
     }
@@ -195,7 +196,5 @@ class ConnectionCamera
     {
         $this->modem = new Modem();
     }
-
-
 
 }

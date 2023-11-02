@@ -27,8 +27,6 @@
                 <td>{{ structured_cable.feederCable }}</td>
                 <td>{{ structured_cable.pair }}</td>
                 <td>
-{#                    <a href="{{ path('app_structured_cable_show', {'id': structured_cable.id}) }}">show</a>#}
-{#                    <a href="{{ path('app_structured_cable_edit_camera', {'id': structured_cable.id}) }}">edit</a>#}
                 </td>
             </tr>
         {% else %}
@@ -38,6 +36,4 @@
         {% endfor %}
         </tbody>
     </table>
-
-{#    <a href="{{ path('structured_cable_new') }}">Create new</a>#}
 {% endblock %}

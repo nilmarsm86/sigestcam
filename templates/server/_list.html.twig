@@ -25,13 +25,9 @@
                 <tr>
                     <th>IP</th>
                     <th>Marca</th>
-{#                    <th>PhysicalSerial</th>#}
                     <th>Model</th>
                     <th>Núm. serie</th>
-{#                    <th>Inventory</th>#}
-{#                    <th>Contic</th>#}
                     <th>Estado</th>
-{#                    <th>ElectronicSerial</th>#}
                     <th>Provincia</th>
                     <th>Municipio</th>
                     <th></th>
@@ -44,10 +40,7 @@
                         <td>{{ server.ip }}</td>
                         <td>{{ server.brand }}</td>
                         <td>{{ server.physicalSerial }}</td>
-{#                        <td>{{ server.physicalSerial }}</td>#}
                         <td>{{ server.model }}</td>
-{#                        <td>{{ server.inventory }}</td>#}
-{#                        <td>{{ server.contic }}</td>#}
                         <td>
                             {% if server.isActive() %}
                             <a href="{{ path('server_state') }}"
@@ -81,7 +74,6 @@
                                 {{ server.municipality }}
                             </a>
                         </td>
-{#                        <td>{{ server.electronicSerial }}</td>#}
                         <td>
                             {% if is_granted('ROLE_BOSS') %}
                                 <a class="btn btn-sm btn-primary" title="Detalle del servidor"

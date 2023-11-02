@@ -16,7 +16,6 @@
         }) }}
     </div>
 
-{#    {{ include('home/_search_list.html.twig') }}#}
     {{ include('partials/_index_container.html.twig', {
         list: 'home/_search_list.html.twig',
         rest_data_action: 'page:onChangeState->content-loader#refreshContent'

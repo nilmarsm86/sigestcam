@@ -31,15 +31,8 @@
                     <th>Núm. serie</th>
                     <th>Estado</th>
                     <th>Esclavo</th>
-{#                    <th>PortsAmount</th>#}
                     <th>Provincia</th>
                     <th>Municipio</th>
-{#                    <th>Brand</th>#}
-{#                    <th>PhysicalAddress</th>#}
-{#                    <th>PhysicalSerial</th>#}
-{#                    <th>Model</th>#}
-{#                    <th>Inventory</th>#}
-{#                    <th>Contic</th>#}
                     <th></th>
                 </tr>
             {% endblock %}
@@ -91,11 +84,6 @@
                                 {{ commutator.municipality.name }}
                             </a>
                         </td>
-{#                        <td>{{ commutator.brand }}</td>    #}
-{#                        <td>{{ commutator.physicalSerial }}</td>#}
-{#                        <td>{{ commutator.model }}</td>#}
-{#                        <td>{{ commutator.inventory }}</td>#}
-{#                        <td>{{ commutator.contic }}</td>                        #}
                         <td>
                             <a class="btn btn-sm btn-primary" title="Detalle del switch"
                                href="{{ path('commutator_show', {'id': commutator.id}) }}"

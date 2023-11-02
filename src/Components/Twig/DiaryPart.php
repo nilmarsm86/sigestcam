@@ -14,41 +14,49 @@ final class DiaryPart
     {
     }
 
+    /**
+     * @return bool|float|int|string|null
+     */
     public function ripCamera()
     {
         return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::Review);
     }
 
+    /**
+     * @return bool|float|int|string|null
+     */
     public function connectivityCamera()
     {
         return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::Connectivity);
     }
 
-//    public function connectivityModem()
-//    {
-//        return $this->reportRepository->findInterruptionAndEquipment(ReportType::Modem, InterruptionReason::Connectivity);
-//    }
-
+    /**
+     * @return bool|float|int|string|null
+     */
     public function electricFluidCamera()
     {
         return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::ElectricFluid);
     }
 
+    /**
+     * @return bool|float|int|string|null
+     */
     public function sustitutionCamera()
     {
         return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::Camera, ReportType::Camera);
     }
 
+    /**
+     * @return bool|float|int|string|null
+     */
     public function sustitutionModem()
     {
         return $this->reportRepository->findInterruptionAndEquipment(InterruptionReason::Modem, ReportType::Modem);
     }
 
-//    public function others()
-//    {
-//        return $this->reportRepository->findInterruption();
-//    }
-
+    /**
+     * @return bool|float|int|string|null
+     */
     public function resolvedInterruption()
     {
         return $this->reportRepository->findResolvedInterruption();

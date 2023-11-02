@@ -28,11 +28,6 @@
                     </div>
 
                     <button class="btn btn-primary btn-sm"
-{#                            {% if port is null %}#}
-{#                                disabled#}
-{#                            {% else %}#}
-{#                                {% if port.equipment is not null %}disabled{% endif %}#}
-{#                            {% endif %}"#}
                             {% if masterModem.getConnectedNumber() >= 4 %}disabled{% endif %}
                             aria-current="page"
                             data-bs-toggle="modal"
@@ -49,11 +44,9 @@
                     <div data-loading="addClass(d-none)">
                         {{ component('ConnectionSlaveModemTable', {connection:connection, masterModem: masterModem, inactives: inactives}) }}
                     </div>
-{#                    {% if port.equipment is not null %}#}
                         <div class="row">
                             {{ component('ConnectionSlaveModemDetail', {connection:connection, masterModem: masterModem}) }}
                         </div>
-{#                    {% endif %}#}
                 {% endif %}
             {% endblock %}
         {% endembed %}

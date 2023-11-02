@@ -84,17 +84,6 @@
                             editable: false,
                         }) }}
 
-{#                        {{ component('ConnectionDetailEditInline', {#}
-{#                            label: 'Modem:',#}
-{#                            data: modem.master_modem,#}
-{#                            id: modem.id,#}
-{#                            connection: connection,#}
-{#                            'data-live-id': 'modem-master_modem-'~ modem.id,#}
-{#                            entity: 'App\\Entity\\Modem',#}
-{#                            template: 'components/live/connection_camera/edit_inline.html.twig',#}
-{#                            editable: false,#}
-{#                        }) }}#}
-
                         {{ component('ConnectionDetailEditInline', {
                             label: 'Switch:',
                             data: modem.commutator,

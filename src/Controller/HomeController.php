@@ -4,12 +4,12 @@ namespace App\Controller;
 
 use App\DTO\Paginator;
 use App\Entity\Camera;
+use App\Entity\Commutator;
 use App\Entity\Modem;
 use App\Entity\Msam;
 use App\Entity\Port;
 use App\Entity\Report;
 use App\Entity\Server;
-use App\Repository\CameraRepository;
 use App\Repository\EquipmentRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -26,6 +26,7 @@ class HomeController extends AbstractController
         $totalModems = $entityManager->getRepository(Modem::class)->findAmountModem();
         $totalServer = $entityManager->getRepository(Server::class)->findAmountServers();
         $totalMsam = $entityManager->getRepository(Msam::class)->findAmountMsam();
+        $totalCommutator = $entityManager->getRepository(Commutator::class)->findAmountCommutators();
 
         $conections[] = (string) $entityManager->getRepository(Port::class)->findAmountDirectConnections();
         $conections[] = (string) $entityManager->getRepository(Port::class)->findAmountSimpleConnections();
@@ -33,18 +34,11 @@ class HomeController extends AbstractController
         $conections[] = (string) $entityManager->getRepository(Port::class)->findAmountSlaveModemConnections();
         $conections[] = (string) $entityManager->getRepository(Port::class)->findAmountFullConnections();
 
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("01");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("02");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("03");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("04");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("05");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("06");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("07");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("08");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("09");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("10");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("11");
-        $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth("12");
+        $reports = [];
+        $months = ["01","02","03","04","05","06","07","08","09","10","11","12",];
+        foreach ($months as $month){
+            $reports[] = (string) $entityManager->getRepository(Report::class)->findOpenAmountReportsByMonth($month);
+        }
 
         return is_null($this->getUser()) ? $this->redirectToRoute('app_login') : $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
@@ -52,6 +46,7 @@ class HomeController extends AbstractController
             'totalModems' => $totalModems,
             'totalServer' => $totalServer,
             'totalMsam' => $totalMsam,
+            'totalCommutator' => $totalCommutator,
             'conections' => $conections,
             'reports' => $reports
         ]);

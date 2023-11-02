@@ -29,10 +29,6 @@ class Card implements HarborInterface
 
     #[ORM\OneToMany(mappedBy: 'card', targetEntity:PortEntity::class, cascade: ['persist'])]
     #[ORM\OrderBy(['number' => 'ASC'])]
-//    #[Assert\Count(
-//        min: 1,
-//        minMessage: 'Debe establecer al menos 1 puerto para este equipo.',
-//    )]
     private Collection $ports;
 
     #[ORM\ManyToOne(inversedBy: 'cards')]
@@ -42,16 +38,13 @@ class Card implements HarborInterface
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'El slot no debe estar vacío.')]
-//    #[Assert\NotNull(message: 'El slot no debe ser nulo.')]
     #[Assert\Positive]
     private ?int $slot = null;
 
     #[ORM\Column]
     #[Assert\NotBlank(message: 'Establezca la cantidad de puertos.')]
-//    #[Assert\NotNull(message: 'La cantidad de puertos no debe ser nula.')]
     #[Assert\Positive]
     private ?int $portsAmount;
-
 
     /**
      * @throws Exception
@@ -70,18 +63,6 @@ class Card implements HarborInterface
     {
         return $this->id;
     }
-
-    /*public function getName(): string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-
-        return $this;
-    }*/
 
     public function getMsam(): ?Msam
     {
@@ -111,7 +92,6 @@ class Card implements HarborInterface
      * No se pone en trait debido a la validación
      * @return int
      */
-//    #[Assert\LessThanOrEqual(16)]
     public function maxPorts(): int
     {
         return $this->maximumPortsAmount;

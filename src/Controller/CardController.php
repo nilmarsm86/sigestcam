@@ -3,7 +3,6 @@
 namespace App\Controller;
 
 use App\Entity\Card;
-use App\Entity\Commutator;
 use App\Entity\Enums\PortType;
 use App\Entity\Msam;
 use App\Form\CardType;
@@ -67,15 +66,6 @@ class CardController extends AbstractController
         ]);
     }
 
-    /*#[Route('/{id}/msam/{msam}', name: 'card_show', methods: ['GET'])]
-    public function show(Card $card, Msam $msam): Response
-    {
-        return $this->render('card/show.html.twig', [
-            'card' => $card,
-            'msam' => $msam,
-        ]);
-    }*/
-
     #[Route('/{id}/edit/msam/{msam}', name: 'card_edit', requirements: ['id' => '\d+', 'msam' => '\d+'], methods: ['GET', 'POST'])]
     public function edit(Request $request, Card $card, EntityManagerInterface $entityManager, Msam $msam): Response
     {
@@ -110,17 +100,6 @@ class CardController extends AbstractController
             'title' => 'Editar targeta'
         ]);
     }
-
-    /*#[Route('/{id}', name: 'card_delete', methods: ['POST'])]
-    public function delete(Request $request, Card $card, EntityManagerInterface $entityManager): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$card->getId(), $request->request->get('_token'))) {
-            $entityManager->remove($card);
-            $entityManager->flush();
-        }
-
-        return $this->redirectToRoute('card_index', [], Response::HTTP_SEE_OTHER);
-    }*/
 
     #[Route('/port/{id}', name: 'card_port', requirements: ['id' => '\d+'], methods: ['GET'])]
     public function port(Request $request, Card $card): Response

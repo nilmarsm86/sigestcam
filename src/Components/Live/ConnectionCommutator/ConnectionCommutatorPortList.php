@@ -173,13 +173,16 @@ class ConnectionCommutatorPortList
         return $data;
     }
 
+    /**
+     * @param Commutator $entity
+     * @return void
+     */
     protected function onConnectionCommutatorTableDetail(Commutator $entity): void
     {
         $this->ports = $this->portsInfo($entity);
         $this->selected = null;
         $this->editingSpeed = null;
         $this->editingType = null;
-        //$this->select(null);//ya ConnectionCameraNew escucha ConnectionCameraTable::SHOW_DETAIL
     }
 
     #[LiveListener(ConnectionCommutatorTable::DETAIL.'_Direct')]
@@ -251,6 +254,10 @@ class ConnectionCommutatorPortList
         $this->onConnectionCommutatorTableChange();
     }
 
+    /**
+     * @param Commutator $entity
+     * @return void
+     */
     protected function onConnectionCommutatorDetailDeactivate(Commutator $entity): void
     {
         $this->select(null);
@@ -303,7 +310,6 @@ class ConnectionCommutatorPortList
         $this->deactivate($portId);
         if($this->selected === $portId){
             $this->select($portId);
-//            $this->selected = null;
         }
     }
 

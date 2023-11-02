@@ -16,6 +16,10 @@ enum ReportType: string
     case Server = '4';
     case Switch = '5';
 
+    /**
+     * @param BackedEnum|string $enum
+     * @return string
+     */
     public static function getLabelFrom(BackedEnum|string $enum): string
     {
         if(is_string($enum)){

@@ -4,13 +4,10 @@ namespace App\Components\Live\ConnectionSlaveCommutator;
 
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorNew;
 use App\Components\Live\Traits\ComponentNewForm;
-use App\Entity\Commutator;
-use App\Entity\Enums\ConnectionType;
 use App\Entity\Port;
 use App\Form\CommutatorType;
 use App\Repository\CommutatorRepository;
 use App\Repository\MunicipalityRepository;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;

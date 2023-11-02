@@ -5,14 +5,12 @@ namespace App\Components\Live\ConnectionSlaveModem;
 use App\Components\Live\ConnectionCommutator\ConnectionCommutatorTable;
 use App\Components\Live\ConnectionModem\ConnectionModemNew;
 use App\Components\Live\Traits\ComponentNewForm;
-use App\Entity\Camera;
 use App\Entity\Enums\ConnectionType;
 use App\Entity\Modem;
 use App\Entity\Port;
 use App\Form\ModemType;
 use App\Repository\ModemRepository;
 use Exception;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormInterface;
 use Symfony\UX\LiveComponent\Attribute\AsLiveComponent;
 use Symfony\UX\LiveComponent\Attribute\LiveAction;
@@ -70,10 +68,6 @@ class ConnectionSlaveModemNew extends ConnectionModemNew
         if($this->isSubmitAndValid()){
             /** @var Modem $slaveModem */
             $slaveModem = $this->getForm()->getData();
-//            if(!is_null($this->port)){
-//                $modem->setPort($this->port);
-//                $modem->setMunicipality($this->port->getCommutator()->getMunicipality());
-//            }
 
             if(!is_null($this->masterModem)){
                 $slaveModem->setMasterModem($this->masterModem);

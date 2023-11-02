@@ -1,8 +1,3 @@
-{#{{ form_start(form) }}#}
-{#    {{ form_widget(form) }}#}
-{#    <button class="btn">{{ button_label|default('Save') }}</button>#}
-{#{{ form_end(form) }}#}
-
 {% embed "embeds/card.html.twig" %}
     {% block card_css_class %}mb-4{% endblock %}
 
@@ -25,13 +20,6 @@
         {% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}
 
         {{ form_start(form) }}
-{#        {{ form_row(form.name) }}#}
-{#        {% if form.slot is defined %}#}
-{#            {{ form_row(form.slot) }}#}
-{#        {% endif %}#}
-{#        {% if form.portsAmount is defined %}#}
-{#            {{ form_row(form.portsAmount) }}#}
-{#        {% endif %}#}
         {{ include('card/_form_fields.html.twig') }}
 
         <div class="row mb-3">

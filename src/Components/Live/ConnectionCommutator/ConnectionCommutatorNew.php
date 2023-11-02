@@ -5,7 +5,6 @@ namespace App\Components\Live\ConnectionCommutator;
 use App\Components\Live\Traits\ComponentNewForm;
 use App\Entity\Commutator;
 use App\Entity\Enums\ConnectionType;
-use App\Entity\Port;
 use App\Form\CommutatorType;
 use App\Repository\CommutatorRepository;
 use App\Repository\MunicipalityRepository;
@@ -41,19 +40,15 @@ class ConnectionCommutatorNew extends AbstractController
     #[LiveProp]
     public ?ConnectionType $connection = null;
 
-//    #[LiveProp(updateFromParent: true)]
-//    public ?Port $masterPort = null;
-
+    /**
+     * @return FormInterface
+     */
     protected function instantiateForm(): FormInterface
     {
         $options = [
             'province' => (int) $this->province,
             'municipality' => (int) $this->municipality
         ];
-
-//        if(!is_null($this->masterPort)){
-//            $options['crud'] = true;
-//        }
 
         return $this->createForm(CommutatorType::class, $this->commut, $options);
     }
@@ -67,9 +62,6 @@ class ConnectionCommutatorNew extends AbstractController
             //lanzar evento a JS
             $this->dispatchBrowserEvent(static::MODAL_CLOSE);
             $commutator = $this->mapped($municipalityRepository, $this->getForm()->getData());
-//            if(!is_null($this->masterPort)){
-//                $commutator->setMasterCommutator($this->masterPort->getCommutator());
-//            }
             $commutatorRepository->save($commutator, true);
 
             $this->emitSuccess([
@@ -78,6 +70,11 @@ class ConnectionCommutatorNew extends AbstractController
         }
     }
 
+    /**
+     * @param MunicipalityRepository $municipalityRepository
+     * @param Commutator $commutator
+     * @return Commutator
+     */
     protected function mapped(MunicipalityRepository $municipalityRepository, Commutator $commutator): Commutator
     {
         return $commutator->setMunicipality($municipalityRepository->find($this->municipality));

@@ -17,9 +17,7 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 #[AsLiveComponent(template: 'components/live/connection_slave_commutator/detail.html.twig')]
 class ConnectionSlaveCommutatorDetail extends ConnectionCommutatorDetail
 {
-//    use DefaultActionTrait;
     use ComponentToolsTrait;
-//    use ComponentActiveInactive;
 
     const DEACTIVATE = self::class.'_deactivate';
 

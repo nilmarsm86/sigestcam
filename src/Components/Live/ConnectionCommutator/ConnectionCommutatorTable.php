@@ -31,6 +31,9 @@ class ConnectionCommutatorTable
     {
     }
 
+    /**
+     * @return void
+     */
     protected function reload()
     {
         $this->entityId = null;
@@ -97,6 +100,9 @@ class ConnectionCommutatorTable
         return static::DETAIL.'_'.$this->connection->name;
     }
 
+    /**
+     * @return void
+     */
     public function onConnectionCommutatorDetailEditInlineSave(): void
     {
         $this->reload();

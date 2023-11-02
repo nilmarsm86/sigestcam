@@ -14,11 +14,18 @@ trait StateTrait
     #[Assert\Choice(choices: [StateEnum::Active, StateEnum::Inactive], message: 'Seleccione un estado válido.')]
     protected ?StateEnum $enumState = null;
 
+    /**
+     * @return StateEnum
+     */
     public function getState(): StateEnum
     {
         return $this->enumState;
     }
 
+    /**
+     * @param StateEnum $state
+     * @return $this
+     */
     public function setState(StateEnum $state): static
     {
         $this->enumState = $state;

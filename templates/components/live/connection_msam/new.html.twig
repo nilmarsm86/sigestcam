@@ -1,26 +1,23 @@
 <div {{ attributes }}>
-{#    {% if isSuccessful == false %}#}
-        {% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}
+    {% form_theme form 'form/bootstrap_5_horizontal_layout_sm.html.twig' %}
 
-        {{ form_start(form, {
-            attr: {
-                'data-action': 'live#action',
-                'data-action-name': 'prevent|save',
-            }
-        }) }}
+    {{ form_start(form, {
+        attr: {
+            'data-action': 'live#action',
+            'data-action-name': 'prevent|save',
+        }
+    }) }}
 
-        {{ include('msam/_form_fields.html.twig') }}
+    {{ include('msam/_form_fields.html.twig') }}
 
-        <div class="row mb-3">
-            <div class="col-sm-10 offset-sm-2">
-                <button type="submit" class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}">
-                    <i class="fas fa-save"></i>
-                    Salvar
-                </button>
-            </div>
+    <div class="row mb-3">
+        <div class="col-sm-10 offset-sm-2">
+            <button type="submit" class="btn btn-primary {{ this.hasValidationErrors ? 'disabled' : '' }}">
+                <i class="fas fa-save"></i>
+                Salvar
+            </button>
         </div>
-        {{ form_row(form._token) }}
-        {{ form_end(form, {render_rest: false}) }}
-{#    {% endif %}#}
-
+    </div>
+    {{ form_row(form._token) }}
+    {{ form_end(form, {render_rest: false}) }}
 </div>

@@ -64,7 +64,6 @@ class RegistrationFormType extends AbstractType
             'data_class' => RegistrationForm::class,
             'attr' => [
                 'class' => 'user register',
-//                'novalidate' => true
             ]
         ]);
     }

@@ -17,12 +17,10 @@
 
         {% block card_body %}
             {{ component('ConnectionCommutatorTable', {connection: connection}) }}
-{#            {% if commutator is not null %}#}
                 <div class="row">
                     {{ component('ConnectionCommutatorDetail', {connection: connection}) }}
                     {{ component('ConnectionCommutatorPortList', {connection: connection}) }}
                 </div>
-{#            {% endif %}#}
         {% endblock %}
     {% endembed %}
 

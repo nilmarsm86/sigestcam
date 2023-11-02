@@ -6,7 +6,6 @@ use App\Entity\Enums\InterruptionReason;
 use App\Entity\Enums\Priority;
 use App\Entity\Enums\ReportState;
 use App\Entity\Enums\ReportType;
-use App\Entity\Enums\State;
 use App\Entity\Equipment;
 use App\Entity\Report;
 use App\Repository\Traits\PaginateTarit;
@@ -166,24 +165,6 @@ class ReportRepository extends ServiceEntityRepository
                 ->setParameter(':reason',$interruption);
         return $builder->getQuery()->getSingleScalarResult();
     }
-
-//    public function findInterruption()
-//    {
-//        $clasicalReasons = [
-//            InterruptionReason::getLabelFrom(InterruptionReason::Review),
-//            InterruptionReason::getLabelFrom(InterruptionReason::Connectivity),
-//            InterruptionReason::getLabelFrom(InterruptionReason::ElectricFluid),
-//            InterruptionReason::getLabelFrom(InterruptionReason::Camera),
-//            InterruptionReason::getLabelFrom(InterruptionReason::Modem),
-//            //InterruptionReason::getLabelFrom(InterruptionReason::WithoutLink),
-//        ];
-//
-//        $builder = $this->createQueryBuilder('r')->select('COUNT(r) as total');
-//        $this->addState($builder, ReportState::Open->value);
-//        $this->addFilter($builder, (new \DateTime('now'))->format('d/m/Y'));
-//        $builder->andWhere($builder->expr()->notIn('r.interruptionReason', $clasicalReasons));
-//        return $builder->getQuery()->getSingleScalarResult();
-//    }
 
     public function findResolvedInterruption()
     {

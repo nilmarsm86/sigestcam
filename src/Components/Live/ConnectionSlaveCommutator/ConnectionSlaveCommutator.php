@@ -17,8 +17,6 @@ use Symfony\UX\LiveComponent\DefaultActionTrait;
 #[AsLiveComponent(template: 'components/live/connection_slave_commutator/conecction_slave_commutator.html.twig')]
 class ConnectionSlaveCommutator extends ConnectionCommutator
 {
-//    use DefaultActionTrait;
-
     const CHANGE = self::class.'_change';
 
     #[LiveProp]
@@ -57,7 +55,6 @@ class ConnectionSlaveCommutator extends ConnectionCommutator
     public function findInactive(): void
     {
         $this->inactive = true;
-        //$this->emit($this->getChangeFullComponentEventName());
     }
 
     /**

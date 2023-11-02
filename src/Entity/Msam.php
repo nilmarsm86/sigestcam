@@ -3,7 +3,6 @@
 namespace App\Entity;
 
 use App\Entity\Enums\State;
-use App\Entity\Enums\State as StateEnum;
 use App\Repository\MsamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -16,10 +15,6 @@ class Msam extends Equipment
 {
     #[ORM\OneToMany(mappedBy: 'msam', targetEntity: Card::class)]
     #[ORM\OrderBy(['slot' => 'ASC'])]
-//    #[Assert\Count(
-//        min: 1,
-//        minMessage: 'Debe establecer al menos 1 targeta para este Msam.',
-//    )]
     private Collection $cards;
 
     #[ORM\Column]
@@ -66,8 +61,8 @@ class Msam extends Equipment
                 $card->setMsam(null);
             }
 
-            //de la targeta eliminada debo eliminar tambien los puertos
-            //de los puertos eliminados debo desconectar los equipos conectados al mismo
+            //TODO: de la targeta eliminada debo eliminar tambien los puertos
+            //TODO: de los puertos eliminados debo desconectar los equipos conectados al mismo
         }
 
         return $this;
@@ -84,22 +79,6 @@ class Msam extends Equipment
 
         return $this;
     }
-
-    /**
-     * @throws Exception
-
-    public function getIp(): ?string
-    {
-        throw new Exception('Msam no tiene Ip');
-    }*/
-
-    /**
-     * @throws Exception
-
-    public function setIp(?string $ip): static
-    {
-        throw new Exception('Msam no tiene Ip');
-    }*/
 
     /**
      * Deactivate

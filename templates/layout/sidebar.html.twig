@@ -21,12 +21,7 @@
             <span>Conexiones</span>
         </a>
     </li>
-{#    <li class="nav-item">#}
-{#        <a class="nav-link" href="{{ path('report_new') }}">#}
-{#            <i class="far fa-user-circle"></i>#}
-{#            <span>Crear reporte</span>#}
-{#        </a>#}
-{#    </li>#}
+
     {% if is_granted('ROLE_BOSS') %}
         <li class="nav-item">
             <a class="nav-link {% if app.request.attributes.get('_route')|u.containsAny('commutator_') %}active{% endif %}"
